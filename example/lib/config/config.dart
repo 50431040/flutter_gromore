@@ -6,3 +6,6 @@ const APP_NAME = "牛小二招聘";
 
 /// 是否是生产环境
 const IS_PRODUCTION = false;
+
+/// 开屏广告id（安卓）
+const SPLASH_ANDROID_ID = "887609336";

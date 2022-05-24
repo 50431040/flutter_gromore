@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_gromore/flutter_gromore.dart';
 import 'package:flutter_gromore_example/config/config.dart';
 
@@ -31,6 +29,10 @@ class _MyAppState extends State<MyApp> {
     FlutterGromore.initSDK(appId: GROMORE_ANDROID_APP_ID, appName: APP_NAME, debug: !IS_PRODUCTION);
   }
 
+  void showSplashAd() {
+    FlutterGromore.showSplash(adUnitId: SPLASH_ANDROID_ID);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,19 +40,21 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ElevatedButton(onPressed: initSDK, child: const Text("初始化SDK"),),
-            const SizedBox(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(onPressed: initSDK, child: const Text("初始化SDK"),),
+              const SizedBox(
+                  height: 20
+              ),
+              ElevatedButton(onPressed: handleRequestPermission, child: const Text("请求非必要权限"),),
+              const SizedBox(
                 height: 20
-            ),
-            ElevatedButton(onPressed: handleRequestPermission, child: const Text("请求非必要权限"),),
-            const SizedBox(
-              height: 20
-            ),
-          ],
+              ),
+              ElevatedButton(onPressed: showSplashAd, child: const Text("开屏广告"),),
+            ],
+          ),
         ),
       ),
     );

@@ -15,15 +15,15 @@ import io.flutter.plugin.common.MethodChannel.Result
 class FlutterGromorePlugin: FlutterPlugin, ActivityAware {
 
   // 事件名
-  val methodChannelName = "flutter_gromore"
-  val eventChannelName = "flutter_gromore_event"
+  private val methodChannelName = "flutter_gromore"
+  private val eventChannelName = "flutter_gromore_event"
 
   // 通道实例
-  var methodChannel: MethodChannel? = null
-  var eventChannel: EventChannel? = null
+  private var methodChannel: MethodChannel? = null
+  private var eventChannel: EventChannel? = null
 
   // 代理，处理事件
-  var pluginDelegate: PluginDelegate? = null
+  private var pluginDelegate: PluginDelegate? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     methodChannel = MethodChannel(flutterPluginBinding.binaryMessenger, methodChannelName)

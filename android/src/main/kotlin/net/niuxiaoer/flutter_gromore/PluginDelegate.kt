@@ -2,6 +2,7 @@ package net.niuxiaoer.flutter_gromore
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import com.bytedance.msdk.api.v2.GMAdConfig
 import com.bytedance.msdk.api.v2.GMMediationAdSdk
 import io.flutter.BuildConfig
@@ -11,6 +12,7 @@ import io.flutter.plugin.common.MethodChannel
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreSplash
 
 class PluginDelegate(activity: Activity): MethodChannel.MethodCallHandler, EventChannel.StreamHandler {
+    private val TAG: String = this::class.java.simpleName
     private var activity: Activity = activity
 
 
@@ -18,9 +20,12 @@ class PluginDelegate(activity: Activity): MethodChannel.MethodCallHandler, Event
         val method: String = call.method
         val arguments = call.arguments as? Map<String, Any?>
 
+        Log.d(TAG, method)
+
         when(method) {
             // 同时请求：READ_PHONE_STATE, COARSE_LOCATION, FINE_LOCATION, WRITE_EXTERNAL_STORAGE权限
             "requestPermissionIfNecessary" -> {
+                Log.d(TAG, "requestPermissionIfNecessary")
                 GMMediationAdSdk.requestPermissionIfNecessary(activity)
                 result.success(true)
             }
@@ -57,10 +62,13 @@ class PluginDelegate(activity: Activity): MethodChannel.MethodCallHandler, Event
 
         val intent = Intent(activity, FlutterGromoreSplash::class.java)
         intent.putExtra("adUnitId", arguments?.get("adUnitId") as? String)
+        intent.putExtra("logo", arguments?.get("logo") as? String)
         intent.putExtra("muted", arguments?.get("muted") as? Boolean)
         intent.putExtra("preload", arguments?.get("preload") as? Boolean)
         intent.putExtra("volume", arguments?.get("volume") as? Float)
         intent.putExtra("timeout", arguments?.get("timeout") as? Int)
+        intent.putExtra("buttonType", arguments?.get("buttonType") as? Int)
+        intent.putExtra("downloadType", arguments?.get("downloadType") as? Int)
 
         activity.startActivity(intent)
         activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
