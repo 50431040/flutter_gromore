@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gromore/callback/gromore_ad_callback.dart';
 import 'package:flutter_gromore/config/splash.dart';
 import 'package:flutter_gromore/callback/gromore_splash_callback.dart';
-import 'package:flutter_gromore/constants/channel.dart';
+import 'package:flutter_gromore/constants/config.dart';
 
 class FlutterGromore {
   static const MethodChannel _methodChannel = MethodChannel(methodChannelName);

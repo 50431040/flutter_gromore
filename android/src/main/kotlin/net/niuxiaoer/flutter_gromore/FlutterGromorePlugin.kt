@@ -7,14 +7,14 @@ import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
+import net.niuxiaoer.flutter_gromore.constants.FlutterGromoreConstants
 import net.niuxiaoer.flutter_gromore.event.AdEventHandler
+import net.niuxiaoer.flutter_gromore.factory.FlutterGromoreFeedFactory
 
 /** FlutterGromorePlugin */
 class FlutterGromorePlugin: FlutterPlugin, ActivityAware {
 
-  // 事件名
-  private val methodChannelName = "flutter_gromore"
-  private val eventChannelName = "flutter_gromore_event"
+
 
   // 通道实例
   private var methodChannel: MethodChannel? = null
@@ -25,8 +25,13 @@ class FlutterGromorePlugin: FlutterPlugin, ActivityAware {
   private var adEventListener: AdEventHandler? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    methodChannel = MethodChannel(flutterPluginBinding.binaryMessenger, methodChannelName)
-    eventChannel = EventChannel(flutterPluginBinding.binaryMessenger, eventChannelName)
+    methodChannel = MethodChannel(flutterPluginBinding.binaryMessenger, FlutterGromoreConstants.methodChannelName)
+    eventChannel = EventChannel(flutterPluginBinding.binaryMessenger, FlutterGromoreConstants.eventChannelName)
+
+    // 注册PlatformView
+    flutterPluginBinding
+            .platformViewRegistry
+            .registerViewFactory(FlutterGromoreConstants.feedViewTypeId, FlutterGromoreFeedFactory())
   }
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
