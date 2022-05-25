@@ -2,11 +2,19 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gromore/callback/gromore_ad_callback.dart';
+import 'package:flutter_gromore/config/splash.dart';
+import 'package:flutter_gromore/callback/gromore_splash_callback.dart';
+import 'package:flutter_gromore/constants/channel.dart';
 
 class FlutterGromore {
-  static const MethodChannel _methodChannel = MethodChannel("flutter_gromore");
-  static const EventChannel _eventChannel = EventChannel("flutter_gromore_event");
+  static const MethodChannel _methodChannel = MethodChannel(methodChannelName);
+  static const EventChannel _eventChannel = EventChannel(eventChannelName);
+
+  // 事件中心，存储事件
+  static Map<String, GromoreAdCallback> eventCenter = {};
 
   /// 权限申请
   /// 同时请求：READ_PHONE_STATE, COARSE_LOCATION, FINE_LOCATION, WRITE_EXTERNAL_STORAGE权限
@@ -19,6 +27,21 @@ class FlutterGromore {
 
   }
 
+  static void _handleEventListenter() {
+    _eventChannel.receiveBroadcastStream().listen((event) {
+      debugPrint(event.toString());
+      String? id = event["id"] as String?;
+      if (id != null && id.isNotEmpty && eventCenter[id] != null) {
+
+        /// 开屏广告事件
+        if (eventCenter[id] is GromoreSplashCallback) {
+          GromoreSplashCallback callback = (eventCenter[id] as GromoreSplashCallback);
+          callback.exec(event["name"]);
+        }
+      }
+    });
+  }
+
   /// 初始化SDK
   static Future<void> initSDK({ required String appId, required String appName, required bool debug }) async {
     await _methodChannel.invokeMethod("initSDK", {
@@ -26,28 +49,17 @@ class FlutterGromore {
       "appName": appName,
       "debug": debug
     });
+
+    _handleEventListenter();
   }
 
   /// 展示开屏广告
-  /// logo：如果传入了logo则会在底部显示logo，logo放在android/app/src/main/res/mipmap下，值不需要文件后缀
-  /// muted：静音
-  /// preload：预加载
-  /// volume：声音配置，与muted配合使用
-  /// timeout：超时时间，默认3000ms
-  /// buttonType：按钮样式（1：全屏可点击，2：仅按钮可点击，默认为1）
-  /// downloadType：点击下载样式（0或者1，默认为1）
-  static Future<void> showSplash({ required String adUnitId, String? logo, bool? muted, bool? preload, double? volume, int? timeout, int? buttonType, int? downloadType }) async {
-    Map params = {
-      "adUnitId": adUnitId,
-      "logo": logo,
-      "muted": muted,
-      "preload": preload,
-      "volume": volume,
-      "timeout": timeout,
-      "buttonType": buttonType,
-      "downloadType": downloadType
-    };
+  static Future<void> showSplash({ required GromoreSplashConfig config, required GromoreAdCallback callback }) async {
+    Map params = config.toJson();
     params.removeWhere((key, value) => value == null);
+    debugPrint("showSplash ${config.id}");
+
+    eventCenter[config.id] = callback;
 
     await _methodChannel.invokeMethod("showSplash", params);
   }

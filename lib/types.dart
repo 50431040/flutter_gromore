@@ -1,0 +1,1 @@
+typedef GromoreVoidCallback = void Function();

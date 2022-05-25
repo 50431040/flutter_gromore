@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gromore/callback/gromore_splash_callback.dart';
+import 'package:flutter_gromore/config/splash.dart';
 
 import 'package:flutter_gromore/flutter_gromore.dart';
 import 'package:flutter_gromore_example/config/config.dart';
@@ -15,7 +17,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
     super.initState();
@@ -26,11 +27,20 @@ class _MyAppState extends State<MyApp> {
   }
 
   void initSDK() {
-    FlutterGromore.initSDK(appId: GROMORE_ANDROID_APP_ID, appName: APP_NAME, debug: !IS_PRODUCTION);
+    FlutterGromore.initSDK(
+        appId: GROMORE_ANDROID_APP_ID,
+        appName: APP_NAME,
+        debug: !IS_PRODUCTION);
   }
 
   void showSplashAd() {
-    FlutterGromore.showSplash(adUnitId: SPLASH_ANDROID_ID);
+    // SPLASH_ANDROID_ID
+    FlutterGromore.showSplash(
+        config: GromoreSplashConfig(
+            adUnitId: SPLASH_ANDROID_ID, logo: "launch_image"),
+        callback: GromoreSplashCallback(onAdShow: () {
+          print("callback --- onAdShow");
+        }));
   }
 
   @override
@@ -44,15 +54,20 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(onPressed: initSDK, child: const Text("初始化SDK"),),
-              const SizedBox(
-                  height: 20
+              ElevatedButton(
+                onPressed: initSDK,
+                child: const Text("初始化SDK"),
               ),
-              ElevatedButton(onPressed: handleRequestPermission, child: const Text("请求非必要权限"),),
-              const SizedBox(
-                height: 20
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: handleRequestPermission,
+                child: const Text("请求非必要权限"),
               ),
-              ElevatedButton(onPressed: showSplashAd, child: const Text("开屏广告"),),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: showSplashAd,
+                child: const Text("开屏广告"),
+              ),
             ],
           ),
         ),

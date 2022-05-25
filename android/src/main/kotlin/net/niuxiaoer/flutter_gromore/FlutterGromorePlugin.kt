@@ -6,10 +6,8 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.EventChannel
-import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
+import net.niuxiaoer.flutter_gromore.event.AdEventHandler
 
 /** FlutterGromorePlugin */
 class FlutterGromorePlugin: FlutterPlugin, ActivityAware {
@@ -22,8 +20,9 @@ class FlutterGromorePlugin: FlutterPlugin, ActivityAware {
   private var methodChannel: MethodChannel? = null
   private var eventChannel: EventChannel? = null
 
-  // 代理，处理事件
+  // 代理
   private var pluginDelegate: PluginDelegate? = null
+  private var adEventListener: AdEventHandler? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     methodChannel = MethodChannel(flutterPluginBinding.binaryMessenger, methodChannelName)
@@ -36,12 +35,11 @@ class FlutterGromorePlugin: FlutterPlugin, ActivityAware {
   }
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-    if (pluginDelegate == null) {
-      pluginDelegate = PluginDelegate(binding.activity);
-    }
+    adEventListener = adEventListener ?: AdEventHandler.getInstance()
+    pluginDelegate = pluginDelegate ?: PluginDelegate(binding.activity)
 
     methodChannel?.setMethodCallHandler(pluginDelegate)
-    eventChannel?.setStreamHandler(pluginDelegate)
+    eventChannel?.setStreamHandler(adEventListener)
   }
 
   override fun onDetachedFromActivityForConfigChanges() {

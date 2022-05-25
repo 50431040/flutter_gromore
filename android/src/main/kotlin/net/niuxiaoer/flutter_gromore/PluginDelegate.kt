@@ -9,12 +9,12 @@ import io.flutter.BuildConfig
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import net.niuxiaoer.flutter_gromore.event.AdEventHandler
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreSplash
 
-class PluginDelegate(activity: Activity): MethodChannel.MethodCallHandler, EventChannel.StreamHandler {
+class PluginDelegate(private val activity: Activity): MethodChannel.MethodCallHandler {
     private val TAG: String = this::class.java.simpleName
-    private var activity: Activity = activity
-
+    private var eventSink: EventChannel.EventSink? = null
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         val method: String = call.method
@@ -44,6 +44,7 @@ class PluginDelegate(activity: Activity): MethodChannel.MethodCallHandler, Event
 
     // 初始化SDK
     private fun initSDK(arguments: Map<String, Any?>?) {
+        // 取出传递的参数
         val appId = arguments?.get("appId") as? String ?: ""
         val appName = arguments?.get("appName") as? String ?: ""
         val debug = arguments?.get("debug") as? Boolean ?: BuildConfig.DEBUG
@@ -60,25 +61,23 @@ class PluginDelegate(activity: Activity): MethodChannel.MethodCallHandler, Event
     // 开屏广告
     private fun showSplash(arguments: Map<String, Any?>?) {
 
-        val intent = Intent(activity, FlutterGromoreSplash::class.java)
-        intent.putExtra("adUnitId", arguments?.get("adUnitId") as? String)
-        intent.putExtra("logo", arguments?.get("logo") as? String)
-        intent.putExtra("muted", arguments?.get("muted") as? Boolean)
-        intent.putExtra("preload", arguments?.get("preload") as? Boolean)
-        intent.putExtra("volume", arguments?.get("volume") as? Float)
-        intent.putExtra("timeout", arguments?.get("timeout") as? Int)
-        intent.putExtra("buttonType", arguments?.get("buttonType") as? Int)
-        intent.putExtra("downloadType", arguments?.get("downloadType") as? Int)
+        val intent = Intent(activity, FlutterGromoreSplash::class.java).apply {
+            putExtra("id", arguments?.get("id") as? String)
+            putExtra("adUnitId", arguments?.get("adUnitId") as? String)
+            putExtra("logo", arguments?.get("logo") as? String)
+            putExtra("muted", arguments?.get("muted") as? Boolean)
+            putExtra("preload", arguments?.get("preload") as? Boolean)
+            putExtra("volume", arguments?.get("volume") as? Float)
+            putExtra("timeout", arguments?.get("timeout") as? Int)
+            putExtra("buttonType", arguments?.get("buttonType") as? Int)
+            putExtra("downloadType", arguments?.get("downloadType") as? Int)
+        }
 
         activity.startActivity(intent)
-        activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        activity.overridePendingTransition(0, 0)
     }
 
-    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-
-    }
-
-    override fun onCancel(arguments: Any?) {
+    fun sendEvent() {
 
     }
 
