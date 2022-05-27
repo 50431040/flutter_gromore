@@ -6,13 +6,15 @@ import android.util.Log
 import com.bytedance.msdk.api.v2.GMAdConfig
 import com.bytedance.msdk.api.v2.GMMediationAdSdk
 import io.flutter.BuildConfig
+import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import net.niuxiaoer.flutter_gromore.event.AdEventHandler
+import net.niuxiaoer.flutter_gromore.view.FlutterGromoreInterstitial
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreSplash
 
-class PluginDelegate(private val activity: Activity): MethodChannel.MethodCallHandler {
+class PluginDelegate(private val activity: Activity, private val binaryMessenger: BinaryMessenger): MethodChannel.MethodCallHandler {
     private val TAG: String = this::class.java.simpleName
     private var eventSink: EventChannel.EventSink? = null
 
@@ -35,8 +37,14 @@ class PluginDelegate(private val activity: Activity): MethodChannel.MethodCallHa
                 result.success(true)
             }
             // 开屏
-            "showSplash" -> {
+            "showSplashAd" -> {
                 showSplash(arguments)
+                result.success(true)
+            }
+            // 插屏
+            "showInterstitialAd" -> {
+                require(arguments != null && arguments["id"] != null)
+                FlutterGromoreInterstitial(activity, binaryMessenger, arguments)
                 result.success(true)
             }
         }

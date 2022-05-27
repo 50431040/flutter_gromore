@@ -5,24 +5,44 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gromore/callback/gromore_feed_callback.dart';
+import 'package:flutter_gromore/callback/gromore_method_channel_handler.dart';
+import 'package:flutter_gromore/config/gromore_feed_config.dart';
 
 import 'package:flutter_gromore/constants/config.dart';
+import 'package:flutter_gromore/flutter_gromore.dart';
 
-class FlutterGromoreFeedView extends StatefulWidget {
-  const FlutterGromoreFeedView({Key? key}) : super(key: key);
+/// 信息流广告组件
+class GromoreFeedView extends StatefulWidget {
+  /// PlatformView参数
+  final GromoreFeedConfig creationParams;
+
+  /// 回调
+  final GromoreFeedCallback callback;
+
+  const GromoreFeedView(
+      {Key? key, required this.creationParams, required this.callback})
+      : super(key: key);
 
   @override
-  State<FlutterGromoreFeedView> createState() => _FlutterGromoreFeedViewState();
+  State<GromoreFeedView> createState() => _GromoreFeedViewState();
 }
 
-class _FlutterGromoreFeedViewState extends State<FlutterGromoreFeedView> {
+class _GromoreFeedViewState extends State<GromoreFeedView> {
   @override
   Widget build(BuildContext context) {
-    const Map<String, dynamic> creationParams = <String, dynamic>{};
+    if (!FlutterGromore.isInit) {
+      return const SizedBox(
+        height: 200,
+        child: Center(
+          child: Text("请先初始化SDK"),
+        ),
+      );
+    }
 
     return Platform.isAndroid
         ? PlatformViewLink(
-            viewType: flutterGromoreFeedViewTypeId,
+            viewType: gromoreFeedViewTypeId,
             surfaceFactory:
                 (BuildContext context, PlatformViewController controller) {
               return AndroidViewSurface(
@@ -35,15 +55,20 @@ class _FlutterGromoreFeedViewState extends State<FlutterGromoreFeedView> {
             onCreatePlatformView: (PlatformViewCreationParams params) {
               return PlatformViewsService.initSurfaceAndroidView(
                 id: params.id,
-                viewType: flutterGromoreFeedViewTypeId,
+                viewType: gromoreFeedViewTypeId,
                 layoutDirection: TextDirection.ltr,
-                creationParams: creationParams,
+                creationParams: widget.creationParams.toJson(),
                 creationParamsCodec: const StandardMessageCodec(),
                 onFocus: () {
                   params.onFocusChanged(true);
                 },
               )
                 ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+                ..addOnPlatformViewCreatedListener((id) {
+                  // 注册事件回调
+                  GromoreMethodChannelHandler<GromoreFeedCallback>.register(
+                      "$gromoreFeedViewTypeId/$id", widget.callback);
+                })
                 ..create();
             },
           )

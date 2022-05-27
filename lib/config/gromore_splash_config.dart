@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_gromore/config/gromore_base_config.dart';
 
-class GromoreSplashConfig {
-  /// 唯一标识，创建时自动生成
-  String id;
+/// 开屏广告配置
+class GromoreSplashConfig extends GromoreBaseAdConfig {
 
+  /// 广告id
   final String adUnitId;
 
   /// 如果传入了logo则会在底部显示logo，logo放在android/app/src/main/res/mipmap下，值不需要文件后缀
@@ -36,10 +36,11 @@ class GromoreSplashConfig {
     this.timeout,
     this.buttonType,
     this.downloadType,
-  }) : id = UniqueKey().toString();
+  });
 
+  @override
   Map toJson() {
-    return {
+    Map result =  {
       "id": id,
       "adUnitId": adUnitId,
       "logo": logo,
@@ -50,5 +51,8 @@ class GromoreSplashConfig {
       "buttonType": buttonType,
       "downloadType": downloadType
     };
+    result.removeWhere((key, value) => value == null);
+    return result;
   }
+
 }

@@ -1,41 +1,49 @@
-
 import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gromore/callback/gromore_ad_callback.dart';
-import 'package:flutter_gromore/config/splash.dart';
+import 'package:flutter_gromore/callback/gromore_base_callback.dart';
+import 'package:flutter_gromore/callback/gromore_interstitial_callback.dart';
+import 'package:flutter_gromore/callback/gromore_method_channel_handler.dart';
 import 'package:flutter_gromore/callback/gromore_splash_callback.dart';
+import 'package:flutter_gromore/config/gromore_interstitial_config.dart';
+import 'package:flutter_gromore/config/gromore_splash_config.dart';
 import 'package:flutter_gromore/constants/config.dart';
+import 'package:flutter_gromore/utils/gromore_ad_size.dart';
 
 class FlutterGromore {
-  static const MethodChannel _methodChannel = MethodChannel(methodChannelName);
-  static const EventChannel _eventChannel = EventChannel(eventChannelName);
+  /// channel
+  static const MethodChannel _methodChannel =
+      MethodChannel(gromoreMethodChannelName);
+  static const EventChannel _eventChannel =
+      EventChannel(gromoreEventChannelName);
 
-  // 事件中心，存储事件
-  static Map<String, GromoreAdCallback> eventCenter = {};
+  /// 事件中心，存储事件
+  static final Map<String, GromoreBaseAdCallback> _eventCenter = {};
+
+  /// SDK是否初始化
+  static bool isInit = false;
 
   /// 权限申请
   /// 同时请求：READ_PHONE_STATE, COARSE_LOCATION, FINE_LOCATION, WRITE_EXTERNAL_STORAGE权限
   static Future<void> requestPermissionIfNecessary() async {
-
     if (Platform.isIOS) {
       return;
     }
     await _methodChannel.invokeMethod("requestPermissionIfNecessary");
-
   }
 
+  /// event类事件监听
   static void _handleEventListenter() {
     _eventChannel.receiveBroadcastStream().listen((event) {
       debugPrint(event.toString());
       String? id = event["id"] as String?;
-      if (id != null && id.isNotEmpty && eventCenter[id] != null) {
-
+      if (id != null && id.isNotEmpty && _eventCenter[id] != null) {
         /// 开屏广告事件
-        if (eventCenter[id] is GromoreSplashCallback) {
-          GromoreSplashCallback callback = (eventCenter[id] as GromoreSplashCallback);
+        if (_eventCenter[id] is GromoreSplashCallback) {
+          GromoreSplashCallback callback =
+              (_eventCenter[id] as GromoreSplashCallback);
           callback.exec(event["name"]);
         }
       }
@@ -43,24 +51,47 @@ class FlutterGromore {
   }
 
   /// 初始化SDK
-  static Future<void> initSDK({ required String appId, required String appName, required bool debug }) async {
-    await _methodChannel.invokeMethod("initSDK", {
-      "appId": appId,
-      "appName": appName,
-      "debug": debug
-    });
+  static Future<void> initSDK(
+      {required String appId,
+      required String appName,
+      required bool debug}) async {
+    if (isInit) {
+      return;
+    }
 
+    await _methodChannel.invokeMethod(
+        "initSDK", {"appId": appId, "appName": appName, "debug": debug});
+
+    isInit = true;
     _handleEventListenter();
   }
 
   /// 展示开屏广告
-  static Future<void> showSplash({ required GromoreSplashConfig config, required GromoreAdCallback callback }) async {
-    Map params = config.toJson();
-    params.removeWhere((key, value) => value == null);
+  static Future<void> showSplashAd(
+      {required GromoreSplashConfig config,
+      required GromoreBaseAdCallback callback}) async {
+    assert(isInit);
+
+    config.generateId();
     debugPrint("showSplash ${config.id}");
+    _eventCenter[config.id!] = callback;
 
-    eventCenter[config.id] = callback;
+    await _methodChannel.invokeMethod("showSplashAd", config.toJson());
+  }
 
-    await _methodChannel.invokeMethod("showSplash", params);
+  /// 展示插屏广告
+  static Future<void> showInterstitialAd(
+      {required GromoreInterstitialConfig config,
+      GromoreInterstitialCallback? callback}) async {
+    assert(isInit);
+
+    config.generateId();
+
+    if (callback != null) {
+      GromoreMethodChannelHandler<GromoreInterstitialCallback>.register(
+          "$gromoreInterstitialTypeId/${config.id}", callback);
+    }
+
+    await _methodChannel.invokeMethod("showInterstitialAd", config.toJson());
   }
 }

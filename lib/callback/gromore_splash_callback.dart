@@ -1,7 +1,8 @@
-import 'package:flutter_gromore/callback/gromore_ad_callback.dart';
+import 'package:flutter_gromore/callback/gromore_base_callback.dart';
 import 'package:flutter_gromore/types.dart';
 
-class GromoreSplashCallback extends GromoreAdCallback {
+/// 开屏广告回调
+class GromoreSplashCallback extends GromoreBaseAdCallback {
   /// 广告被点击，肯定有回调
   final GromoreVoidCallback? onAdClicked;
 
@@ -38,8 +39,10 @@ class GromoreSplashCallback extends GromoreAdCallback {
     this.onAdLoadTimeout,
     this.onAdEnd,
     this.onAdShow}) : super();
-  
-  void exec(String callbackName) {
+
+  /// 执行回调
+  @override
+  void exec(String callbackName, [dynamic arguments]) {
     if (callbackName == "onAdClicked" && onAdClicked != null) {
       onAdClicked!();
     } else if (callbackName == "onAdShow" && onAdShow != null) {

@@ -21,6 +21,11 @@ class Utils {
             return dm.heightPixels
         }
 
+        // 屏幕密度
+        fun getDensity(context: Context): Float {
+            return context.resources.displayMetrics.density
+        }
+
         // 状态栏透明
         fun setTranslucent(activity: Activity) {
             val window = activity.window

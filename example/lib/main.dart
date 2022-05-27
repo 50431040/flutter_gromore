@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gromore/callback/gromore_interstitial_callback.dart';
 import 'package:flutter_gromore/callback/gromore_splash_callback.dart';
-import 'package:flutter_gromore/config/splash.dart';
+import 'package:flutter_gromore/config/gromore_interstitial_config.dart';
+import 'package:flutter_gromore/config/gromore_splash_config.dart';
 import 'package:flutter_gromore/flutter_gromore.dart';
+import 'package:flutter_gromore/utils/gromore_ad_size.dart';
 import 'package:flutter_gromore_example/config/config.dart';
 import 'package:flutter_gromore_example/pages/feed_demo.dart';
 
@@ -48,10 +51,9 @@ class _HomePageState extends State<HomePage> {
 
   /// 展示开屏广告
   void showSplashAd() {
-    // SPLASH_ANDROID_ID
-    FlutterGromore.showSplash(
+    FlutterGromore.showSplashAd(
         config: GromoreSplashConfig(
-            adUnitId: SPLASH_ANDROID_ID, logo: "launch_image"),
+            adUnitId: GROMORE_SPLASH_ANDROID_ID, logo: "launch_image"),
         callback: GromoreSplashCallback(onAdShow: () {
           print("callback --- onAdShow");
         }));
@@ -63,32 +65,54 @@ class _HomePageState extends State<HomePage> {
         context, MaterialPageRoute(builder: (context) => const FeedDemo()));
   }
 
+  /// 展示插屏广告
+  void showInterstitialAd() {
+    FlutterGromore.showInterstitialAd(config: GromoreInterstitialConfig(
+      adUnitId: GROMORE_INTERSTITIAL_ANDROID_ID,
+      size: GromoreAdSize.withPercent(
+        MediaQuery.of(context).size.width * 2 / 3,
+        2 / 3
+      )
+    ), callback: GromoreInterstitialCallback(
+      onInterstitialShow: () {
+        print("===== showInterstitialAd success ======");
+      }
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: initSDK,
-            child: const Text("初始化SDK"),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: handleRequestPermission,
-            child: const Text("请求非必要权限"),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: showSplashAd,
-            child: const Text("开屏广告"),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: showFeedAd,
-            child: const Text("信息流广告"),
-          ),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: initSDK,
+              child: const Text("初始化SDK"),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: handleRequestPermission,
+              child: const Text("请求非必要权限"),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: showSplashAd,
+              child: const Text("开屏广告"),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: showFeedAd,
+              child: const Text("信息流广告"),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: showInterstitialAd,
+              child: const Text("插屏广告"),
+            ),
+          ],
+        ),
       ),
     );
   }

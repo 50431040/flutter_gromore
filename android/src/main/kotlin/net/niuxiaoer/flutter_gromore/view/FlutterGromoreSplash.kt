@@ -18,6 +18,7 @@ import net.niuxiaoer.flutter_gromore.event.AdEvent
 import net.niuxiaoer.flutter_gromore.event.AdEventHandler
 import net.niuxiaoer.flutter_gromore.utils.Utils
 
+// Activity实例
 class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdLoadCallback {
 
     private val TAG: String = this::class.java.simpleName
@@ -36,35 +37,34 @@ class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdL
 
     // 初始化广告
     private fun initAd() {
-        id = intent.getStringExtra("id") ?: ""
+        var tmp = intent.getStringExtra("id")
+        require(tmp != null)
+        id = tmp
+
         val adUnitId = intent.getStringExtra("adUnitId")
+        require(adUnitId != null && adUnitId.isNotEmpty())
 
-        Log.d(TAG, "initAd $id")
+        mTTSplashAd = GMSplashAd(this, adUnitId)
+        mTTSplashAd?.setAdSplashListener(this)
 
-        if (adUnitId?.length ?: 0 > 0) {
-            mTTSplashAd = GMSplashAd(this, adUnitId)
-            mTTSplashAd?.setAdSplashListener(this)
+        val muted = intent.getBooleanExtra("muted", false)
+        val preload = intent.getBooleanExtra("preload", true)
+        val volume = intent.getFloatExtra("volume", 1f)
+        val timeout = intent.getIntExtra("timeout", 3000)
+        val buttonType = intent.getIntExtra("buttonType", TTAdConstant.SPLASH_BUTTON_TYPE_FULL_SCREEN)
+        val downloadType = intent.getIntExtra("downloadType", TTAdConstant.DOWNLOAD_TYPE_POPUP)
 
-            val muted = intent.getBooleanExtra("muted", false)
-            val preload = intent.getBooleanExtra("preload", true)
-            val volume = intent.getFloatExtra("volume", 1f)
-            val timeout = intent.getIntExtra("timeout", 3000)
-            val buttonType = intent.getIntExtra("buttonType", TTAdConstant.SPLASH_BUTTON_TYPE_FULL_SCREEN)
-            val downloadType = intent.getIntExtra("downloadType", TTAdConstant.DOWNLOAD_TYPE_POPUP)
+        val adSlot = GMAdSlotSplash.Builder()
+                .setImageAdSize(containerWidth, containerHeight)
+                .setSplashPreLoad(preload)
+                .setMuted(muted)
+                .setVolume(volume)
+                .setTimeOut(timeout)
+                .setSplashButtonType(buttonType)
+                .setDownloadType(downloadType)
+                .build()
 
-            val adSlot = GMAdSlotSplash.Builder()
-                    .setImageAdSize(containerWidth, containerHeight)
-                    .setSplashPreLoad(preload)
-                    .setMuted(muted)
-                    .setVolume(volume)
-                    .setTimeOut(timeout)
-                    .setSplashButtonType(buttonType)
-                    .setDownloadType(downloadType)
-                    .build()
-
-            mTTSplashAd?.loadAd(adSlot, this)
-
-        }
+        mTTSplashAd?.loadAd(adSlot, this)
     }
 
     // 初始化
@@ -88,25 +88,25 @@ class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdL
     private fun handleLogo() {
         val logo = intent.getStringExtra("logo")
 
-        // 传入了logo参数
-        if (logo != null && logo.isNotEmpty()) {
-            val id = getMipmapId(logo)
+        val id = logo.takeIf {
+            logo != null && logo.isNotEmpty()
+        }?.let {
+            getMipmapId(it)
+        }
 
-            // 资源存在
-            if (id > 0) {
-                logoContainer.apply {
-                    visibility = View.VISIBLE
-                    setImageResource(id)
-                }
-                containerHeight -= logoContainer.layoutParams.height
-            } else {
-                logoContainer.visibility = View.GONE
-                Log.e(TAG, "Logo 名称不匹配或不在 mipmap 文件夹下，展示全屏")
+        if (id != null && id > 0) {
+            // 找得到图片资源，设置
+            logoContainer.apply {
+                visibility = View.VISIBLE
+                setImageResource(id)
             }
 
+            containerHeight -= logoContainer.layoutParams.height
         } else {
             logoContainer.visibility = View.GONE
+            Log.e(TAG, "Logo 名称不匹配或不在 mipmap 文件夹下，展示全屏")
         }
+
     }
 
     /**
@@ -114,14 +114,10 @@ class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdL
      * @param resName 资源名称，不带后缀
      * @return 返回资源id
      */
-    private fun getMipmapId(resName: String): Int {
-        return resources.getIdentifier(resName, "mipmap", packageName)
-    }
+    private fun getMipmapId(resName: String) = resources.getIdentifier(resName, "mipmap", packageName)
 
     // 发送事件
-    private fun sendEvent(msg: String) {
-        AdEventHandler.getInstance().sendEvent(AdEvent(id, msg))
-    }
+    private fun sendEvent(msg: String) = AdEventHandler.getInstance().sendEvent(AdEvent(id, msg))
 
     private fun finishActivity() {
         finish()

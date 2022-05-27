@@ -8,5 +8,8 @@ class FlutterGromoreConstants {
 
         // viewTypeId
         const val feedViewTypeId = "flutter_gromore_feed"
+
+        // 插屏
+        const val interstitialTypeId = "flutter_gromore_interstitial"
     }
 }
