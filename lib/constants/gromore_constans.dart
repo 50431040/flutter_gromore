@@ -9,4 +9,7 @@ class FlutterGromoreConstants {
 
   /// 插屏广告注册名
   static const interstitialTypeId = "flutter_gromore_interstitial";
+
+  // 开屏广告注册名
+  static const splashTypeId = "flutter_gromore_splash";
 }

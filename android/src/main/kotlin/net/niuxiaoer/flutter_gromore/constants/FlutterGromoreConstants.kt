@@ -11,5 +11,8 @@ class FlutterGromoreConstants {
 
         // 插屏
         const val interstitialTypeId = "flutter_gromore_interstitial"
+
+        // 开屏
+        const val splashTypeId = "flutter_gromore_splash"
     }
 }

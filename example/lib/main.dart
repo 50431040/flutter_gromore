@@ -7,6 +7,7 @@ import 'package:flutter_gromore/flutter_gromore.dart';
 import 'package:flutter_gromore/utils/gromore_ad_size.dart';
 import 'package:flutter_gromore_example/config/config.dart';
 import 'package:flutter_gromore_example/pages/feed_demo.dart';
+import 'package:flutter_gromore_example/pages/custom_splash.dart';
 
 void main() {
   runApp(const MyApp());
@@ -59,6 +60,12 @@ class _HomePageState extends State<HomePage> {
         }));
   }
 
+  /// 展示自定义布局开屏广告
+  void showSplashAdView() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const CustomSplash()));
+  }
+
   /// 展示信息流广告
   void showFeedAd() {
     Navigator.push(
@@ -100,6 +107,11 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: showSplashAd,
               child: const Text("开屏广告"),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: showSplashAdView,
+              child: const Text("开屏广告（自定义布局）"),
             ),
             const SizedBox(height: 20),
             ElevatedButton(

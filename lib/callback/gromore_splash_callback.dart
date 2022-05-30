@@ -27,7 +27,7 @@ class GromoreSplashCallback extends GromoreBaseAdCallback {
   /// 开屏广告加载超时
   final GromoreVoidCallback? onAdLoadTimeout;
 
-  /// 开屏广告结束，这个时候会销毁广告
+  /// 开屏广告结束，这个时候会销毁广告（点击跳过、倒计时结束或渲染错误等 理应隐藏广告 的情况都会触发此回调，建议统一在此回调处理路由跳转等逻辑）
   final GromoreVoidCallback? onAdEnd;
 
   GromoreSplashCallback({this.onAdClicked,

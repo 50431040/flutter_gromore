@@ -11,6 +11,7 @@ import io.flutter.plugin.common.MethodChannel
 import net.niuxiaoer.flutter_gromore.constants.FlutterGromoreConstants
 import net.niuxiaoer.flutter_gromore.event.AdEventHandler
 import net.niuxiaoer.flutter_gromore.factory.FlutterGromoreFeedFactory
+import net.niuxiaoer.flutter_gromore.factory.FlutterGromoreSplashFactory
 
 /** FlutterGromorePlugin */
 class FlutterGromorePlugin: FlutterPlugin, ActivityAware {
@@ -35,6 +36,10 @@ class FlutterGromorePlugin: FlutterPlugin, ActivityAware {
     flutterPluginBinding
             .platformViewRegistry
             .registerViewFactory(FlutterGromoreConstants.feedViewTypeId, FlutterGromoreFeedFactory(binaryMessenger))
+
+    flutterPluginBinding
+            .platformViewRegistry
+            .registerViewFactory(FlutterGromoreConstants.splashTypeId, FlutterGromoreSplashFactory(binaryMessenger))
   }
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
