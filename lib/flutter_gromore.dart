@@ -9,15 +9,14 @@ import 'package:flutter_gromore/callback/gromore_method_channel_handler.dart';
 import 'package:flutter_gromore/callback/gromore_splash_callback.dart';
 import 'package:flutter_gromore/config/gromore_interstitial_config.dart';
 import 'package:flutter_gromore/config/gromore_splash_config.dart';
-import 'package:flutter_gromore/constants/config.dart';
-import 'package:flutter_gromore/utils/gromore_ad_size.dart';
+import 'package:flutter_gromore/constants/gromore_constans.dart';
 
 class FlutterGromore {
   /// channel
   static const MethodChannel _methodChannel =
-      MethodChannel(gromoreMethodChannelName);
+      MethodChannel(FlutterGromoreConstants.methodChannelName);
   static const EventChannel _eventChannel =
-      EventChannel(gromoreEventChannelName);
+      EventChannel(FlutterGromoreConstants.eventChannelName);
 
   /// 事件中心，存储事件
   static final Map<String, GromoreBaseAdCallback> _eventCenter = {};
@@ -89,7 +88,7 @@ class FlutterGromore {
 
     if (callback != null) {
       GromoreMethodChannelHandler<GromoreInterstitialCallback>.register(
-          "$gromoreInterstitialTypeId/${config.id}", callback);
+          "${FlutterGromoreConstants.interstitialTypeId}/${config.id}", callback);
     }
 
     await _methodChannel.invokeMethod("showInterstitialAd", config.toJson());

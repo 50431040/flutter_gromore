@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gromore/callback/gromore_feed_callback.dart';
 import 'package:flutter_gromore/callback/gromore_method_channel_handler.dart';
 import 'package:flutter_gromore/config/gromore_feed_config.dart';
+import 'package:flutter_gromore/constants/gromore_constans.dart';
 
-import 'package:flutter_gromore/constants/config.dart';
 import 'package:flutter_gromore/flutter_gromore.dart';
 
 /// 信息流广告组件
@@ -42,7 +42,7 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
 
     return Platform.isAndroid
         ? PlatformViewLink(
-            viewType: gromoreFeedViewTypeId,
+            viewType: FlutterGromoreConstants.feedViewTypeId,
             surfaceFactory:
                 (BuildContext context, PlatformViewController controller) {
               return AndroidViewSurface(
@@ -55,7 +55,7 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
             onCreatePlatformView: (PlatformViewCreationParams params) {
               return PlatformViewsService.initSurfaceAndroidView(
                 id: params.id,
-                viewType: gromoreFeedViewTypeId,
+                viewType: FlutterGromoreConstants.feedViewTypeId,
                 layoutDirection: TextDirection.ltr,
                 creationParams: widget.creationParams.toJson(),
                 creationParamsCodec: const StandardMessageCodec(),
@@ -67,7 +67,7 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
                 ..addOnPlatformViewCreatedListener((id) {
                   // 注册事件回调
                   GromoreMethodChannelHandler<GromoreFeedCallback>.register(
-                      "$gromoreFeedViewTypeId/$id", widget.callback);
+                      "${FlutterGromoreConstants.feedViewTypeId}/$id", widget.callback);
                 })
                 ..create();
             },

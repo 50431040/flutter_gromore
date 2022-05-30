@@ -1,0 +1,12 @@
+/// 相关常量
+class FlutterGromoreConstants {
+  /// channel
+  static const methodChannelName = "flutter_gromore";
+  static const eventChannelName = "flutter_gromore_event";
+
+  /// 信息流注册名
+  static const feedViewTypeId = "flutter_gromore_feed";
+
+  /// 插屏广告注册名
+  static const interstitialTypeId = "flutter_gromore_interstitial";
+}
