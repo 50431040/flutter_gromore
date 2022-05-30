@@ -62,24 +62,16 @@ class FlutterGromoreFeed(private val context: Context, viewId: Int, private val 
     }
 
     override fun initAd() {
-        val adUnitId: String
-        var count: Int
-        val width: Int
-        val height: Int
-        var adStyleType: Int
-
         require(creationParams != null)
 
-        creationParams.apply {
-            adUnitId = get("adUnitId") as String
-            count = get("count") as? Int ?: 3
-            // 默认宽度占满
-            width = get("width") as? Int ?: Utils.getScreenWidthInPx(context)
-            // 0为高度选择自适应参数
-            height = get("height") as? Int ?: 0
-            // 默认为模板信息流
-            adStyleType = get("type") as? Int ?: AdSlot.TYPE_EXPRESS_AD
-        }
+        val adUnitId = creationParams["adUnitId"] as String
+        var count = creationParams["count"] as? Int ?: 3
+        // 默认宽度占满
+        val width = creationParams["width"] as? Int ?: Utils.getScreenWidthInPx(context)
+        // 0为高度选择自适应参数
+        val height = creationParams["height"] as? Int ?: 0
+        // 默认为模板信息流
+        var adStyleType = creationParams["type"] as? Int ?: AdSlot.TYPE_EXPRESS_AD
 
         require(adUnitId.isNotEmpty())
         require(count > 0)
