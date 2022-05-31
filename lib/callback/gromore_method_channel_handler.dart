@@ -5,19 +5,19 @@ import 'package:flutter_gromore/callback/gromore_base_callback.dart';
 /// T 继承自事件回调基类
 class GromoreMethodChannelHandler<T extends GromoreBaseAdCallback> {
   final MethodChannel _channel;
-  final T feedCallback;
+  final T _callback;
 
-  GromoreMethodChannelHandler(String channelName, this.feedCallback)
+  GromoreMethodChannelHandler(String channelName, this._callback)
       : _channel = MethodChannel(channelName) {
     // 注册事件回调
     _channel.setMethodCallHandler(_onMethodCall);
     print("====== GromoreMethodChannelHandler register $channelName =====");
   }
 
-  GromoreMethodChannelHandler.register(String channelName, T feedCallback)
-      : this(channelName, feedCallback);
+  GromoreMethodChannelHandler.register(String channelName, T callback)
+      : this(channelName, callback);
 
   Future<dynamic> _onMethodCall(MethodCall call) async {
-    feedCallback.exec(call.method, call.arguments);
+    _callback.exec(call.method, call.arguments);
   }
 }
