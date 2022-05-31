@@ -13,16 +13,16 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
   }
   
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    let args = call.arguments as? Dictionary<String,Any>
+    let args = call.arguments as! Dictionary<String, Any>
     switch call.method {
     case "getPlatformVersion":
       result("iOS " + UIDevice.current.systemVersion)
     case "requestIDFA":
       requestIDFA(result: result)
     case "initSDK":
-      initSDK(appId: args!["appId"] as! String,result: result)
+      initSDK(appId: args["appId"] as! String,result: result)
     case "showSplashAd":
-      showSplashAd(config: args!["config"] as! Dictionary<String, Any>)
+        showSplashAd(args: args)
     case "showInterstitialAd":
       print("showInterstitialAd")
     default:
@@ -52,8 +52,7 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     result(true)
   }
   
-  private func showSplashAd(config: Dictionary<String, Any>){
-//    FlutterGromoreSplash().initAd(config: config)
+  private func showSplashAd(args: Dictionary<String, Any>){
+    FlutterGromoreSplash().initAd(args: args)
   }
 }
-

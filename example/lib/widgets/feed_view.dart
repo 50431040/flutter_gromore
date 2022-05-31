@@ -23,7 +23,7 @@ class _FeedViewState extends State<FeedView>
       height: _height,
       child: GromoreFeedView(
           creationParams:
-              GromoreFeedConfig(adUnitId: GROMORE_FEED_ANDROID_ID),
+              GromoreFeedConfig(adUnitId: GoMoreAdConfig.feedId),
           callback: GromoreFeedCallback(
             onRenderSuccess: (double height) {
               print("GromoreFeedView | onRenderSuccess | $height");

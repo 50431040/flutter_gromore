@@ -3,11 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		17AD5EED28462183006752B8 /* ABUAdBaiduAdapter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17AD5EEA28462183006752B8 /* ABUAdBaiduAdapter.framework */; };
+		17AD5EEE28462183006752B8 /* ABUAdGdtAdapter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17AD5EEB28462183006752B8 /* ABUAdGdtAdapter.framework */; };
+		17AD5EEF28462183006752B8 /* ABUAdCsjAdapter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17AD5EEC28462183006752B8 /* ABUAdCsjAdapter.framework */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -32,6 +35,9 @@
 /* Begin PBXFileReference section */
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		17AD5EEA28462183006752B8 /* ABUAdBaiduAdapter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ABUAdBaiduAdapter.framework; path = Frameworks/ABUAdBaiduAdapter.framework; sourceTree = "<group>"; };
+		17AD5EEB28462183006752B8 /* ABUAdGdtAdapter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ABUAdGdtAdapter.framework; path = Frameworks/ABUAdGdtAdapter.framework; sourceTree = "<group>"; };
+		17AD5EEC28462183006752B8 /* ABUAdCsjAdapter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ABUAdCsjAdapter.framework; path = Frameworks/ABUAdCsjAdapter.framework; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		589779E9736815D5BDB19260 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		5BF2230F06946462ABFF2BF9 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
@@ -54,6 +60,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17AD5EED28462183006752B8 /* ABUAdBaiduAdapter.framework in Frameworks */,
+				17AD5EEE28462183006752B8 /* ABUAdGdtAdapter.framework in Frameworks */,
+				17AD5EEF28462183006752B8 /* ABUAdCsjAdapter.framework in Frameworks */,
 				B7643A6A5D52E3584B3053B7 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -64,6 +73,9 @@
 		384F25EBA87238D10D37BF30 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				17AD5EEA28462183006752B8 /* ABUAdBaiduAdapter.framework */,
+				17AD5EEC28462183006752B8 /* ABUAdCsjAdapter.framework */,
+				17AD5EEB28462183006752B8 /* ABUAdGdtAdapter.framework */,
 				C59A0BE55DE9ED70F4C7770F /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
@@ -121,7 +133,6 @@
 				5BF2230F06946462ABFF2BF9 /* Pods-Runner.release.xcconfig */,
 				8BF2B142A280E6BFC5E5D5F0 /* Pods-Runner.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -375,9 +386,97 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = net.niuxiaoer.flutterGromoreExample;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/ABUAdCsjAdapter.framework/ABUAdCsjAdapter",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/ABUAdBaiduAdapter.framework/ABUAdBaiduAdapter",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/ABUAdGdtAdapter.framework/ABUAdGdtAdapter",
+					"-l\"bz2\"",
+					"-l\"c++\"",
+					"-l\"c++abi\"",
+					"-l\"iconv\"",
+					"-l\"resolv\"",
+					"-l\"resolv.9\"",
+					"-l\"sqlite3\"",
+					"-l\"xml2\"",
+					"-l\"z\"",
+					"-framework",
+					"\"ABUAdSDK\"",
+					"-framework",
+					"\"AVFoundation\"",
+					"-framework",
+					"\"Accelerate\"",
+					"-framework",
+					"\"AdSupport\"",
+					"-framework",
+					"\"AudioToolbox\"",
+					"-framework",
+					"\"BUAdSDK\"",
+					"-framework",
+					"\"BUCNAuxiliary\"",
+					"-framework",
+					"\"BUFoundation\"",
+					"-framework",
+					"\"BURelyFoundation\"",
+					"-framework",
+					"\"CoreFoundation\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreImage\"",
+					"-framework",
+					"\"CoreLocation\"",
+					"-framework",
+					"\"CoreMedia\"",
+					"-framework",
+					"\"CoreMotion\"",
+					"-framework",
+					"\"CoreServices\"",
+					"-framework",
+					"\"CoreTelephony\"",
+					"-framework",
+					"\"CoreText\"",
+					"-framework",
+					"\"ImageIO\"",
+					"-framework",
+					"\"JavaScriptCore\"",
+					"-framework",
+					"\"MapKit\"",
+					"-framework",
+					"\"MediaPlayer\"",
+					"-framework",
+					"\"MobileCoreServices\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"StoreKit\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"WebKit\"",
+					"-framework",
+					"\"flutter_gromore\"",
+					"-weak_framework",
+					"\"AppTrackingTransparency\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.niuxiaoer.niuxiaoer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -485,7 +584,8 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -499,9 +599,97 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = net.niuxiaoer.flutterGromoreExample;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/ABUAdCsjAdapter.framework/ABUAdCsjAdapter",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/ABUAdBaiduAdapter.framework/ABUAdBaiduAdapter",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/ABUAdGdtAdapter.framework/ABUAdGdtAdapter",
+					"-l\"bz2\"",
+					"-l\"c++\"",
+					"-l\"c++abi\"",
+					"-l\"iconv\"",
+					"-l\"resolv\"",
+					"-l\"resolv.9\"",
+					"-l\"sqlite3\"",
+					"-l\"xml2\"",
+					"-l\"z\"",
+					"-framework",
+					"\"ABUAdSDK\"",
+					"-framework",
+					"\"AVFoundation\"",
+					"-framework",
+					"\"Accelerate\"",
+					"-framework",
+					"\"AdSupport\"",
+					"-framework",
+					"\"AudioToolbox\"",
+					"-framework",
+					"\"BUAdSDK\"",
+					"-framework",
+					"\"BUCNAuxiliary\"",
+					"-framework",
+					"\"BUFoundation\"",
+					"-framework",
+					"\"BURelyFoundation\"",
+					"-framework",
+					"\"CoreFoundation\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreImage\"",
+					"-framework",
+					"\"CoreLocation\"",
+					"-framework",
+					"\"CoreMedia\"",
+					"-framework",
+					"\"CoreMotion\"",
+					"-framework",
+					"\"CoreServices\"",
+					"-framework",
+					"\"CoreTelephony\"",
+					"-framework",
+					"\"CoreText\"",
+					"-framework",
+					"\"ImageIO\"",
+					"-framework",
+					"\"JavaScriptCore\"",
+					"-framework",
+					"\"MapKit\"",
+					"-framework",
+					"\"MediaPlayer\"",
+					"-framework",
+					"\"MobileCoreServices\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"StoreKit\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"WebKit\"",
+					"-framework",
+					"\"flutter_gromore\"",
+					"-weak_framework",
+					"\"AppTrackingTransparency\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.niuxiaoer.niuxiaoer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -518,9 +706,97 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = net.niuxiaoer.flutterGromoreExample;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/ABUAdCsjAdapter.framework/ABUAdCsjAdapter",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/ABUAdBaiduAdapter.framework/ABUAdBaiduAdapter",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/ABUAdGdtAdapter.framework/ABUAdGdtAdapter",
+					"-l\"bz2\"",
+					"-l\"c++\"",
+					"-l\"c++abi\"",
+					"-l\"iconv\"",
+					"-l\"resolv\"",
+					"-l\"resolv.9\"",
+					"-l\"sqlite3\"",
+					"-l\"xml2\"",
+					"-l\"z\"",
+					"-framework",
+					"\"ABUAdSDK\"",
+					"-framework",
+					"\"AVFoundation\"",
+					"-framework",
+					"\"Accelerate\"",
+					"-framework",
+					"\"AdSupport\"",
+					"-framework",
+					"\"AudioToolbox\"",
+					"-framework",
+					"\"BUAdSDK\"",
+					"-framework",
+					"\"BUCNAuxiliary\"",
+					"-framework",
+					"\"BUFoundation\"",
+					"-framework",
+					"\"BURelyFoundation\"",
+					"-framework",
+					"\"CoreFoundation\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreImage\"",
+					"-framework",
+					"\"CoreLocation\"",
+					"-framework",
+					"\"CoreMedia\"",
+					"-framework",
+					"\"CoreMotion\"",
+					"-framework",
+					"\"CoreServices\"",
+					"-framework",
+					"\"CoreTelephony\"",
+					"-framework",
+					"\"CoreText\"",
+					"-framework",
+					"\"ImageIO\"",
+					"-framework",
+					"\"JavaScriptCore\"",
+					"-framework",
+					"\"MapKit\"",
+					"-framework",
+					"\"MediaPlayer\"",
+					"-framework",
+					"\"MobileCoreServices\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"StoreKit\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"WebKit\"",
+					"-framework",
+					"\"flutter_gromore\"",
+					"-weak_framework",
+					"\"AppTrackingTransparency\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.niuxiaoer.niuxiaoer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
