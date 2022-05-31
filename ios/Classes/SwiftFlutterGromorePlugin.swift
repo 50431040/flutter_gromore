@@ -5,9 +5,11 @@ import ABUAdSDK
 
 public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "flutter_gromore", binaryMessenger: registrar.messenger())
+      let channel = FlutterMethodChannel(name: FlutterGromoreContants.methodChannelName, binaryMessenger: registrar.messenger())
     let instance = SwiftFlutterGromorePlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
+      registrar.register(FlutterGromoreFactory(messenger: registrar.messenger()), withId: FlutterGromoreContants.feedViewTypeId)
+    
   }
   
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
