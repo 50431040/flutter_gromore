@@ -19,6 +19,7 @@ Pod::Spec.new do |s|
 
   # 引入 GroMore 基础 SDK
   s.vendored_frameworks = 'Frameworks/ABUAdSDK.framework'
+  s.dependency 'BURelyFoundation'
   s.frameworks = 'SystemConfiguration', 'CoreGraphics', 'Foundation', 'UIKit', 'AdSupport', 'StoreKit', 'QuartzCore', 'CoreTelephony', 'MobileCoreServices', 'Accelerate', 'AVFoundation', 'WebKit'
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
