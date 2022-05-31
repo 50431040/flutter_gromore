@@ -1,12 +1,21 @@
 PODS:
-  - BURelyFoundation (0.0.1.58):
-    - BURelyFoundation/HM (= 0.0.1.58)
-    - BURelyFoundation/NETWork (= 0.0.1.58)
-  - BURelyFoundation/HM (0.0.1.58)
-  - BURelyFoundation/NETWork (0.0.1.58)
+  - Ads-CN (4.3.0.5):
+    - Ads-CN/BUAdSDK (= 4.3.0.5)
+  - Ads-CN/BUAdSDK (4.3.0.5):
+    - Ads-CN/BUFoundation
+    - Ads-CN/Domestic
+  - Ads-CN/BUFoundation (4.3.0.5):
+    - BURelyFoundation (= 0.0.1.47)
+  - Ads-CN/Domestic (4.3.0.5):
+    - Ads-CN/BUFoundation
+  - BURelyFoundation (0.0.1.47):
+    - BURelyFoundation/HM (= 0.0.1.47)
+    - BURelyFoundation/NETWork (= 0.0.1.47)
+  - BURelyFoundation/HM (0.0.1.47)
+  - BURelyFoundation/NETWork (0.0.1.47)
   - Flutter (1.0.0)
   - flutter_gromore (0.0.1):
-    - BURelyFoundation
+    - Ads-CN
     - Flutter
 
 DEPENDENCIES:
@@ -15,6 +24,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Ads-CN
     - BURelyFoundation
 
 EXTERNAL SOURCES:
@@ -24,9 +34,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_gromore/ios"
 
 SPEC CHECKSUMS:
-  BURelyFoundation: f529322f9e93cf8cc0b4539e447aff77a8ff34de
+  Ads-CN: b6b1294ba4e938168475ceacc786f7263d8b9747
+  BURelyFoundation: 5e7f811867d3ee91ed20e426c505e31c55674256
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  flutter_gromore: ab6a800ad221337c4e9fef2025e36bc5ca0a8966
+  flutter_gromore: 45ce1416879a41b90ecfdf6443e2d700b1523f46
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
