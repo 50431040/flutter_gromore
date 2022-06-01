@@ -53,6 +53,6 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
   }
   
   private func showSplashAd(args: Dictionary<String, Any>){
-    FlutterGromoreSplash().initAd(args: args)
+//    FlutterGromoreSplash().initAd(args: args)
   }
 }

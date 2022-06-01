@@ -28,7 +28,7 @@ class GoMoreAdConfig {
     if(Platform.isAndroid){
       return '946996514';
     }
-    return '946996513';
+    return '947047858';
   }
 
   /// 插屏广告ID

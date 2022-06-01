@@ -40,9 +40,11 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
       );
     }
 
+    String viewType = FlutterGromoreConstants.feedViewTypeId;
+
     return Platform.isAndroid
         ? PlatformViewLink(
-            viewType: FlutterGromoreConstants.feedViewTypeId,
+            viewType: viewType,
             surfaceFactory:
                 (BuildContext context, PlatformViewController controller) {
               return AndroidViewSurface(
@@ -55,7 +57,7 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
             onCreatePlatformView: (PlatformViewCreationParams params) {
               return PlatformViewsService.initSurfaceAndroidView(
                 id: params.id,
-                viewType: FlutterGromoreConstants.feedViewTypeId,
+                viewType: viewType,
                 layoutDirection: TextDirection.ltr,
                 creationParams: widget.creationParams.toJson(),
                 creationParamsCodec: const StandardMessageCodec(),
@@ -67,11 +69,19 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
                 ..addOnPlatformViewCreatedListener((id) {
                   // 注册事件回调
                   GromoreMethodChannelHandler<GromoreFeedCallback>.register(
-                      "${FlutterGromoreConstants.feedViewTypeId}/$id", widget.callback);
+                      "$viewType/$id", widget.callback);
                 })
                 ..create();
             },
           )
-        : Container();
+        : UiKitView(
+            viewType: viewType,
+            creationParams: widget.creationParams.toJson(),
+            creationParamsCodec: const StandardMessageCodec(),
+            onPlatformViewCreated: (id) {
+              // 注册事件回调
+              GromoreMethodChannelHandler<GromoreFeedCallback>.register(
+                  "$viewType/$id", widget.callback);
+            });
   }
 }

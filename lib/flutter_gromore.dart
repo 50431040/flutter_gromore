@@ -62,7 +62,8 @@ class FlutterGromore {
         "initSDK", {"appId": appId, "appName": appName, "debug": debug});
 
     isInit = true;
-    _handleEventListenter();
+    print("========== initSDK =========");
+    // _handleEventListenter();
   }
 
   /// 展示开屏广告

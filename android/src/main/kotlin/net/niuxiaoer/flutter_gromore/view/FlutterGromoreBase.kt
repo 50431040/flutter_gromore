@@ -13,7 +13,7 @@ abstract class FlutterGromoreBase(messenger: BinaryMessenger, channelName: Strin
     private val methodChannel = MethodChannel(messenger, channelName)
 
     // 初始化广告
-    abstract fun initAd();
+    abstract fun initAd()
 
     // 发送事件消息
     protected fun postMessage(method: String, arguments: Map<String, Any?>? = null) {
