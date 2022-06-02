@@ -59,8 +59,7 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     }
     
     private func showSplashAd(args: [String: Any]){
-        let splashView: FlutterGromoreSplash = FlutterGromoreSplash()
-        splashView.initAd(args: args)
+        let splashView: FlutterGromoreSplash = FlutterGromoreSplash(args)
         UIApplication.shared.keyWindow?.addSubview(splashView)
     }
 }

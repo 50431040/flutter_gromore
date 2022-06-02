@@ -11,9 +11,19 @@ class FlutterGromoreSplash: UIView, ABUSplashAdDelegate {
     private var eventId: String?
     private var splashAd: ABUSplashAd?
     
-    public func initAd(args: Dictionary<String, Any>) {
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
+    init(_ args: [String: Any]) {
         eventId = args["id"] as? String
-        // 初始化开屏广告
+        super.init(frame: CGRect())
+        initAd(args: args)
+    }
+    
+    /// 初始化广告
+    private func initAd(args: [String: Any]) {
+        // 配置开屏广告
         splashAd = ABUSplashAd(adUnitID: args["adUnitId"] as! String)
         splashAd?.delegate = self
         splashAd?.rootViewController = Utils.getVC()
@@ -22,23 +32,28 @@ class FlutterGromoreSplash: UIView, ABUSplashAdDelegate {
         // 展示 logo
         let logo: String = args["logo"] as? String ?? ""
         if !logo.isEmpty {
-            // logo 图片
-            let logoImage: UIView = UIImageView(image: UIImage(named: logo))
-            // 容器
-            let screenSize: CGSize = UIScreen.main.bounds.size
-            let logoContainerWidth: CGFloat = screenSize.width
-            let logoContainerHeight: CGFloat = screenSize.height * 0.15
-            let logoContainer: UIView = UIView(frame: CGRect(x: 0, y: 0, width: logoContainerWidth, height: logoContainerHeight))
-            logoContainer.backgroundColor = UIColor.white
-            // 居中
-            logoImage.contentMode = UIView.ContentMode.center
-            logoImage.center = logoContainer.center
-            // 设置到开屏广告底部
-            logoContainer.addSubview(logoImage)
-            splashAd?.customBottomView = logoContainer
+            splashAd?.customBottomView = generateLogoContainer(name: logo)
         }
         // 加载开屏广告
         splashAd?.loadData()
+    }
+    
+    /// 创建 logo 容器
+    private func generateLogoContainer(name: String) -> UIView {
+        // logo 图片
+        let logoImage: UIView = UIImageView(image: UIImage(named: name))
+        // 容器
+        let screenSize: CGSize = UIScreen.main.bounds.size
+        let logoContainerWidth: CGFloat = screenSize.width
+        let logoContainerHeight: CGFloat = screenSize.height * 0.15
+        let logoContainer: UIView = UIView(frame: CGRect(x: 0, y: 0, width: logoContainerWidth, height: logoContainerHeight))
+        logoContainer.backgroundColor = UIColor.white
+        // 居中
+        logoImage.contentMode = UIView.ContentMode.center
+        logoImage.center = logoContainer.center
+        // 设置到开屏广告底部
+        logoContainer.addSubview(logoImage)
+        return logoContainer
     }
     
     private func sendEvent(_ message: String) {
@@ -56,6 +71,7 @@ class FlutterGromoreSplash: UIView, ABUSplashAdDelegate {
     /// 开屏广告加载失败
     func splashAd(_ splashAd: ABUSplashAd, didFailWithError error: Error?) {
         sendEvent("onSplashAdLoadFail")
+        sendEvent("onAdEnd")
     }
     
     /// 开屏广告关闭
@@ -72,6 +88,7 @@ class FlutterGromoreSplash: UIView, ABUSplashAdDelegate {
     /// 开屏广告显示失败
     func splashAdDidShowFailed(_ splashAd: ABUSplashAd, error: Error) {
         sendEvent("onAdShowFail")
+        sendEvent("onAdEnd")
     }
     
     ///点击了开屏广告
@@ -81,17 +98,8 @@ class FlutterGromoreSplash: UIView, ABUSplashAdDelegate {
     
     /// 开屏广告倒计时结束
     func splashAdCountdown(toZero splashAd: ABUSplashAd) {
-        print("###debug countdown")
-        sendEvent("onAdEnd")
+        sendEvent("onAdDismiss")
     }
     
-    /// 即将展示开屏广告的详情页
-    func splashAdWillPresentFullScreenModal(_ splashAd: ABUSplashAd) {
-        // TODO: 点击广告详情页回调
-    }
-    
-    /// 开屏广告的详情页已关闭
-    func splashAdWillDismissFullScreenModal(_ splashAd: ABUSplashAd) {
-        // TODO: 点击广告详情页回调
-    }
+    // TODO: 安卓端还有 onAdLoadTimeout、onAdSkip
 }
