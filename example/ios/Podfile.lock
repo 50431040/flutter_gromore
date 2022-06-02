@@ -8,6 +8,7 @@ PODS:
     - BURelyFoundation (= 0.0.1.47)
   - Ads-CN/Domestic (4.3.0.5):
     - Ads-CN/BUFoundation
+  - BaiduMobAdSDK (4.861)
   - BURelyFoundation (0.0.1.47):
     - BURelyFoundation/HM (= 0.0.1.47)
     - BURelyFoundation/NETWork (= 0.0.1.47)
@@ -19,12 +20,14 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - BaiduMobAdSDK
   - Flutter (from `Flutter`)
   - flutter_gromore (from `.symlinks/plugins/flutter_gromore/ios`)
 
 SPEC REPOS:
   trunk:
     - Ads-CN
+    - BaiduMobAdSDK
     - BURelyFoundation
 
 EXTERNAL SOURCES:
@@ -35,10 +38,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Ads-CN: b6b1294ba4e938168475ceacc786f7263d8b9747
+  BaiduMobAdSDK: 23e9ca38da6685dd35bb1a32540ff20353ec2361
   BURelyFoundation: 5e7f811867d3ee91ed20e426c505e31c55674256
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   flutter_gromore: 45ce1416879a41b90ecfdf6443e2d700b1523f46
 
-PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+PODFILE CHECKSUM: ad2886bf68a2deaa1c2a16cce47e4fa10bca4d7a
 
 COCOAPODS: 1.11.3
