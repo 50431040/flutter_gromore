@@ -30,7 +30,7 @@ class FlutterGromoreInterstitial(private val activity: Activity,
     override fun initAd() {
         val adUnitId = arguments["adUnitId"] as? String
         val width = arguments["width"] as? Double
-        val height = arguments["width"] as? Double
+        val height = arguments["height"] as? Double
 
         require(adUnitId != null && adUnitId.isNotEmpty() && width != null && height != null)
 
