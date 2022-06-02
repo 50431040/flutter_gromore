@@ -21,8 +21,8 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         switch call.method {
         case "getPlatformVersion":
             result("iOS " + UIDevice.current.systemVersion)
-        case "requestIDFA":
-            requestIDFA(result: result)
+        case "requestATT":
+            requestATT(result: result)
         case "initSDK":
             initSDK(appId: args["appId"] as! String,result: result)
         case "showSplashAd":
@@ -35,7 +35,7 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     }
     
     // 请求广告标识符
-    private func requestIDFA(result: @escaping FlutterResult){
+    private func requestATT(result: @escaping FlutterResult){
         // iOS 14 之后需要获取 ATT 追踪权限
         if #available(iOS 14, *) {
             ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in

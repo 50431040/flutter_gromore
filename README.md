@@ -23,9 +23,14 @@
 
 ### 三方SDK导入
 
->  聚合SDK依赖于被聚合的三方SDK，故在接入本SDK之前请确保项目已经接入了参与聚合的第三方广告联盟SDK。
+> 具体内容请参考官方SDK接入文档
 
-把使用到的广告商SDK和Adapter的添加到`ios/Frameworks`，示例中添加了广点通、穿山甲和百度。
+1. 把使用到的广告商SDK和Adapter的导入进来（Android和iOS两个平台都要），示例中添加了广点通、穿山甲和百度。
+
+2. AndroidManifest.xml中手动添加对应adn的配置项（权限在授权部分介绍）
+
+3. 代码混淆及资源混淆配置
+4. 插件内部已经引入gromore SDK，所以无需再次引入（implementation "com.gromore.cn:gromore-sdk:3.4.0.3"）。其他内容均以官方为准。
 
 ### 授权
 
