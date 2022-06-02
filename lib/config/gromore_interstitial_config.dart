@@ -3,7 +3,6 @@ import 'package:flutter_gromore/utils/gromore_ad_size.dart';
 
 /// 插屏广告配置
 class GromoreInterstitialConfig extends GromoreBaseAdConfig {
-
   /// 广告id
   final String adUnitId;
 

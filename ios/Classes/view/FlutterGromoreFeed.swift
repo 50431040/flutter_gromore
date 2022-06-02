@@ -136,7 +136,7 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdsManagerDele
     
     /// 播放状态改变(仅三方adn支持的视频广告有)
     func nativeAdExpressView(_ nativeAdView: ABUNativeAdView, stateDidChanged playerState: ABUPlayerPlayState) {
-        postMessage("nativeAdExpressViewStateChange")
+//        postMessage("nativeAdExpressViewStateChange")
     }
     
     /// 点击事件
@@ -153,7 +153,7 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdsManagerDele
     
     /// 广告即将展示全屏页面/商店时触发
     func nativeAdViewWillPresentFullScreenModal(_ nativeAdView: ABUNativeAdView) {
-        postMessage("nativeAdViewWillPresentFullScreenModal")
+//        postMessage("nativeAdViewWillPresentFullScreenModal")
     }
     
 //    /// 视频广告点击

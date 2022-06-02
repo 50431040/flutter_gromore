@@ -19,12 +19,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-          appBar: AppBar(
-            title: const Text("Demo"),
-          ),
-          body: const HomePage(),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text("Demo"),
         ),
+        body: const HomePage(),
+      ),
     );
   }
 }
@@ -45,9 +45,7 @@ class _HomePageState extends State<HomePage> {
   /// 初始化SDK
   void initSDK() {
     FlutterGromore.initSDK(
-        appId: GoMoreAdConfig.appId,
-        appName: APP_NAME,
-        debug: !IS_PRODUCTION);
+        appId: GoMoreAdConfig.appId, appName: APP_NAME, debug: !IS_PRODUCTION);
   }
 
   /// 展示开屏广告
@@ -74,17 +72,14 @@ class _HomePageState extends State<HomePage> {
 
   /// 展示插屏广告
   void showInterstitialAd() {
-    FlutterGromore.showInterstitialAd(config: GromoreInterstitialConfig(
-      adUnitId: GoMoreAdConfig.interstitialId,
-      size: GromoreAdSize.withPercent(
-        MediaQuery.of(context).size.width * 2 / 3,
-        2 / 3
-      )
-    ), callback: GromoreInterstitialCallback(
-      onInterstitialShow: () {
-        print("===== showInterstitialAd success ======");
-      }
-    ));
+    FlutterGromore.showInterstitialAd(
+        config: GromoreInterstitialConfig(
+            adUnitId: GoMoreAdConfig.interstitialId,
+            size: GromoreAdSize.withPercent(
+                MediaQuery.of(context).size.width * 2 / 3, 2 / 3)),
+        callback: GromoreInterstitialCallback(onInterstitialShow: () {
+          print("===== showInterstitialAd success ======");
+        }));
   }
 
   @override

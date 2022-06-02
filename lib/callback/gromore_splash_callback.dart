@@ -30,15 +30,17 @@ class GromoreSplashCallback extends GromoreBaseAdCallback {
   /// 开屏广告结束，这个时候会销毁广告（点击跳过、倒计时结束或渲染错误等 理应隐藏广告 的情况都会触发此回调，建议统一在此回调处理路由跳转等逻辑）
   final GromoreVoidCallback? onAdEnd;
 
-  GromoreSplashCallback({this.onAdClicked,
-    this.onAdShowFail,
-    this.onAdSkip,
-    this.onAdDismiss,
-    this.onSplashAdLoadFail,
-    this.onSplashAdLoadSuccess,
-    this.onAdLoadTimeout,
-    this.onAdEnd,
-    this.onAdShow}) : super();
+  GromoreSplashCallback(
+      {this.onAdClicked,
+      this.onAdShowFail,
+      this.onAdSkip,
+      this.onAdDismiss,
+      this.onSplashAdLoadFail,
+      this.onSplashAdLoadSuccess,
+      this.onAdLoadTimeout,
+      this.onAdEnd,
+      this.onAdShow})
+      : super();
 
   /// 执行回调
   @override
@@ -53,9 +55,11 @@ class GromoreSplashCallback extends GromoreBaseAdCallback {
       onAdSkip!();
     } else if (callbackName == "onAdDismiss" && onAdDismiss != null) {
       onAdDismiss!();
-    } else if (callbackName == "onSplashAdLoadFail" && onSplashAdLoadFail != null) {
+    } else if (callbackName == "onSplashAdLoadFail" &&
+        onSplashAdLoadFail != null) {
       onSplashAdLoadFail!();
-    } else if (callbackName == "onSplashAdLoadSuccess" && onSplashAdLoadSuccess != null) {
+    } else if (callbackName == "onSplashAdLoadSuccess" &&
+        onSplashAdLoadSuccess != null) {
       onSplashAdLoadSuccess!();
     } else if (callbackName == "onAdLoadTimeout" && onAdLoadTimeout != null) {
       onAdLoadTimeout!();

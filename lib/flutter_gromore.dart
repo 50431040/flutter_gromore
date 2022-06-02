@@ -33,6 +33,16 @@ class FlutterGromore {
     await _methodChannel.invokeMethod("requestPermissionIfNecessary");
   }
 
+  /// 申请ATT权限
+  /// 以往广告归因依赖于IDFA。从iOS 14开始，只有在获得用户明确许可的前提下，应用才可以访问用户的IDFA数据并向用户投放定向广告。在应用程序调用 App Tracking Transparency 框架向最终用户提出应用程序跟踪授权请求之前，IDFA将不可用。如果某个应用未提出此请求，则读取到的IDFA将返回全为0的字符串，这个可能会导致广告收入降低。
+  /// 需要在App层级的info.plist里添加ATT权限描述
+  static Future<void> requestATT() async {
+    if (Platform.isAndroid) {
+      return;
+    }
+    await _methodChannel.invokeMethod("requestATT");
+  }
+
   /// event类事件监听
   static void _handleEventListenter() {
     _eventChannel.receiveBroadcastStream().listen((event) {
@@ -89,7 +99,8 @@ class FlutterGromore {
 
     if (callback != null) {
       GromoreMethodChannelHandler<GromoreInterstitialCallback>.register(
-          "${FlutterGromoreConstants.interstitialTypeId}/${config.id}", callback);
+          "${FlutterGromoreConstants.interstitialTypeId}/${config.id}",
+          callback);
     }
 
     await _methodChannel.invokeMethod("showInterstitialAd", config.toJson());

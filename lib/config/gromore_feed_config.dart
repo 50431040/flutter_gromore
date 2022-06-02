@@ -18,10 +18,10 @@ class GromoreFeedConfig extends GromoreBaseAdConfig {
 
   GromoreFeedConfig(
       {required this.adUnitId,
-        this.count,
-        this.width,
-        this.height,
-        this.adStyleType});
+      this.count,
+      this.width,
+      this.height,
+      this.adStyleType});
 
   @override
   Map toJson() {

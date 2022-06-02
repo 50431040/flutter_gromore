@@ -38,21 +38,28 @@ class GromoreInterstitialCallback extends GromoreBaseAdCallback {
 
   @override
   void exec(String callbackName, [arguments]) {
-    if (callbackName == "onInterstitialLoadFail" && onInterstitialLoadFail != null) {
+    if (callbackName == "onInterstitialLoadFail" &&
+        onInterstitialLoadFail != null) {
       onInterstitialLoadFail!();
-    } else if (callbackName == "onInterstitialLoad" && onInterstitialLoad != null) {
+    } else if (callbackName == "onInterstitialLoad" &&
+        onInterstitialLoad != null) {
       onInterstitialLoad!();
-    } else if (callbackName == "onInterstitialShow" && onInterstitialShow != null) {
+    } else if (callbackName == "onInterstitialShow" &&
+        onInterstitialShow != null) {
       onInterstitialShow!();
-    } else if (callbackName == "onInterstitialShowFail" && onInterstitialShowFail != null) {
+    } else if (callbackName == "onInterstitialShowFail" &&
+        onInterstitialShowFail != null) {
       onInterstitialShowFail!();
-    } else if (callbackName == "onInterstitialAdClick" && onInterstitialAdClick != null) {
+    } else if (callbackName == "onInterstitialAdClick" &&
+        onInterstitialAdClick != null) {
       onInterstitialAdClick!();
-    } else if (callbackName == "onInterstitialClosed" && onInterstitialClosed != null) {
+    } else if (callbackName == "onInterstitialClosed" &&
+        onInterstitialClosed != null) {
       onInterstitialClosed!();
     } else if (callbackName == "onAdOpened" && onAdOpened != null) {
       onAdOpened!();
-    } else if (callbackName == "onAdLeftApplication" && onAdLeftApplication != null) {
+    } else if (callbackName == "onAdLeftApplication" &&
+        onAdLeftApplication != null) {
       onAdLeftApplication!();
     }
   }
