@@ -23,7 +23,7 @@
 
 ### 三方SDK导入
 
-聚合SDK依赖于被聚合的三方SDK，故在接入本SDK之前请确保项目已经接入了参与聚合的第三方广告联盟SDK。
+>  聚合SDK依赖于被聚合的三方SDK，故在接入本SDK之前请确保项目已经接入了参与聚合的第三方广告联盟SDK。
 
 把使用到的广告商SDK和Adapter的添加到`ios/Frameworks`，示例中添加了广点通、穿山甲和百度。
 
@@ -111,7 +111,7 @@ child: GromoreSplashView(
     onAdEnd: () {
       Navigator.pop(context);
     }
-  ),),
+),),
 ```
 
 3. 参数（GromoreSplashConfig）
