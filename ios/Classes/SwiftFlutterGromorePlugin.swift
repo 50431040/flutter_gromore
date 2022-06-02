@@ -8,6 +8,8 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: FlutterGromoreContants.methodChannelName, binaryMessenger: registrar.messenger())
+        let eventChanel = FlutterEventChannel(name: FlutterGromoreContants.eventChannelName, binaryMessenger: registrar.messenger())
+        eventChanel.setStreamHandler(AdEventHandler.instance)
         let instance = SwiftFlutterGromorePlugin()
         
         messenger = registrar.messenger()
@@ -56,7 +58,9 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         result(true)
     }
     
-    private func showSplashAd(args: Dictionary<String, Any>){
-        //    FlutterGromoreSplash().initAd(args: args)
+    private func showSplashAd(args: [String: Any]){
+        let splashView: FlutterGromoreSplash = FlutterGromoreSplash()
+        splashView.initAd(args: args)
+        UIApplication.shared.keyWindow?.addSubview(splashView)
     }
 }
