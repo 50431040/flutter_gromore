@@ -25,12 +25,21 @@
 
 > 具体内容请参考官方SDK接入文档
 
+#### Android
+
 1. 把使用到的广告商SDK和Adapter的导入进来（Android和iOS两个平台都要），示例中添加了广点通、穿山甲和百度。
 
 2. AndroidManifest.xml中手动添加对应adn的配置项（权限在授权部分介绍）
 
 3. 代码混淆及资源混淆配置
 4. 插件内部已经引入gromore SDK，所以无需再次引入（implementation "com.gromore.cn:gromore-sdk:3.4.0.3"）。其他内容均以官方为准。
+
+#### iOS
+
+> 插件已经引入 GroMore 3.4..0.4 和穿山甲 SDK 4.3.0.5
+
+1. 引入 GroMore 提供的广告 Adapter，按需引入即可，案例中引入百度和广点通。
+2. 引入广告的基础 SDK，案例中使用 CocoaPods 引入百度和广点通，可见 `example/ios/Podfile` 。引入时需要注意 Adapter 所支持的 SDK 版本范围，可在 GroMore 接入文档查看。
 
 ### 授权
 
