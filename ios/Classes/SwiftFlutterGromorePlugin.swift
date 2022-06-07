@@ -19,7 +19,7 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let args = call.arguments as! Dictionary<String, Any>
+        let args = call.arguments as? Dictionary<String, Any> ?? [:]
         switch call.method {
         case "getPlatformVersion":
             result("iOS " + UIDevice.current.systemVersion)
@@ -28,9 +28,10 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         case "initSDK":
             initSDK(appId: args["appId"] as! String,result: result)
         case "showSplashAd":
-            showSplashAd(args: args)
+            showSplashAd(args: args, result: result)
         case "showInterstitialAd":
             Utils.getVC().addChild(FlutterGromoreInterstitial.init(messenger: SwiftFlutterGromorePlugin.messenger!, arguments: args))
+            result(true)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -50,7 +51,7 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     }
     
     // 初始化SDK
-    private func initSDK(appId: String, result: @escaping FlutterResult){
+    private func initSDK(appId: String, result: @escaping FlutterResult) {
         ABUAdSDKManager.setupSDK(withAppId: appId) { ABUUserConfig in
             ABUUserConfig.logEnable = true
             return ABUUserConfig
@@ -58,8 +59,9 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         result(true)
     }
     
-    private func showSplashAd(args: [String: Any]){
+    private func showSplashAd(args: [String: Any], result: @escaping FlutterResult) {
         let splashView: FlutterGromoreSplash = FlutterGromoreSplash(args)
         UIApplication.shared.keyWindow?.addSubview(splashView)
+        result(true)
     }
 }
