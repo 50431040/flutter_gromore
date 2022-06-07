@@ -146,7 +146,7 @@ class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdL
     }
 
     override fun onAdShowFail(p0: AdError) {
-        Log.d(TAG, "onAdShowFail")
+        Log.d(TAG, "onAdShowFail -- ${p0.message}")
 
         finishActivity()
         sendEvent("onAdShowFail")

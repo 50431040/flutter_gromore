@@ -16,9 +16,7 @@
         android:protectionLevel="signature" />
     <uses-permission android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN" />
 
-    <application
-        android:networkSecurityConfig="@xml/network_config"
-        android:requestLegacyExternalStorage="true">
+    <application>
         <!-- 开屏广告页面 -->
         <activity
             android:name=".view.FlutterGromoreSplash"

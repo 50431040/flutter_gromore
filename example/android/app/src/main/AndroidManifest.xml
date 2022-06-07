@@ -22,6 +22,8 @@
    <application
         android:label="flutter_gromore_example"
         android:icon="@mipmap/ic_launcher"
+        android:networkSecurityConfig="@xml/network_config"
+        android:requestLegacyExternalStorage="true"
        tools:replace="android:label">
         <activity
             android:name=".MainActivity"
