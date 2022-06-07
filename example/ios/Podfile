@@ -30,6 +30,10 @@ flutter_ios_podfile_setup
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
+  
+  # SDK 版本需要查看 GroMore 提供 Adapter 的支持范围
+  pod 'BaiduMobAdSDK', '4.87'
+  pod 'GDTMobSDK', '4.13.65'
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end

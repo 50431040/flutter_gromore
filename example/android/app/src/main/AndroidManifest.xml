@@ -109,5 +109,32 @@
            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
        <!-- GDT end================== -->
 
+       <!-- baidu start================== -->
+       <!-- 声明打开落地页的Activity（不建议修改主题配置）-->
+       <activity
+           android:name="com.baidu.mobads.sdk.api.AppActivity"
+           android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
+           android:theme="@android:style/Theme.NoTitleBar"/>
+       <!-- 声明打开显示激励视频/全屏视频的Activity-->
+       <activity
+           android:name="com.baidu.mobads.sdk.api.MobRewardVideoActivity"
+           android:configChanges="screenSize|orientation|keyboardHidden"
+           android:launchMode="singleTask"
+           android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+       <!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现 -->
+       <!-- android:authorities="${packageName}.bd.provider" authorities中${packageName}部分必须替换成app自己的包名 -->
+       <!-- 原来的FileProvider在新版本中改为BdFileProvider,继承自v4的FileProvider,需要在应用内引用support-v4包 -->
+       <provider
+           android:name="com.baidu.mobads.sdk.api.BdFileProvider"
+           android:authorities="${applicationId}.bd.provider"
+           android:exported="false"
+           android:grantUriPermissions="true">
+           <meta-data
+               android:name="android.support.FILE_PROVIDER_PATHS"
+               android:resource="@xml/bd_file_paths" />
+       </provider>
+       <!-- baidu end================== -->
+
     </application>
 </manifest>

@@ -8,6 +8,8 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: FlutterGromoreContants.methodChannelName, binaryMessenger: registrar.messenger())
+        let eventChanel = FlutterEventChannel(name: FlutterGromoreContants.eventChannelName, binaryMessenger: registrar.messenger())
+        eventChanel.setStreamHandler(AdEventHandler.instance)
         let instance = SwiftFlutterGromorePlugin()
         
         messenger = registrar.messenger()
@@ -21,8 +23,8 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         switch call.method {
         case "getPlatformVersion":
             result("iOS " + UIDevice.current.systemVersion)
-        case "requestIDFA":
-            requestIDFA(result: result)
+        case "requestATT":
+            requestATT(result: result)
         case "initSDK":
             initSDK(appId: args["appId"] as! String,result: result)
         case "showSplashAd":
@@ -35,7 +37,7 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     }
     
     // 请求广告标识符
-    private func requestIDFA(result: @escaping FlutterResult){
+    private func requestATT(result: @escaping FlutterResult){
         // iOS 14 之后需要获取 ATT 追踪权限
         if #available(iOS 14, *) {
             ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
@@ -56,7 +58,8 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         result(true)
     }
     
-    private func showSplashAd(args: Dictionary<String, Any>){
-        //    FlutterGromoreSplash().initAd(args: args)
+    private func showSplashAd(args: [String: Any]){
+        let splashView: FlutterGromoreSplash = FlutterGromoreSplash(args)
+        UIApplication.shared.keyWindow?.addSubview(splashView)
     }
 }
