@@ -78,7 +78,7 @@ class FlutterGromoreInterstitial(private val activity: Activity,
 
     // 如果show时发现无可用广告（比如广告过期或者isReady=false），会触发该回调。 开发者应该在该回调里进行重新请求。
     override fun onInterstitialShowFail(p0: AdError) {
-        Log.d(TAG, "onInterstitialShowFail")
+        Log.d(TAG, "onInterstitialShowFail -- ${p0.message}")
         postMessage("onInterstitialShowFail")
     }
 
