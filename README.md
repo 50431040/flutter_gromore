@@ -139,7 +139,7 @@ child: GromoreSplashView(
 | muted        | 静音，默认为true                                             | 否   |
 | preload      | 预加载，默认为true                                           | 否   |
 | volume       | 声音配置，与muted配合使用                                    | 否   |
-| timeout      | 超时时间，默认3000，单位：ms                                 | 否   |
+| timeout      | 超时时间，默认3，单位：秒(s)                                 | 否   |
 | buttonType   | 按钮样式（1：全屏可点击，2：仅按钮可点击，默认为1）          | 否   |
 | downloadType | 点击下载样式（0或者1，默认为1）                              | 否   |
 
