@@ -11,6 +11,7 @@ import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import net.niuxiaoer.flutter_gromore.event.AdEventHandler
+import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedManager
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreInterstitial
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreSplash
 
@@ -44,6 +45,11 @@ class PluginDelegate(private val activity: Activity, private val binaryMessenger
                 require(arguments != null && arguments["id"] != null)
                 FlutterGromoreInterstitial(activity, binaryMessenger, arguments)
                 result.success(true)
+            }
+            // 加载信息流广告
+            "loadFeedAd" -> {
+                require(arguments != null && arguments["adUnitId"] != null)
+                FlutterGromoreFeedManager(arguments, activity, result)
             }
         }
     }

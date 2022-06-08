@@ -11,8 +11,7 @@ import net.niuxiaoer.flutter_gromore.view.FlutterGromoreFeed
 
 class FlutterGromoreFeedFactory(private val binaryMessenger: BinaryMessenger): PlatformViewFactory(StandardMessageCodec.INSTANCE) {
     override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
-        val creationParams = args as Map<String?, Any?>?
-        Log.d("GromoreFeedFactory", "$viewId $args")
+        val creationParams = args as Map<String?, Any?>
         return FlutterGromoreFeed(context as Activity, viewId, creationParams, binaryMessenger);
     }
 }

@@ -22,23 +22,21 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
 import net.niuxiaoer.flutter_gromore.constants.FlutterGromoreConstants
+import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedCache
+import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedManager
 import net.niuxiaoer.flutter_gromore.utils.Utils
 
 
-class FlutterGromoreFeed(private val context: Context, viewId: Int, private val creationParams: Map<String?, Any?>?, binaryMessenger: BinaryMessenger) :
+class FlutterGromoreFeed(private val context: Context, viewId: Int, creationParams: Map<String?, Any?>, binaryMessenger: BinaryMessenger) :
         FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.feedViewTypeId}/$viewId"),
         PlatformView,
         GMNativeExpressAdListener,
-        GMNativeAdLoadCallback,
-        GMDislikeCallback,
-        GMSettingConfigCallback {
+        GMDislikeCallback {
 
     private val TAG: String = this::class.java.simpleName
 
     // 信息流广告容器
     private var container: FrameLayout = FrameLayout(context)
-
-    private lateinit var mTTAdNative: GMUnifiedNativeAd
 
     // 广告model
     private var mGMNativeAd: GMNativeAd? = null
@@ -47,51 +45,9 @@ class FlutterGromoreFeed(private val context: Context, viewId: Int, private val 
 
     init {
         container.layoutParams = layoutParams
-        loadAdWithCallback()
-    }
-
-    // 加载信息流广告，如果没有config配置会等到加载完config配置后才去请求广告
-    private fun loadAdWithCallback() {
-        if (GMMediationAdSdk.configLoadSuccess()) {
-            Log.d(TAG, "loadAdWithCallback - configLoadSuccess")
-            initAd()
-        } else {
-            Log.d(TAG, "loadAdWithCallback - registerConfigCallback")
-            GMMediationAdSdk.registerConfigCallback(this)
-        }
-    }
-
-    override fun initAd() {
-        require(creationParams != null)
-
-        val adUnitId = creationParams["adUnitId"] as String
-        var count = creationParams["count"] as? Int ?: 3
-        // 默认宽度占满
-        val width = creationParams["width"] as? Int ?: Utils.getScreenWidthInPx(context)
-        // 0为高度选择自适应参数
-        val height = creationParams["height"] as? Int ?: 0
-        // 默认为模板信息流
-        var adStyleType = creationParams["type"] as? Int ?: AdSlot.TYPE_EXPRESS_AD
-
-        require(adUnitId.isNotEmpty())
-        require(count > 0)
-
-        // step1:创建GMUnifiedNativeAd对象，传递Context对象和广告位ID即mAdUnitId
-        mTTAdNative = GMUnifiedNativeAd(context, adUnitId)
-
-        // 加载feed广告 1为模板，2为原生
-        GMAdSlotNative.Builder()
-                .setAdStyleType(adStyleType)
-                .setGMAdSlotGDTOption(GMAdOptionUtil.getGMAdSlotGDTOption().build())
-                .setGMAdSlotBaiduOption(GMAdOptionUtil.getGMAdSlotBaiduOption().build())
-                // 1:如果是信息流自渲染广告，设置广告图片期望的图片宽高 ，不能为0
-                // 2:如果是信息流模板广告，宽度设置为希望的宽度，高度设置为0(0为高度选择自适应参数)
-                .setImageAdSize(width, height)
-                .setAdCount(count)
-                .build()
-                .let {
-                    mTTAdNative.loadAd(it, this)
-                }
+        // 从缓存中取广告
+        mGMNativeAd = FlutterGromoreFeedCache.getCacheFeedAd(creationParams["feedId"] as Int)
+        initAd()
     }
 
     private fun showAd() {
@@ -113,7 +69,6 @@ class FlutterGromoreFeed(private val context: Context, viewId: Int, private val 
     private fun removeAdView() {
         container.removeAllViews()
         mGMNativeAd?.destroy()
-        mTTAdNative.destroy()
         mGMNativeAd = null
     }
 
@@ -188,29 +143,7 @@ class FlutterGromoreFeed(private val context: Context, viewId: Int, private val 
         postMessage("onShow")
     }
 
-    // 拉取广告成功
-    override fun onAdLoaded(p0: MutableList<GMNativeAd>) {
-
-        p0.takeIf {
-            p0.isNotEmpty()
-        }?.apply {
-            Log.d(TAG, "onAdLoaded")
-
-            mGMNativeAd = this.random()
-            showAd()
-            postMessage("onAdLoaded")
-        }
-    }
-
-    // 拉取广告失败
-    override fun onAdLoadedFail(p0: AdError) {
-        Log.d(TAG, "广告加载失败 - ${p0.code} - ${p0.message}")
-        postMessage("onAdLoadedFail")
-    }
-
-    override fun configLoad() {
-        Log.d(TAG, "loadAdWithCallback - configLoad")
-        postMessage("configLoad")
-        initAd()
+    override fun initAd() {
+        showAd()
     }
 }
