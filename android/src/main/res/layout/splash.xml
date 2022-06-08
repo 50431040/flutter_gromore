@@ -18,10 +18,13 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/splash_ad_logo"
         android:layout_width="match_parent"
-        android:layout_height="96dp"
-        android:src="@mipmap/flutterads_logo"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="22dp"
         android:scaleType="center"
+        android:src="@mipmap/launch_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/splash_ad_container" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -123,7 +123,7 @@ class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdL
     private fun finishActivity() {
         finish()
         // 设置退出动画
-        overridePendingTransition(0, 0)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
 
         sendEvent("onAdEnd")
     }
