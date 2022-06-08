@@ -50,7 +50,7 @@ class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdL
         val muted = intent.getBooleanExtra("muted", false)
         val preload = intent.getBooleanExtra("preload", true)
         val volume = intent.getFloatExtra("volume", 1f)
-        val timeout = intent.getIntExtra("timeout", 3000)
+        val timeout = intent.getIntExtra("timeout", 3) * 1000
         val buttonType = intent.getIntExtra("buttonType", TTAdConstant.SPLASH_BUTTON_TYPE_FULL_SCREEN)
         val downloadType = intent.getIntExtra("downloadType", TTAdConstant.DOWNLOAD_TYPE_POPUP)
 

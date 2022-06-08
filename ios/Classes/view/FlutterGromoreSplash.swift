@@ -27,7 +27,7 @@ class FlutterGromoreSplash: UIView, ABUSplashAdDelegate {
         splashAd = ABUSplashAd(adUnitID: args["adUnitId"] as! String)
         splashAd?.delegate = self
         splashAd?.rootViewController = Utils.getVC()
-        splashAd?.tolerateTimeout = TimeInterval(args["timeout"] as? Int ?? 3000)
+        splashAd?.tolerateTimeout = TimeInterval(args["timeout"] as? Int ?? 3)
         splashAd?.splashButtonType = ABUSplashButtonType(rawValue: args["buttonType"] as? Int ?? 1)!
         // 展示 logo
         let logo: String = args["logo"] as? String ?? ""

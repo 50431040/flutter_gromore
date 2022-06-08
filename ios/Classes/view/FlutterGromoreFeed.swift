@@ -8,74 +8,32 @@
 import Foundation
 import ABUAdSDK
 
-class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdsManagerDelegate, ABUNativeAdViewDelegate, ABUNativeAdVideoDelegate, FlutterGromoreBase {
-    
+class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate, ABUNativeAdVideoDelegate, FlutterGromoreBase {
     var methodChannel: FlutterMethodChannel?
     /// 容器
     private var container: UIView
     /// 传递过来的参数
-    private var createParams: Any?
+    private var createParams: [String: Any]
     
     init(frame: CGRect, id: Int64, params: Any?, messenger: FlutterBinaryMessenger) {
         container = UIView(frame: frame)
-        createParams = params
+        createParams = params as? [String : Any] ?? [:]
         super.init()
-        
         methodChannel = initMethodChannel(channelName: "\(FlutterGromoreContants.feedViewTypeId)/\(id)", messenger: messenger)
         initAd()
     }
     
     func initAd() {
-        assert(createParams != nil)
-        
-        if let params = createParams as? Dictionary<String, Any> {
-            let slot: ABUAdUnit = ABUAdUnit()
-            
-            // 广告尺寸
-            var size: CGSize = CGSize()
-                        
-            // 默认宽度占满
-            if let width = params["width"] as? Int {
-                size.width = CGFloat(width)
-            } else {
-                size.width = CGFloat(Utils.getScreenWidth)
-            }
-                        
-            // 0为高度选择自适应参数
-            if let height = params["height"] as? Int {
-                size.height = CGFloat(height)
-            } else {
-                size.height = 0
-            }
-            
-            // 默认为模板信息流
-            if let adStyleType = params["type"] as? Int {
-                slot.getExpressAdIfCan = adStyleType == 1
-            } else {
-                slot.getExpressAdIfCan = true
-            }
-            
-            slot.id = params["adUnitId"] as! String
-            slot.adSize = size
-            let adManger: ABUNativeAdsManager = ABUNativeAdsManager.init(slot: slot)
-            adManger.rootViewController = Utils.getVC()
-            // 静音播放视频
-            adManger.startMutedIfCan = true
-            adManger.delegate = self
-            
-            // 当前配置拉取成功，直接loadAdData
-            if (ABUAdSDKManager.configDidLoad()) {
-                adManger.loadAdData(withCount: 3)
-            } else {
-                ABUAdSDKManager.addConfigLoadSuccessObserver(self, withAction: { id in
-                    adManger.loadAdData(withCount: 3)
-                })
+        let adViewId: String = createParams["viewId"] as! String
+        if let adView: ABUNativeAdView = FlutterGromoreFeedCache.getAd(key: adViewId) {
+            adView.rootViewController = Utils.getVC()
+            adView.delegate = self
+            adView.videoDelegate = self
+            if adView.isExpressAd {
+                adView.render()
             }
         }
-        
-        
     }
-    
     
     func view() -> UIView {
         container
@@ -91,30 +49,8 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdsManagerDele
         }
     }
     
-    /// 广告加载成功
-    func nativeAdsManagerSuccess(toLoad adsManager: ABUNativeAdsManager, nativeAds nativeAdViewArray: [ABUNativeAdView]?) {
-        
-        postMessage("onAdLoaded")
-                
-        if let model = nativeAdViewArray?.randomElement() {
-            model.rootViewController = Utils.getVC()
-            model.delegate = self
-            model.videoDelegate = self
-            
-            if (model.hasExpressAdGot) {
-                model.render()
-            }
-        }
-    }
-    
-    /// 广告加载失败
-    func nativeAdsManager(_ adsManager: ABUNativeAdsManager, didFailWithError error: Error?) {
-        postMessage("onAdLoadedFail")
-    }
-    
     /// 广告渲染成功(仅针对原生模板)
     func nativeAdExpressViewRenderSuccess(_ nativeExpressAdView: ABUNativeAdView) {
-        
         postMessage("onRenderSuccess", arguments: ["height": nativeExpressAdView.bounds.height])
         
         var frame = container.frame
@@ -147,7 +83,10 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdsManagerDele
     /// 点击不喜欢关闭广告
     func nativeAdExpressViewDidClosed(_ nativeAdView: ABUNativeAdView?, closeReason filterWords: [[AnyHashable : Any]]?) {
         postMessage("onSelected")
-        nativeAdView?.removeFromSuperview()
+        if let adView = nativeAdView {
+            adView.removeFromSuperview()
+            FlutterGromoreFeedCache.removeAd(key: adView.adViewID)
+        }
         removeAdView()
     }
     

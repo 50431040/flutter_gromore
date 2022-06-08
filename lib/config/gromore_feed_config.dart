@@ -4,6 +4,8 @@ class GromoreFeedConfig extends GromoreBaseAdConfig {
   /// 广告id
   final String adUnitId;
 
+  final String? viewId;
+
   /// 请求数量，默认为3
   final int? count;
 
@@ -18,6 +20,7 @@ class GromoreFeedConfig extends GromoreBaseAdConfig {
 
   GromoreFeedConfig(
       {required this.adUnitId,
+      this.viewId,
       this.count,
       this.width,
       this.height,
@@ -27,6 +30,7 @@ class GromoreFeedConfig extends GromoreBaseAdConfig {
   Map toJson() {
     Map<String, dynamic> result = {
       "adUnitId": adUnitId,
+      "viewId": viewId,
       "count": count,
       "width": width,
       "height": height,

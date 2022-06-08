@@ -7,6 +7,7 @@ import 'package:flutter_gromore/callback/gromore_base_callback.dart';
 import 'package:flutter_gromore/callback/gromore_interstitial_callback.dart';
 import 'package:flutter_gromore/callback/gromore_method_channel_handler.dart';
 import 'package:flutter_gromore/callback/gromore_splash_callback.dart';
+import 'package:flutter_gromore/config/gromore_feed_config.dart';
 import 'package:flutter_gromore/config/gromore_interstitial_config.dart';
 import 'package:flutter_gromore/config/gromore_splash_config.dart';
 import 'package:flutter_gromore/constants/gromore_constans.dart';
@@ -104,5 +105,14 @@ class FlutterGromore {
     }
 
     await _methodChannel.invokeMethod("showInterstitialAd", config.toJson());
+  }
+
+  static Future<List<String>> loadFeedAd(GromoreFeedConfig config) async {
+    if (Platform.isAndroid) {
+      return [];
+    }
+    List<dynamic> demo =
+        await _methodChannel.invokeMethod("loadFeedAd", config.toJson());
+    return List<String>.from(demo);
   }
 }
