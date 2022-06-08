@@ -5,6 +5,7 @@ import ABUAdSDK
 
 public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     private static var messenger: FlutterBinaryMessenger? = nil
+    private var feedManager: FlutterGromoreFeedManager?
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: FlutterGromoreContants.methodChannelName, binaryMessenger: registrar.messenger())
@@ -31,6 +32,15 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
             showSplashAd(args: args, result: result)
         case "showInterstitialAd":
             Utils.getVC().addChild(FlutterGromoreInterstitial.init(messenger: SwiftFlutterGromorePlugin.messenger!, arguments: args))
+            result(true)
+        case "loadFeedAd":
+            feedManager = FlutterGromoreFeedManager(args: args, result: result)
+            feedManager?.loadAd()
+        case "clearFeedAd":
+            let adsId: [String] = args["adsId"] as? [String] ?? []
+            adsId.forEach { id in
+                FlutterGromoreFeedCache.removeAd(key: id)
+            }
             result(true)
         default:
             result(FlutterMethodNotImplemented)

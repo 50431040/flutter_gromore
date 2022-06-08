@@ -1,4 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_gromore/config/gromore_feed_config.dart';
+import 'package:flutter_gromore/flutter_gromore.dart';
+import 'package:flutter_gromore_example/config/config.dart';
 import 'package:flutter_gromore_example/widgets/feed_view.dart';
 
 class FeedDemo extends StatefulWidget {
@@ -9,14 +14,29 @@ class FeedDemo extends StatefulWidget {
 }
 
 class _FeedDemoState extends State<FeedDemo> {
+  List<String> viewIds = [];
+
+  @override
+  void initState() {
+    getFeedAd();
+    super.initState();
+  }
+
+  void getFeedAd() async {
+    List<String> viewIds = await FlutterGromore.loadFeedAd(
+        GromoreFeedConfig(adUnitId: GoMoreAdConfig.feedId));
+    setState(() {
+      this.viewIds.addAll(viewIds);
+    });
+  }
 
   handleBottomSheet() {
     showModalBottomSheet(
         context: context,
         builder: (_) => Material(
-          child: SafeArea(
-            top: false,
-            child: Container(
+              child: SafeArea(
+                top: false,
+                child: Container(
                   height: 200,
                   width: double.infinity,
                   color: Colors.red,
@@ -36,8 +56,8 @@ class _FeedDemoState extends State<FeedDemo> {
                     ],
                   ),
                 ),
-          ),
-        ));
+              ),
+            ));
   }
 
   @override
@@ -53,7 +73,16 @@ class _FeedDemoState extends State<FeedDemo> {
             shrinkWrap: true,
             itemBuilder: (context, index) {
               if (index % 5 == 0) {
-                return const FeedView();
+                if (Platform.isAndroid) {
+                  return const FeedView(viewId: "");
+                }
+                if (index ~/ 5 >= viewIds.length) {
+                  getFeedAd();
+                  return const SizedBox();
+                }
+                return IgnorePointer(
+                  child: FeedView(viewId: viewIds[index ~/ 5]),
+                );
               }
 
               return Container(
