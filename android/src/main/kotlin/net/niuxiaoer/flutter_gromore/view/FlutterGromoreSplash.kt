@@ -2,6 +2,7 @@ package net.niuxiaoer.flutter_gromore.view
 
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -122,12 +123,20 @@ class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdL
     private fun finishActivity() {
         finish()
         // 设置退出动画
-        overridePendingTransition(0, 0)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+
+        sendEvent("onAdEnd")
+    }
+
+    override fun onDestroy() {
         // 销毁
         mTTSplashAd?.destroy()
         mTTSplashAd = null
+        super.onDestroy()
+    }
 
-        sendEvent("onAdEnd")
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        return true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -146,7 +155,7 @@ class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdL
     }
 
     override fun onAdShowFail(p0: AdError) {
-        Log.d(TAG, "onAdShowFail -- ${p0.message}")
+        Log.d(TAG, "onAdShowFail -- ${p0.message} -- ${p0.code}")
 
         finishActivity()
         sendEvent("onAdShowFail")
