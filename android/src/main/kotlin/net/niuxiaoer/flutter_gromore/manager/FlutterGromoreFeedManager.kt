@@ -73,15 +73,17 @@ class FlutterGromoreFeedManager(private val params: Map<String, Any?>,
         var feedIdList: MutableList<String> = ArrayList()
 
         p0.forEach {
-            feedIdList.add(it.hashCode().toString())
+            val id: Int = it.hashCode()
+            feedIdList.add(id.toString())
+            FlutterGromoreFeedCache.addCacheFeedAd(id, it)
         }
 
-        result.success(mapOf("code" to 200, "data" to feedIdList))
+        result.success(feedIdList)
     }
 
     /// 信息流广告加载失败
     override fun onAdLoadedFail(p0: AdError) {
-        result.success(mapOf("code" to p0.code, "message" to p0.message))
+        result.error(p0.code.toString(), p0.message, p0.toString())
     }
 
     override fun configLoad() {

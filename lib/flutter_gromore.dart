@@ -108,11 +108,13 @@ class FlutterGromore {
   }
 
   static Future<List<String>> loadFeedAd(GromoreFeedConfig config) async {
-    if (Platform.isAndroid) {
+    assert(isInit);
+
+    try {
+      List result = await _methodChannel.invokeMethod("loadFeedAd", config.toJson());
+      return List<String>.from(result);
+    } catch(err) {
       return [];
     }
-    List<dynamic> demo =
-        await _methodChannel.invokeMethod("loadFeedAd", config.toJson());
-    return List<String>.from(demo);
   }
 }

@@ -46,7 +46,7 @@ class FlutterGromoreFeed(private val context: Context, viewId: Int, creationPara
     init {
         container.layoutParams = layoutParams
         // 从缓存中取广告
-        mGMNativeAd = FlutterGromoreFeedCache.getCacheFeedAd(creationParams["feedId"] as Int)
+        mGMNativeAd = FlutterGromoreFeedCache.getCacheFeedAd((creationParams["feedId"] as String).toInt())
         initAd()
     }
 

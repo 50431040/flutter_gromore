@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gromore/callback/gromore_feed_callback.dart';
-import 'package:flutter_gromore/config/gromore_feed_config.dart';
 import 'package:flutter_gromore/view/gromore_feed_view.dart';
-import 'package:flutter_gromore_example/config/config.dart';
+import 'package:flutter_gromore_example/utils/ad_utils.dart';
 
 class FeedView extends StatefulWidget {
-  final String viewId;
 
-  const FeedView({Key? key, required this.viewId}) : super(key: key);
+  const FeedView({Key? key}) : super(key: key);
 
   @override
   State<FeedView> createState() => _FeedViewState();
@@ -16,7 +14,24 @@ class FeedView extends StatefulWidget {
 class _FeedViewState extends State<FeedView>
     with AutomaticKeepAliveClientMixin {
   double _height = 0.1;
-  bool _show = true;
+  bool _show = false;
+  String? _feedAdId;
+
+  @override
+  void initState() {
+    loadFeedAd();
+    super.initState();
+  }
+
+  loadFeedAd() async {
+    String? feedAdId = await AdUtils.getFeedAdId();
+    if (feedAdId != null && feedAdId.isNotEmpty) {
+      setState(() {
+        _feedAdId = feedAdId;
+        _show = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +39,9 @@ class _FeedViewState extends State<FeedView>
     return _show ? SizedBox(
       height: _height,
       child: GromoreFeedView(
-          creationParams:
-              GromoreFeedConfig(adUnitId: GoMoreAdConfig.feedId, viewId: widget.viewId),
+          creationParams: {
+            "feedId": _feedAdId!
+          },
           callback: GromoreFeedCallback(
             onRenderSuccess: (double height) {
               print("GromoreFeedView | onRenderSuccess | $height");

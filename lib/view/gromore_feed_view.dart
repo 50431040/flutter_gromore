@@ -7,15 +7,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gromore/callback/gromore_feed_callback.dart';
 import 'package:flutter_gromore/callback/gromore_method_channel_handler.dart';
-import 'package:flutter_gromore/config/gromore_feed_config.dart';
 import 'package:flutter_gromore/constants/gromore_constans.dart';
 
 import 'package:flutter_gromore/flutter_gromore.dart';
 
 /// 信息流广告组件
 class GromoreFeedView extends StatefulWidget {
-  /// PlatformView参数
-  final GromoreFeedConfig creationParams;
+  final Map<String, String> creationParams;
 
   /// 回调
   final GromoreFeedCallback callback;
@@ -32,12 +30,7 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
   @override
   Widget build(BuildContext context) {
     if (!FlutterGromore.isInit) {
-      return const SizedBox(
-        height: 200,
-        child: Center(
-          child: Text("请先初始化SDK"),
-        ),
-      );
+      print("============== 请先初始化SDK ==============");
     }
 
     String viewType = FlutterGromoreConstants.feedViewTypeId;
@@ -59,7 +52,7 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
                 id: params.id,
                 viewType: viewType,
                 layoutDirection: TextDirection.ltr,
-                creationParams: widget.creationParams.toJson(),
+                creationParams: widget.creationParams,
                 creationParamsCodec: const StandardMessageCodec(),
                 onFocus: () {
                   params.onFocusChanged(true);
@@ -76,7 +69,7 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
           )
         : UiKitView(
             viewType: viewType,
-            creationParams: widget.creationParams.toJson(),
+            creationParams: widget.creationParams,
             creationParamsCodec: const StandardMessageCodec(),
             onPlatformViewCreated: (id) {
               // 注册事件回调
