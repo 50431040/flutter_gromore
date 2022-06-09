@@ -17,7 +17,7 @@ class FlutterGromoreFeedCache {
             return cacheFeedAd[id]
         }
 
-        /// 清空缓存信息流广告
+        /// 移除缓存信息流广告
         fun removeCacheFeedAd(id: Int) {
             cacheFeedAd.remove(id)
         }

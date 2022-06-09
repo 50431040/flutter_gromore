@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gromore/callback/gromore_feed_callback.dart';
+import 'package:flutter_gromore/flutter_gromore.dart';
 import 'package:flutter_gromore/view/gromore_feed_view.dart';
 import 'package:flutter_gromore_example/utils/ad_utils.dart';
 
@@ -21,6 +22,14 @@ class _FeedViewState extends State<FeedView>
   void initState() {
     loadFeedAd();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    if (_show) {
+      FlutterGromore.removeFeedAd(_feedAdId!);
+    }
+    super.dispose();
   }
 
   loadFeedAd() async {

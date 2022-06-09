@@ -107,6 +107,7 @@ class FlutterGromore {
     await _methodChannel.invokeMethod("showInterstitialAd", config.toJson());
   }
 
+  /// 加载信息流广告
   static Future<List<String>> loadFeedAd(GromoreFeedConfig config) async {
     assert(isInit);
 
@@ -116,5 +117,14 @@ class FlutterGromore {
     } catch(err) {
       return [];
     }
+  }
+
+  /// 加载信息流广告
+  static Future<void> removeFeedAd(String feedId) async {
+    assert(isInit);
+
+    await _methodChannel.invokeMethod("removeFeedAd", {
+      "feedId": feedId
+    });
   }
 }

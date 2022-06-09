@@ -2,28 +2,18 @@ package net.niuxiaoer.flutter_gromore.view
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import com.bytedance.msdk.api.AdError
-import com.bytedance.msdk.api.AdSlot
 import com.bytedance.msdk.api.v2.GMDislikeCallback
-import com.bytedance.msdk.api.v2.GMMediationAdSdk
-import com.bytedance.msdk.api.v2.GMSettingConfigCallback
 import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeAd
-import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeAdLoadCallback
 import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeExpressAdListener
-import com.bytedance.msdk.api.v2.ad.nativeAd.GMUnifiedNativeAd
-import com.bytedance.msdk.api.v2.slot.GMAdOptionUtil
-import com.bytedance.msdk.api.v2.slot.GMAdSlotNative
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
 import net.niuxiaoer.flutter_gromore.constants.FlutterGromoreConstants
 import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedCache
-import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedManager
 import net.niuxiaoer.flutter_gromore.utils.Utils
 
 
@@ -106,6 +96,7 @@ class FlutterGromoreFeed(private val context: Context, viewId: Int, creationPara
 
         if (ad != null) {
             container.removeAllViews()
+            container.setBackgroundColor(Color.WHITE)
             container.addView(ad, layoutParams)
         }
 

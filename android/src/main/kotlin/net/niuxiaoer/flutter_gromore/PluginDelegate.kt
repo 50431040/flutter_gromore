@@ -11,6 +11,7 @@ import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import net.niuxiaoer.flutter_gromore.event.AdEventHandler
+import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedCache
 import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedManager
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreInterstitial
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreSplash
@@ -50,6 +51,12 @@ class PluginDelegate(private val activity: Activity, private val binaryMessenger
             "loadFeedAd" -> {
                 require(arguments != null && arguments["adUnitId"] != null)
                 FlutterGromoreFeedManager(arguments, activity, result)
+            }
+            // 移除信息流广告
+            "removeFeedAd" -> {
+                require(arguments != null && arguments["feedId"] != null)
+                FlutterGromoreFeedCache.removeCacheFeedAd((arguments["feedId"] as String).toInt())
+                result.success(true)
             }
         }
     }
