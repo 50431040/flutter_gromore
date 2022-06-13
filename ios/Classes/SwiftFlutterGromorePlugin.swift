@@ -6,6 +6,7 @@ import ABUAdSDK
 public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     private static var messenger: FlutterBinaryMessenger? = nil
     private var feedManager: FlutterGromoreFeedManager?
+    private var interstitialFullAd: FlutterGromoreInterstitial?
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: FlutterGromoreContants.methodChannelName, binaryMessenger: registrar.messenger())
@@ -31,7 +32,7 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         case "showSplashAd":
             showSplashAd(args: args, result: result)
         case "showInterstitialAd":
-            Utils.getVC().addChild(FlutterGromoreInterstitial.init(messenger: SwiftFlutterGromorePlugin.messenger!, arguments: args))
+            interstitialFullAd = FlutterGromoreInterstitial(messenger: SwiftFlutterGromorePlugin.messenger!, arguments: args)
             result(true)
         case "loadFeedAd":
             feedManager = FlutterGromoreFeedManager(args: args, result: result)
