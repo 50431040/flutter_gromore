@@ -24,7 +24,7 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
     }
     
     func initAd() {
-        let adViewId: String = createParams["viewId"] as! String
+        let adViewId: String = createParams["feedId"] as! String
         if let adView: ABUNativeAdView = FlutterGromoreFeedCache.getAd(key: adViewId) {
             adView.rootViewController = Utils.getVC()
             adView.delegate = self
