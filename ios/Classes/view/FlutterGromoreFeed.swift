@@ -11,12 +11,12 @@ import ABUAdSDK
 class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate, ABUNativeAdVideoDelegate, FlutterGromoreBase {
     var methodChannel: FlutterMethodChannel?
     /// 容器
-    private var container: UIView
+    private var container: FlutterGromoreIntercptPenetrateView
     /// 传递过来的参数
     private var createParams: [String: Any]
     
     init(frame: CGRect, id: Int64, params: Any?, messenger: FlutterBinaryMessenger) {
-        container = UIView(frame: frame)
+        container = FlutterGromoreIntercptPenetrateView(frame: frame)
         createParams = params as? [String : Any] ?? [:]
         super.init()
         methodChannel = initMethodChannel(channelName: "\(FlutterGromoreContants.feedViewTypeId)/\(id)", messenger: messenger)
