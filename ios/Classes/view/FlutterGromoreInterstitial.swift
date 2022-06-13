@@ -8,20 +8,20 @@
 import Foundation
 import ABUAdSDK
 
-class FlutterGromoreInterstitial: UIViewController, FlutterGromoreBase, ABUInterstitialProAdDelegate {
+class FlutterGromoreInterstitial: UIViewController, FlutterGromoreBase, ABUInterstitialAdDelegate {
     
     var methodChannel: FlutterMethodChannel? = nil
     var createParams: Dictionary<String, Any> = [:]
     
     init(messenger: FlutterBinaryMessenger, arguments: Dictionary<String, Any>) {
-        
+
         super.init(nibName: nil, bundle: nil)
         
         methodChannel = initMethodChannel(channelName: "\(FlutterGromoreContants.interstitialTypeId)/\(arguments["id"] ?? "")", messenger: messenger)
         createParams = arguments
-        
+
         initAd()
-        
+
     }
     
     required init?(coder: NSCoder) {
@@ -37,7 +37,7 @@ class FlutterGromoreInterstitial: UIViewController, FlutterGromoreBase, ABUInter
         
         let size = CGSize.init(width: width, height: height)
         
-        let interstitialAd = ABUInterstitialProAd.init(adUnitID: adUnitId, sizeForInterstitial: size)
+        let interstitialAd = ABUInterstitialAd.init(adUnitID: adUnitId, size: size)
         interstitialAd.delegate = self
         // 静音
         interstitialAd.mutedIfCan = true
@@ -53,45 +53,45 @@ class FlutterGromoreInterstitial: UIViewController, FlutterGromoreBase, ABUInter
     }
     
     /// 广告加载成功
-    func interstitialProAdDidLoad(_ interstitialProAd: ABUInterstitialProAd) {
+    func interstitialAdDidLoad(_ interstitialAd: ABUInterstitialAd) {
         postMessage("onInterstitialLoad")
-        if (interstitialProAd.isReady) {
-            interstitialProAd.show(fromRootViewController: Utils.getVC(), extroInfos: nil)
+        if (interstitialAd.isReady) {
+            interstitialAd.show(fromRootViewController: Utils.getVC())
         }
     }
     
     /// 广告加载失败
-    func interstitialProAd(_ interstitialProAd: ABUInterstitialProAd, didFailWithError error: Error?) {
+    func interstitialAd(_ interstitialAd: ABUInterstitialAd, didFailWithError error: Error?) {
         postMessage("onInterstitialLoadFail")
     }
     
     /// 广告渲染失败
-    func interstitialProAdViewRenderFail(_ interstitialProAd: ABUInterstitialProAd, error: Error?) {
+    func interstitialAdViewRenderFail(_ interstitialAd: ABUInterstitialAd, error: Error?) {
         postMessage("onInterstitialShowFail")
     }
     
     /// 广告展示
-    func interstitialProAdDidVisible(_ interstitialProAd: ABUInterstitialProAd) {
+    func interstitialAdDidVisible(_ interstitialAd: ABUInterstitialAd) {
         postMessage("onInterstitialShow")
     }
     
     /// 广告展示失败
-    func interstitialProAdDidShowFailed(_ interstitialProAd: ABUInterstitialProAd, error: Error) {
+    func interstitialAdDidShowFailed(_ interstitialAd: ABUInterstitialAd, error: Error) {
         postMessage("onInterstitialShowFail")
     }
     
     /// 广告点击
-    func interstitialProAdDidClick(_ interstitialProAd: ABUInterstitialProAd) {
+    func interstitialAdDidClick(_ interstitialAd: ABUInterstitialAd) {
         postMessage("onInterstitialAdClick")
     }
     
     /// 广告关闭
-    func interstitialProAdDidClose(_ interstitialProAd: ABUInterstitialProAd) {
+    func interstitialAdDidClose(_ interstitialAd: ABUInterstitialAd) {
         postMessage("onInterstitialClosed")
     }
     
     /// 详情页或appstore打开
-    func interstitialProAdWillPresentFullScreenModal(_ interstitialProAd: ABUInterstitialProAd) {
+    func interstitialAdWillPresentFullScreenModal(_ interstitialAd: ABUInterstitialAd) {
         postMessage("onAdOpened")
     }
 }
