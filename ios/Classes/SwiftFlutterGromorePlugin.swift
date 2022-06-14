@@ -6,6 +6,7 @@ import ABUAdSDK
 public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     private static var messenger: FlutterBinaryMessenger? = nil
     private var feedManager: FlutterGromoreFeedManager?
+    private var interstitialFullAd: FlutterGromoreInterstitial?
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: FlutterGromoreContants.methodChannelName, binaryMessenger: registrar.messenger())
@@ -31,17 +32,13 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         case "showSplashAd":
             showSplashAd(args: args, result: result)
         case "showInterstitialAd":
-            Utils.getVC().addChild(FlutterGromoreInterstitial.init(messenger: SwiftFlutterGromorePlugin.messenger!, arguments: args))
+            interstitialFullAd = FlutterGromoreInterstitial(messenger: SwiftFlutterGromorePlugin.messenger!, arguments: args)
             result(true)
         case "loadFeedAd":
             feedManager = FlutterGromoreFeedManager(args: args, result: result)
             feedManager?.loadAd()
-        case "clearFeedAd":
-            let adsId: [String] = args["adsId"] as? [String] ?? []
-            adsId.forEach { id in
-                FlutterGromoreFeedCache.removeAd(key: id)
-            }
-            result(true)
+        case "removeFeedAd":
+            removeFeedAd(args: args, result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -72,6 +69,14 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     private func showSplashAd(args: [String: Any], result: @escaping FlutterResult) {
         let splashView: FlutterGromoreSplash = FlutterGromoreSplash(args)
         UIApplication.shared.keyWindow?.addSubview(splashView)
+        result(true)
+    }
+    
+    /// 移除缓存中信息流广告
+    private func removeFeedAd(args: [String: Any], result: @escaping FlutterResult) {
+        if let feedId = args["feedId"] as? String {
+            FlutterGromoreFeedCache.removeAd(key: feedId)
+        }
         result(true)
     }
 }

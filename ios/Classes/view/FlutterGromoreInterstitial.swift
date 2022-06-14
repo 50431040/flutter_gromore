@@ -5,92 +5,67 @@
 //  Created by jlq on 2022/6/1.
 //
 
-import Foundation
 import ABUAdSDK
 
-class FlutterGromoreInterstitial: UIViewController, FlutterGromoreBase, ABUInterstitialProAdDelegate {
+class FlutterGromoreInterstitial: NSObject, FlutterGromoreBase, ABUInterstitialProAdDelegate {
+    var methodChannel: FlutterMethodChannel?
+    private var args: [String: Any]
+    private var interstitialAd: ABUInterstitialProAd?
     
-    var methodChannel: FlutterMethodChannel? = nil
-    var createParams: Dictionary<String, Any> = [:]
-    
-    init(messenger: FlutterBinaryMessenger, arguments: Dictionary<String, Any>) {
-        
-        super.init(nibName: nil, bundle: nil)
-        
+    init(messenger: FlutterBinaryMessenger, arguments: [String: Any]) {
+        args = arguments
+        super.init()
         methodChannel = initMethodChannel(channelName: "\(FlutterGromoreContants.interstitialTypeId)/\(arguments["id"] ?? "")", messenger: messenger)
-        createParams = arguments
-        
         initAd()
-        
     }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
-    
     
     func initAd() {
-        
-        let adUnitId = createParams["adUnitId"] as! String
-        let width = createParams["width"] as! Double
-        let height = createParams["height"] as! Double
-        
-        let size = CGSize.init(width: width, height: height)
-        
-        let interstitialAd = ABUInterstitialProAd.init(adUnitID: adUnitId, sizeForInterstitial: size)
-        interstitialAd.delegate = self
-        // 静音
-        interstitialAd.mutedIfCan = true
-        
-        if (ABUAdSDKManager.configDidLoad()) {
-            interstitialAd.loadData()
-        } else {
-            ABUAdSDKManager.addConfigLoadSuccessObserver(self, withAction: { id in
-                interstitialAd.loadData()
-            })
+        let adUnitId: String = args["adUnitId"] as! String
+        let size: CGSize = CGSize(
+            width: args["width"] as? Double ?? 0,
+            height: args["height"] as? Double ?? 0
+        )
+        interstitialAd = ABUInterstitialProAd(adUnitID: adUnitId, sizeForInterstitial: size)
+        if let ad = interstitialAd {
+            ad.delegate = self
+            ad.mutedIfCan = true
+            ad.loadData()
         }
-        
     }
     
-    /// 广告加载成功
+    /// 插全屏广告加载成功
     func interstitialProAdDidLoad(_ interstitialProAd: ABUInterstitialProAd) {
         postMessage("onInterstitialLoad")
-        if (interstitialProAd.isReady) {
-            interstitialProAd.show(fromRootViewController: Utils.getVC(), extroInfos: nil)
+        if let ad = interstitialAd, ad.isReady {
+            ad.show(fromRootViewController: Utils.getVC(), extroInfos: nil)
         }
     }
     
-    /// 广告加载失败
+    /// 插全屏广告加载失败
     func interstitialProAd(_ interstitialProAd: ABUInterstitialProAd, didFailWithError error: Error?) {
         postMessage("onInterstitialLoadFail")
     }
     
-    /// 广告渲染失败
-    func interstitialProAdViewRenderFail(_ interstitialProAd: ABUInterstitialProAd, error: Error?) {
-        postMessage("onInterstitialShowFail")
-    }
-    
-    /// 广告展示
+    /// 展示插全屏广告
     func interstitialProAdDidVisible(_ interstitialProAd: ABUInterstitialProAd) {
         postMessage("onInterstitialShow")
     }
     
-    /// 广告展示失败
     func interstitialProAdDidShowFailed(_ interstitialProAd: ABUInterstitialProAd, error: Error) {
         postMessage("onInterstitialShowFail")
     }
     
-    /// 广告点击
+    /// 点击插全屏广告
     func interstitialProAdDidClick(_ interstitialProAd: ABUInterstitialProAd) {
         postMessage("onInterstitialAdClick")
     }
     
-    /// 广告关闭
+    /// 插全屏广告关闭
     func interstitialProAdDidClose(_ interstitialProAd: ABUInterstitialProAd) {
         postMessage("onInterstitialClosed")
     }
     
-    /// 详情页或appstore打开
+    /// 即将弹出广告详情页
     func interstitialProAdWillPresentFullScreenModal(_ interstitialProAd: ABUInterstitialProAd) {
         postMessage("onAdOpened")
     }

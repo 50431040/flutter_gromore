@@ -20,7 +20,7 @@ class GroMoreAdConfig {
     if(Platform.isAndroid){
       return '887609336';
     }
-    return '887615532';
+    return '102083881';
   }
 
   /// 信息流广告ID
@@ -28,7 +28,7 @@ class GroMoreAdConfig {
     if(Platform.isAndroid){
       return '946996514';
     }
-    return '947047858';
+    return '102083975';
   }
 
   /// 插屏广告ID
@@ -36,6 +36,6 @@ class GroMoreAdConfig {
     if(Platform.isAndroid){
       return '946996513';
     }
-    return '947047859';
+    return '102082993';
   }
 }
