@@ -37,12 +37,8 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         case "loadFeedAd":
             feedManager = FlutterGromoreFeedManager(args: args, result: result)
             feedManager?.loadAd()
-        case "clearFeedAd":
-            let adsId: [String] = args["adsId"] as? [String] ?? []
-            adsId.forEach { id in
-                FlutterGromoreFeedCache.removeAd(key: id)
-            }
-            result(true)
+        case "removeFeedAd":
+            removeFeedAd(args: args, result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -73,6 +69,14 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     private func showSplashAd(args: [String: Any], result: @escaping FlutterResult) {
         let splashView: FlutterGromoreSplash = FlutterGromoreSplash(args)
         UIApplication.shared.keyWindow?.addSubview(splashView)
+        result(true)
+    }
+    
+    /// 移除缓存中信息流广告
+    private func removeFeedAd(args: [String: Any], result: @escaping FlutterResult) {
+        if let feedId = args["feedId"] as? String {
+            FlutterGromoreFeedCache.removeAd(key: feedId)
+        }
         result(true)
     }
 }
