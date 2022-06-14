@@ -45,7 +45,7 @@ class FlutterGromore {
   }
 
   /// event类事件监听
-  static void _handleEventListenter() {
+  static void _handleEventListener() {
     _eventChannel.receiveBroadcastStream().listen((event) {
       debugPrint(event.toString());
       String? id = event["id"] as String?;
@@ -74,7 +74,7 @@ class FlutterGromore {
 
     isInit = true;
     print("========== initSDK =========");
-    // _handleEventListenter();
+    _handleEventListener();
   }
 
   /// 展示开屏广告
