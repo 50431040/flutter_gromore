@@ -5,6 +5,7 @@ import ABUAdSDK
 
 public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     private static var messenger: FlutterBinaryMessenger? = nil
+    private var splashAd: FlutterGromoreSplash?
     private var feedManager: FlutterGromoreFeedManager?
     private var interstitialFullAd: FlutterGromoreInterstitial?
     
@@ -66,9 +67,9 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         result(true)
     }
     
+    // 显示开屏广告
     private func showSplashAd(args: [String: Any], result: @escaping FlutterResult) {
-        let splashView: FlutterGromoreSplash = FlutterGromoreSplash(args)
-        UIApplication.shared.keyWindow?.addSubview(splashView)
+        splashAd = FlutterGromoreSplash(args)
         result(true)
     }
     

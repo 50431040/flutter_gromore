@@ -7,17 +7,13 @@
 
 import ABUAdSDK
 
-class FlutterGromoreSplash: UIView, ABUSplashAdDelegate {
+class FlutterGromoreSplash: NSObject, ABUSplashAdDelegate {
     private var eventId: String?
     private var splashAd: ABUSplashAd?
     
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
-    
     init(_ args: [String: Any]) {
         eventId = args["id"] as? String
-        super.init(frame: CGRect())
+        super.init()
         initAd(args: args)
     }
     
