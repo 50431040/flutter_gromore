@@ -68,6 +68,10 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
     /// 广告展示
     func nativeAdDidBecomeVisible(_ nativeAdView: ABUNativeAdView) {
         postMessage("onAdShow")
+        if let adnName = nativeAdView.getShowEcpmInfo()?.adnName, adnName == "pangle" {
+            // 穿山甲广告存在点击穿透
+            container.isPermeable = true
+        }
     }
     
     /// 播放状态改变(仅三方adn支持的视频广告有)

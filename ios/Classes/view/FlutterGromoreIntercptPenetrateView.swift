@@ -7,8 +7,11 @@
 
 /// 用于拦截点击穿透
 class FlutterGromoreIntercptPenetrateView: UIView {
+    /// 存在穿透问题？
+    var isPermeable: Bool = false
+    
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        if let overlay = getFlutterOverlayView() {
+        if isPermeable, let overlay = getFlutterOverlayView() {
             // 在窗口的点击位置
             let windowPoint: CGPoint = convert(point, to: Utils.getVC().view)
             // 点击位置在 PlatformView 被遮盖时形成的 FlutterOverlayView 上时阻断点击穿透
