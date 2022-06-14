@@ -14,7 +14,7 @@ class AdUtils {
     }
 
     // 加载信息流广告
-    List<String> idList = await FlutterGromore.loadFeedAd(GromoreFeedConfig(adUnitId: GoMoreAdConfig.feedId));
+    List<String> idList = await FlutterGromore.loadFeedAd(GromoreFeedConfig(adUnitId: GroMoreAdConfig.feedId));
 
     if (idList.isNotEmpty) {
       String id = idList.removeLast();

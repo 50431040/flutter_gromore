@@ -45,14 +45,14 @@ class _HomePageState extends State<HomePage> {
   /// 初始化SDK
   void initSDK() {
     FlutterGromore.initSDK(
-        appId: GoMoreAdConfig.appId, appName: APP_NAME, debug: !IS_PRODUCTION);
+        appId: GroMoreAdConfig.appId, appName: APP_NAME, debug: !IS_PRODUCTION);
   }
 
   /// 展示开屏广告
   void showSplashAd() {
     FlutterGromore.showSplashAd(
         config: GromoreSplashConfig(
-            adUnitId: GoMoreAdConfig.splashId, logo: "launch_image"),
+            adUnitId: GroMoreAdConfig.splashId, logo: "launch_image"),
         callback: GromoreSplashCallback(onAdShow: () {
           print("callback --- onAdShow");
         }));
@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
   void showInterstitialAd() {
     FlutterGromore.showInterstitialAd(
         config: GromoreInterstitialConfig(
-            adUnitId: GoMoreAdConfig.interstitialId,
+            adUnitId: GroMoreAdConfig.interstitialId,
             size: GromoreAdSize.withPercent(
                 MediaQuery.of(context).size.width * 2 / 3, 2 / 3)),
         callback: GromoreInterstitialCallback(onInterstitialShow: () {

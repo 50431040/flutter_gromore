@@ -133,7 +133,7 @@ dependencies {
 
 #### iOS
 
-> 插件已经引入 GroMore 3.4..0.4 和穿山甲 SDK 4.3.0.5
+> 插件已经引入 GroMore 3.4.0.4 和穿山甲 SDK 4.3.0.5
 
 1. 引入 GroMore 提供的广告 Adapter，按需引入即可，案例中引入百度和广点通。
 2. 引入广告的基础 SDK，案例中使用 CocoaPods 引入百度和广点通，可见 `example/ios/Podfile` 。引入时需要注意 Adapter 所支持的 SDK 版本范围，可在 GroMore 接入文档查看。
@@ -199,7 +199,7 @@ FlutterGromore.initSDK(
 
 1. 说明
 
-- 开屏广告提供了两种方式：第一种是自渲染，第二种是拉起原生页面
+- 开屏广告提供了两种方式：第一种是自渲染（仅Android端可用），第二种是拉起原生页面
 - 自渲染方式以Widget的方式提供
 - 原生页面方式支持传入logo，渲染时logo会在底部显示（logo值不需要文件后缀）
 
@@ -256,7 +256,9 @@ child: GromoreSplashView(
 | onAdLoadTimeout       | 开屏广告加载超时                                             |
 | onAdEnd               | 开屏广告结束，这个时候会销毁广告（点击跳过、倒计时结束或渲染错误等 理应隐藏广告 的情况都会触发此回调，建议统一在此回调处理路由跳转等逻辑） |
 
-### 插屏广告
+### 插全屏广告
+
+该广告类型支持插屏、全屏混出
 
 1. 使用
 
@@ -295,16 +297,20 @@ FlutterGromore.showInterstitialAd(
 
 1. 说明
 
-- 信息流广告一般在渲染成功后才展示
+- 先加载广告id，成功后再渲染展示
 - 渲染成功回调中(onRenderSuccess)提供了一个参数，表示渲染后的广告高度，可以用来动态控制组件显示与否
 - 具体使用参考example
 
 2. 使用
 
 ```dart
+// 加载广告id
+List<String> idList = await FlutterGromore.loadFeedAd(GromoreFeedConfig(adUnitId: GroMoreAdConfig.feedId));
+
 GromoreFeedView(
-  creationParams:
-  GromoreFeedConfig(adUnitId: GoMoreAdConfig.feedId),
+  creationParams: {
+      "feedId": _feedAdId!
+  },
   callback: GromoreFeedCallback(
     onRenderSuccess: (double height) {
       print("GromoreFeedView | onRenderSuccess | $height");
