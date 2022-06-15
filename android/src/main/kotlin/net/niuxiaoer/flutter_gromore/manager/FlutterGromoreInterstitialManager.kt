@@ -3,6 +3,8 @@ package net.niuxiaoer.flutter_gromore.manager
 import android.app.Activity
 import android.util.Log
 import com.bytedance.msdk.api.AdError
+import com.bytedance.msdk.api.v2.GMMediationAdSdk
+import com.bytedance.msdk.api.v2.GMSettingConfigCallback
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAd
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdLoadCallback
 import com.bytedance.msdk.api.v2.slot.GMAdOptionUtil
@@ -12,15 +14,25 @@ import io.flutter.plugin.common.MethodChannel
 class FlutterGromoreInterstitialManager(private val params: Map<String, Any?>,
                                         private val activity: Activity,
                                         private val result: MethodChannel.Result) :
-        GMInterstitialFullAdLoadCallback {
+        GMInterstitialFullAdLoadCallback,
+        GMSettingConfigCallback {
 
     private var mInterstitialAd: GMInterstitialFullAd? = null
 
     init {
-        loadInterstitialAd()
+        loadAdWithCallback()
     }
 
-    private fun loadInterstitialAd() {
+    /// 加载插屏广告，如果没有config配置会等到加载完config配置后才去请求广告
+    private fun loadAdWithCallback() {
+        if (GMMediationAdSdk.configLoadSuccess()) {
+            loadAd()
+        } else {
+            GMMediationAdSdk.registerConfigCallback(this)
+        }
+    }
+
+    private fun loadAd() {
         val adUnitId = params["adUnitId"] as? String
         val width = params["width"] as? Double
         val height = params["height"] as? Double
@@ -53,5 +65,9 @@ class FlutterGromoreInterstitialManager(private val params: Map<String, Any?>,
     }
 
     override fun onInterstitialFullCached() {
+    }
+
+    override fun configLoad() {
+        loadAd()
     }
 }
