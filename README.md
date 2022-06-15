@@ -215,7 +215,7 @@ FlutterGromore.initSDK(
 
 1. 说明
 
-- 开屏广告提供了两种方式：第一种是自渲染（仅Android端可用），第二种是拉起原生页面
+- 开屏广告提供了两种方式：第一种是自渲染（仅Android端可用，不建议使用），第二种是拉起原生页面
 - 自渲染方式以Widget的方式提供
 - 原生页面方式支持传入logo，渲染时logo会在底部显示（logo值不需要文件后缀）
 
@@ -274,34 +274,49 @@ child: GromoreSplashView(
 
 ### 插全屏广告
 
-该广告类型支持插屏、全屏混出
+1. 说明
 
-1. 使用
+- 该广告类型支持插屏、全屏混出（穿山甲插屏/全屏代码位已无法新建，都使用GroMore【插全屏】广告位代替）
+- 先加载广告id，成功后再渲染展示
+
+2. 使用
 
 ```dart
-FlutterGromore.showInterstitialAd(
-  config: GromoreInterstitialConfig(
-    adUnitId: GoMoreAdConfig.interstitialId,
-    size: GromoreAdSize.withPercent(
-      MediaQuery.of(context).size.width * 2 / 3, 2 / 3)),
-  callback: GromoreInterstitialCallback(onInterstitialShow: () {
-    print("===== showInterstitialAd success ======");
-}));
+// 加载全屏广告
+interstitialId = await FlutterGromore.loadInterstitialAd(
+    GromoreInterstitialConfig(
+        adUnitId: GroMoreAdConfig.interstitialId,
+        size: GromoreAdSize.withPercent(
+            MediaQuery.of(context).size.width * 2 / 3, 2 / 3)));
+if (interstitialId.isEmpty) {
+    print("加载全屏广告失败");
+}
+
+// 合适的时机展示插屏广告
+if (interstitialId.isNotEmpty) {
+    await FlutterGromore.showInterstitialAd(
+        interstitialId: interstitialId,
+        callback: GromoreInterstitialCallback(onInterstitialShow: () {
+            print("===== showInterstitialAd success ======");
+        }, onInterstitialClosed: () {
+            FlutterGromore.removeInterstitialAd(interstitialId);
+            interstitialId = "";
+            loadInterstitialAd();
+        }));
+}
 ```
 
-2. 配置（GromoreInterstitialConfig）
+3. 配置（GromoreInterstitialConfig）
 
 | 参数名   | 说明                        | 必填 |
 | -------- | --------------------------- | ---- |
 | adUnitId | 插屏广告位id                | 是   |
 | size     | 广告尺寸（GromoreAdSize类） | 是   |
 
-3. 回调（GromoreSplashCallback，命名和 **Android** 聚合文档基本一致）
+4. 回调（GromoreSplashCallback，命名和 **Android** 聚合文档基本一致）
 
 | 回调方法名             | 说明                                                         | 备注                                                         |
 | ---------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| onInterstitialLoadFail | 广告加载失败                                                 |                                                              |
-| onInterstitialLoad     | 广告加载成功                                                 |                                                              |
 | onInterstitialShow     | 广告展示                                                     |                                                              |
 | onInterstitialShowFail | 如果show时发现无可用广告（比如广告过期或者isReady=false），会触发该回调。 开发者应该在该回调里进行重新请求。 | iOS端广告渲染失败时(interstitialAdViewRenderFail)也会走此回调 |
 | onInterstitialAdClick  | 广告被点击                                                   |                                                              |
@@ -320,9 +335,18 @@ FlutterGromore.showInterstitialAd(
 2. 使用
 
 ```dart
-// 加载广告id
-List<String> idList = await FlutterGromore.loadFeedAd(GromoreFeedConfig(adUnitId: GroMoreAdConfig.feedId));
 
+// 加载信息流广告
+List<String> idList = await FlutterGromore.loadFeedAd(GromoreFeedConfig(adUnitId: GroMoreAdConfig.feedId));
+if (idList.isNotEmpty) {
+    String id = idList.removeLast();
+    feedAdIdList.addAll(idList);
+    return id;
+} else {
+    // 加载信息流广告失败
+}
+
+// 展示信息流广告
 GromoreFeedView(
   creationParams: {
       "feedId": _feedAdId!
@@ -364,9 +388,6 @@ GromoreFeedView(
 | onCancel        | 取消选择不喜欢原因 | 仅Android可用                                |
 | onRefuse        | 拒绝填写原因       | 仅Android可用                                |
 | onShow          | 拒绝弹框显示       | 仅Android可用                                |
-| onAdLoaded      | 拉取广告成功       |                                              |
-| onAdLoadedFail  | 拉取广告失败       |                                              |
-| configLoad      | 配置加载成功       | 仅Android可用，参考官方文档                  |
 
 ## 问题
 

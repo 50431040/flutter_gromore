@@ -73,7 +73,6 @@ class FlutterGromore {
         "initSDK", {"appId": appId, "appName": appName, "debug": debug});
 
     isInit = true;
-    print("========== initSDK =========");
     _handleEventListener();
   }
 
@@ -84,27 +83,47 @@ class FlutterGromore {
     assert(isInit);
 
     config.generateId();
-    debugPrint("showSplash ${config.id}");
     _eventCenter[config.id!] = callback;
 
     await _methodChannel.invokeMethod("showSplashAd", config.toJson());
   }
 
+  /// 加载插屏广告
+  static Future<String> loadInterstitialAd(GromoreInterstitialConfig config) async {
+    assert(isInit);
+
+    try {
+      String result = await _methodChannel.invokeMethod("loadInterstitialAd", config.toJson());
+      return result;
+    } catch(err) {
+      return "";
+    }
+  }
+
   /// 展示插屏广告
   static Future<void> showInterstitialAd(
-      {required GromoreInterstitialConfig config,
+      {required String interstitialId,
       GromoreInterstitialCallback? callback}) async {
     assert(isInit);
 
-    config.generateId();
-
     if (callback != null) {
       GromoreMethodChannelHandler<GromoreInterstitialCallback>.register(
-          "${FlutterGromoreConstants.interstitialTypeId}/${config.id}",
+          "${FlutterGromoreConstants.interstitialTypeId}/$interstitialId",
           callback);
     }
 
-    await _methodChannel.invokeMethod("showInterstitialAd", config.toJson());
+    await _methodChannel.invokeMethod("showInterstitialAd", {
+      "interstitialId": interstitialId
+    });
+  }
+
+  /// 移除信息流广告
+  static Future<void> removeInterstitialAd(String interstitialId) async {
+    assert(isInit);
+
+    await _methodChannel.invokeMethod("removeInterstitialAd", {
+      "interstitialId": interstitialId
+    });
   }
 
   /// 加载信息流广告
@@ -119,7 +138,7 @@ class FlutterGromore {
     }
   }
 
-  /// 加载信息流广告
+  /// 移除信息流广告
   static Future<void> removeFeedAd(String feedId) async {
     assert(isInit);
 

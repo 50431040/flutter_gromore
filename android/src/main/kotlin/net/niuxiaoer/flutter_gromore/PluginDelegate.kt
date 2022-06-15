@@ -13,10 +13,12 @@ import io.flutter.plugin.common.MethodChannel
 import net.niuxiaoer.flutter_gromore.event.AdEventHandler
 import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedCache
 import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedManager
+import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreInterstitialCache
+import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreInterstitialManager
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreInterstitial
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreSplash
 
-class PluginDelegate(private val activity: Activity, private val binaryMessenger: BinaryMessenger): MethodChannel.MethodCallHandler {
+class PluginDelegate(private val activity: Activity, private val binaryMessenger: BinaryMessenger) : MethodChannel.MethodCallHandler {
     private val TAG: String = this::class.java.simpleName
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -25,7 +27,7 @@ class PluginDelegate(private val activity: Activity, private val binaryMessenger
 
         Log.d(TAG, method)
 
-        when(method) {
+        when (method) {
             // 同时请求：READ_PHONE_STATE, COARSE_LOCATION, FINE_LOCATION, WRITE_EXTERNAL_STORAGE权限
             "requestPermissionIfNecessary" -> {
                 GMMediationAdSdk.requestPermissionIfNecessary(activity)
@@ -41,10 +43,21 @@ class PluginDelegate(private val activity: Activity, private val binaryMessenger
                 showSplash(arguments)
                 result.success(true)
             }
-            // 插屏
+            // 加载插屏广告
+            "loadInterstitialAd" -> {
+                require(arguments != null && arguments["adUnitId"] != null)
+                FlutterGromoreInterstitialManager(arguments, activity, result)
+            }
+            // 展示插屏广告
             "showInterstitialAd" -> {
-                require(arguments != null && arguments["id"] != null)
+                require(arguments != null && arguments["interstitialId"] != null)
                 FlutterGromoreInterstitial(activity, binaryMessenger, arguments)
+                result.success(true)
+            }
+            // 移除插屏广告
+            "removeInterstitialAd" -> {
+                require(arguments != null && arguments["interstitialId"] != null)
+                FlutterGromoreInterstitialCache.removeCacheInterstitialAd((arguments["interstitialId"] as String).toInt())
                 result.success(true)
             }
             // 加载信息流广告

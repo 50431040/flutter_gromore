@@ -6,18 +6,15 @@ import com.bytedance.msdk.api.AdError
 import com.bytedance.msdk.api.reward.RewardItem
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAd
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdListener
-import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdLoadCallback
-import com.bytedance.msdk.api.v2.slot.GMAdOptionUtil
-import com.bytedance.msdk.api.v2.slot.GMAdSlotInterstitialFull
 import io.flutter.plugin.common.BinaryMessenger
 import net.niuxiaoer.flutter_gromore.constants.FlutterGromoreConstants
+import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreInterstitialCache
 
 
 class FlutterGromoreInterstitial(private val activity: Activity,
                                  binaryMessenger: BinaryMessenger,
-                                 private val arguments: Map<String, Any?>) :
-        FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.interstitialTypeId}/${arguments["id"]}"),
-        GMInterstitialFullAdLoadCallback,
+                                 creationParams: Map<String, Any?>) :
+        FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.interstitialTypeId}/${creationParams["interstitialId"]}"),
         GMInterstitialFullAdListener {
 
     private val TAG: String = this::class.java.simpleName
@@ -25,26 +22,23 @@ class FlutterGromoreInterstitial(private val activity: Activity,
     private var mInterstitialAd: GMInterstitialFullAd? = null
 
     init {
+        mInterstitialAd = FlutterGromoreInterstitialCache.getCacheInterstitialAd((creationParams["interstitialId"] as String).toInt())
         initAd()
+    }
+
+    private fun showAd() {
+        mInterstitialAd.takeIf {
+            it != null && it.isReady
+        }?.let {
+            // 真正展示
+            it.setAdInterstitialFullListener(this)
+            it.showAd(activity)
+        }
     }
 
     // 初始化插屏广告
     override fun initAd() {
-        val adUnitId = arguments["adUnitId"] as? String
-        val width = arguments["width"] as? Double
-        val height = arguments["height"] as? Double
-
-        require(adUnitId != null && adUnitId.isNotEmpty() && width != null && height != null)
-
-        mInterstitialAd = GMInterstitialFullAd(activity, adUnitId)
-
-        val adSlotInterstitialFull = GMAdSlotInterstitialFull.Builder()
-                .setGMAdSlotBaiduOption(GMAdOptionUtil.getGMAdSlotBaiduOption().build())
-                .setGMAdSlotGDTOption(GMAdOptionUtil.getGMAdSlotGDTOption().build())
-                .setImageAdSize(width.toInt(), height.toInt())
-                .build()
-
-        mInterstitialAd?.loadAd(adSlotInterstitialFull, this)
+        showAd()
     }
 
     private fun destroyAd() {
@@ -104,27 +98,5 @@ class FlutterGromoreInterstitial(private val activity: Activity,
     // 激励视频播放完毕，验证是否有效发放奖励的回调，可以通过rewardItem获取服务端验证返回的数据，首先区分是哪个adn，然后获取数据。
     override fun onRewardVerify(p0: RewardItem) {
 
-    }
-
-    override fun onInterstitialFullLoadFail(error: AdError) {
-        Log.d(TAG, "onInterstitialLoadFail - ${error.code} - ${error.message}")
-        postMessage("onInterstitialLoadFail")
-        destroyAd()
-    }
-
-    override fun onInterstitialFullAdLoad() {
-        Log.d(TAG, "onInterstitialLoad")
-        postMessage("onInterstitialLoad")
-
-        mInterstitialAd.takeIf {
-            it != null && it.isReady
-        }?.let {
-            // 真正展示
-            it.setAdInterstitialFullListener(this)
-            it.showAd(activity)
-        }
-    }
-
-    override fun onInterstitialFullCached() {
     }
 }

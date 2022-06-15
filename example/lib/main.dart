@@ -37,15 +37,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String interstitialId = "";
+
   /// 请求权限（安卓端）
   void handleRequestPermission() {
     FlutterGromore.requestPermissionIfNecessary();
   }
 
   /// 初始化SDK
-  void initSDK() {
-    FlutterGromore.initSDK(
+  void initSDK() async {
+    await FlutterGromore.initSDK(
         appId: GroMoreAdConfig.appId, appName: APP_NAME, debug: !IS_PRODUCTION);
+
+    // 加载插屏广告
+    loadInterstitialAd();
   }
 
   /// 展示开屏广告
@@ -70,16 +75,32 @@ class _HomePageState extends State<HomePage> {
         context, MaterialPageRoute(builder: (context) => const FeedDemo()));
   }
 
-  /// 展示插屏广告
-  void showInterstitialAd() {
-    FlutterGromore.showInterstitialAd(
-        config: GromoreInterstitialConfig(
+  /// 加载插屏广告
+  Future<void> loadInterstitialAd() async {
+    interstitialId = await FlutterGromore.loadInterstitialAd(
+        GromoreInterstitialConfig(
             adUnitId: GroMoreAdConfig.interstitialId,
             size: GromoreAdSize.withPercent(
-                MediaQuery.of(context).size.width * 2 / 3, 2 / 3)),
-        callback: GromoreInterstitialCallback(onInterstitialShow: () {
-          print("===== showInterstitialAd success ======");
-        }));
+                MediaQuery.of(context).size.width * 2 / 3, 2 / 3)));
+
+    if (interstitialId.isEmpty) {
+      print("loadInterstitialAd 失败");
+    }
+  }
+
+  /// 合适的时机展示插屏广告
+  Future<void> showInterstitialAd() async {
+    if (interstitialId.isNotEmpty) {
+      await FlutterGromore.showInterstitialAd(
+          interstitialId: interstitialId,
+          callback: GromoreInterstitialCallback(onInterstitialShow: () {
+            print("====== showInterstitialAd success ======");
+          }, onInterstitialClosed: () {
+            FlutterGromore.removeInterstitialAd(interstitialId);
+            interstitialId = "";
+            loadInterstitialAd();
+          }));
+    }
   }
 
   @override
@@ -104,10 +125,11 @@ class _HomePageState extends State<HomePage> {
               child: const Text("开屏广告"),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: showSplashAdView,
-              child: const Text("开屏广告（自定义布局）"),
-            ),
+            // 不建议使用，仅安卓端可用
+            // ElevatedButton(
+            //   onPressed: showSplashAdView,
+            //   child: const Text("开屏广告（自定义布局）"),
+            // ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: showFeedAd,

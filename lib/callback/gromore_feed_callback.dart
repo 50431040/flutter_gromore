@@ -27,15 +27,6 @@ class GromoreFeedCallback extends GromoreBaseAdCallback {
   /// 拒绝弹框显示
   final GromoreVoidCallback? onShow;
 
-  /// 拉取广告成功
-  final GromoreVoidCallback? onAdLoaded;
-
-  /// 拉取广告失败
-  final GromoreVoidCallback? onAdLoadedFail;
-
-  /// 配置加载成功
-  final GromoreVoidCallback? configLoad;
-
   GromoreFeedCallback(
       {this.onAdClick,
       this.onAdShow,
@@ -44,10 +35,7 @@ class GromoreFeedCallback extends GromoreBaseAdCallback {
       this.onSelected,
       this.onCancel,
       this.onRefuse,
-      this.onShow,
-      this.onAdLoaded,
-      this.onAdLoadedFail,
-      this.configLoad});
+      this.onShow});
 
   /// 执行回调
   @override
@@ -68,12 +56,6 @@ class GromoreFeedCallback extends GromoreBaseAdCallback {
       onRefuse!();
     } else if (callbackName == "onShow" && onShow != null) {
       onShow!();
-    } else if (callbackName == "onAdLoaded" && onAdLoaded != null) {
-      onAdLoaded!();
-    } else if (callbackName == "onAdLoadedFail" && onAdLoadedFail != null) {
-      onAdLoadedFail!();
-    } else if (callbackName == "configLoad" && configLoad != null) {
-      configLoad!();
     }
   }
 }

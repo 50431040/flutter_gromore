@@ -2,12 +2,6 @@ import 'package:flutter_gromore/callback/gromore_base_callback.dart';
 import 'package:flutter_gromore/types.dart';
 
 class GromoreInterstitialCallback extends GromoreBaseAdCallback {
-  /// 广告加载失败
-  final GromoreVoidCallback? onInterstitialLoadFail;
-
-  /// 广告加载成功
-  final GromoreVoidCallback? onInterstitialLoad;
-
   /// 广告展示
   final GromoreVoidCallback? onInterstitialShow;
 
@@ -27,9 +21,7 @@ class GromoreInterstitialCallback extends GromoreBaseAdCallback {
   final GromoreVoidCallback? onAdLeftApplication;
 
   GromoreInterstitialCallback(
-      {this.onInterstitialLoadFail,
-      this.onInterstitialLoad,
-      this.onInterstitialShow,
+      {this.onInterstitialShow,
       this.onInterstitialShowFail,
       this.onInterstitialAdClick,
       this.onInterstitialClosed,
@@ -38,13 +30,7 @@ class GromoreInterstitialCallback extends GromoreBaseAdCallback {
 
   @override
   void exec(String callbackName, [arguments]) {
-    if (callbackName == "onInterstitialLoadFail" &&
-        onInterstitialLoadFail != null) {
-      onInterstitialLoadFail!();
-    } else if (callbackName == "onInterstitialLoad" &&
-        onInterstitialLoad != null) {
-      onInterstitialLoad!();
-    } else if (callbackName == "onInterstitialShow" &&
+    if (callbackName == "onInterstitialShow" &&
         onInterstitialShow != null) {
       onInterstitialShow!();
     } else if (callbackName == "onInterstitialShowFail" &&

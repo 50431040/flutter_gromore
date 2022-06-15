@@ -16,25 +16,25 @@ class GroMoreAdConfig {
   }
 
   /// 开屏广告ID
-  static String get splashId{
-    if(Platform.isAndroid){
-      return '887609336';
+  static String get splashId {
+    if (Platform.isAndroid) {
+      return '102082953';
     }
     return '102083881';
   }
 
   /// 信息流广告ID
-  static String get feedId{
-    if(Platform.isAndroid){
-      return '946996514';
+  static String get feedId {
+    if (Platform.isAndroid) {
+      return '102083741';
     }
     return '102083975';
   }
 
   /// 插屏广告ID
   static String get interstitialId {
-    if(Platform.isAndroid){
-      return '946996513';
+    if (Platform.isAndroid) {
+      return '102073230';
     }
     return '102082993';
   }
