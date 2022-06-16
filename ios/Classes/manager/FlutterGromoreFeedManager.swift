@@ -49,6 +49,6 @@ class FlutterGromoreFeedManager: NSObject, ABUNativeAdsManagerDelegate {
     
     /// 广告加载失败
     func nativeAdsManager(_ adsManager: ABUNativeAdsManager, didFailWithError error: Error?) {
-        result(FlutterError())
+        result(FlutterError(code: "0", message: error?.localizedDescription ?? "", details: error?.localizedDescription ?? ""))
     }
 }

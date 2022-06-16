@@ -7,6 +7,7 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     private static var messenger: FlutterBinaryMessenger? = nil
     private var splashAd: FlutterGromoreSplash?
     private var feedManager: FlutterGromoreFeedManager?
+    private var interstitialManager: FlutterGromoreInterstitialManager?
     private var interstitialFullAd: FlutterGromoreInterstitial?
     
     public static func register(with registrar: FlutterPluginRegistrar) {
@@ -32,9 +33,14 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
             initSDK(appId: args["appId"] as! String,result: result)
         case "showSplashAd":
             showSplashAd(args: args, result: result)
+        case "loadInterstitialAd":
+            interstitialManager = FlutterGromoreInterstitialManager(args: args, result: result)
+            interstitialManager?.loadAd()
         case "showInterstitialAd":
             interstitialFullAd = FlutterGromoreInterstitial(messenger: SwiftFlutterGromorePlugin.messenger!, arguments: args)
             result(true)
+        case "removeInterstitialAd":
+            removeInterstitialAd(args: args, result: result)
         case "loadFeedAd":
             feedManager = FlutterGromoreFeedManager(args: args, result: result)
             feedManager?.loadAd()
@@ -77,6 +83,14 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     private func removeFeedAd(args: [String: Any], result: @escaping FlutterResult) {
         if let feedId = args["feedId"] as? String {
             FlutterGromoreFeedCache.removeAd(key: feedId)
+        }
+        result(true)
+    }
+    
+    /// 移除缓存中插屏广告
+    private func removeInterstitialAd(args: [String: Any], result: @escaping FlutterResult) {
+        if let interstitialId = args["interstitialId"] as? String {
+            FlutterGromoreInterstitialCache.removeAd(key: interstitialId)
         }
         result(true)
     }

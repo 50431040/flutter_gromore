@@ -134,6 +134,7 @@ class FlutterGromore {
       List result = await _methodChannel.invokeMethod("loadFeedAd", config.toJson());
       return List<String>.from(result);
     } catch(err) {
+      debugPrint(err.toString());
       return [];
     }
   }
