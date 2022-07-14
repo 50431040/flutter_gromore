@@ -15,6 +15,7 @@ import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedCache
 import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedManager
 import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreInterstitialCache
 import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreInterstitialManager
+import net.niuxiaoer.flutter_gromore.utils.Utils
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreInterstitial
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreSplash
 
@@ -41,7 +42,8 @@ class PluginDelegate(private val activity: Activity, private val binaryMessenger
             // 开屏
             "showSplashAd" -> {
                 showSplash(arguments)
-                result.success(true)
+                // 在开屏广告关闭后才会调用result.success
+                Utils.splashResult = result
             }
             // 加载插屏广告
             "loadInterstitialAd" -> {
