@@ -11,9 +11,11 @@ class FlutterGromoreInterstitial: NSObject, FlutterGromoreBase, ABUInterstitialP
     var methodChannel: FlutterMethodChannel?
     private var args: [String: Any]
     private var interstitialAd: ABUInterstitialProAd?
+    private var result: FlutterResult
     
-    init(messenger: FlutterBinaryMessenger, arguments: [String: Any]) {
+    init(messenger: FlutterBinaryMessenger, arguments: [String: Any], result: @escaping FlutterResult) {
         args = arguments
+        self.result = result
         super.init()
         interstitialAd = FlutterGromoreInterstitialCache.getAd(key: arguments["interstitialId"] as! String)
         methodChannel = initMethodChannel(channelName: "\(FlutterGromoreContants.interstitialTypeId)/\(arguments["interstitialId"] ?? "")", messenger: messenger)
@@ -35,6 +37,7 @@ class FlutterGromoreInterstitial: NSObject, FlutterGromoreBase, ABUInterstitialP
     
     func interstitialProAdDidShowFailed(_ interstitialProAd: ABUInterstitialProAd, error: Error) {
         postMessage("onInterstitialShowFail")
+        result(false)
     }
     
     /// 点击插全屏广告
@@ -45,6 +48,7 @@ class FlutterGromoreInterstitial: NSObject, FlutterGromoreBase, ABUInterstitialP
     /// 插全屏广告关闭
     func interstitialProAdDidClose(_ interstitialProAd: ABUInterstitialProAd) {
         postMessage("onInterstitialClosed")
+        result(true)
     }
     
     /// 即将弹出广告详情页

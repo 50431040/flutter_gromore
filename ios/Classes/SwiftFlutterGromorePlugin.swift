@@ -37,8 +37,7 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
             interstitialManager = FlutterGromoreInterstitialManager(args: args, result: result)
             interstitialManager?.loadAd()
         case "showInterstitialAd":
-            interstitialFullAd = FlutterGromoreInterstitial(messenger: SwiftFlutterGromorePlugin.messenger!, arguments: args)
-            result(true)
+            interstitialFullAd = FlutterGromoreInterstitial(messenger: SwiftFlutterGromorePlugin.messenger!, arguments: args, result: result)
         case "removeInterstitialAd":
             removeInterstitialAd(args: args, result: result)
         case "loadFeedAd":
