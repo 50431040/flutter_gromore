@@ -7,13 +7,15 @@ import com.bytedance.msdk.api.reward.RewardItem
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAd
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdListener
 import io.flutter.plugin.common.BinaryMessenger
+import io.flutter.plugin.common.MethodChannel
 import net.niuxiaoer.flutter_gromore.constants.FlutterGromoreConstants
 import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreInterstitialCache
 
 
 class FlutterGromoreInterstitial(private val activity: Activity,
                                  binaryMessenger: BinaryMessenger,
-                                 creationParams: Map<String, Any?>) :
+                                 creationParams: Map<String, Any?>,
+                                 private val result: MethodChannel.Result) :
         FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.interstitialTypeId}/${creationParams["interstitialId"]}"),
         GMInterstitialFullAdListener {
 
@@ -56,6 +58,7 @@ class FlutterGromoreInterstitial(private val activity: Activity,
     override fun onInterstitialFullShowFail(p0: AdError) {
         Log.d(TAG, "onInterstitialShowFail -- ${p0.message}")
         postMessage("onInterstitialShowFail")
+        result.success(false)
     }
 
     // 广告被点击
@@ -67,6 +70,7 @@ class FlutterGromoreInterstitial(private val activity: Activity,
     // 关闭广告
     override fun onInterstitialFullClosed() {
         Log.d(TAG, "onInterstitialClosed")
+        result.success(true)
         postMessage("onInterstitialClosed")
         destroyAd()
     }

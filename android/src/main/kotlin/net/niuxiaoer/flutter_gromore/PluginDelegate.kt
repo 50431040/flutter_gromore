@@ -53,8 +53,7 @@ class PluginDelegate(private val activity: Activity, private val binaryMessenger
             // 展示插屏广告
             "showInterstitialAd" -> {
                 require(arguments != null && arguments["interstitialId"] != null)
-                FlutterGromoreInterstitial(activity, binaryMessenger, arguments)
-                result.success(true)
+                FlutterGromoreInterstitial(activity, binaryMessenger, arguments, result)
             }
             // 移除插屏广告
             "removeInterstitialAd" -> {
