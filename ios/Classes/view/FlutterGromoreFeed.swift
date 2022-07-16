@@ -68,15 +68,24 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
     /// 广告展示
     func nativeAdDidBecomeVisible(_ nativeAdView: ABUNativeAdView) {
         postMessage("onAdShow")
+        
         if let adnName = nativeAdView.getShowEcpmInfo()?.adnName, adnName == "pangle" {
             // 穿山甲广告存在点击穿透
             container.isPermeable = true
+            // 穿山甲广告每次滑入视图时都会调用 “用户申请展示广告”
+            // Guess: BUNativeExpressAdView 大概在 viewWillAppear 调用了展示广告，打算移除这一层
+            // 层级结构：ABUNativeAdView -> BUNativeExpressAdView -> BUWKWebViewClient
+            if let pangleNativeAdView = nativeAdView.subviews.first,
+               let pangleWebView = pangleNativeAdView.subviews.first {
+                pangleNativeAdView.removeFromSuperview()
+                nativeAdView.addSubview(pangleWebView)
+            }
         }
     }
     
     /// 播放状态改变(仅三方adn支持的视频广告有)
     func nativeAdExpressView(_ nativeAdView: ABUNativeAdView, stateDidChanged playerState: ABUPlayerPlayState) {
-//        postMessage("nativeAdExpressViewStateChange")
+        //        postMessage("nativeAdExpressViewStateChange")
     }
     
     /// 点击事件
@@ -96,21 +105,21 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
     
     /// 广告即将展示全屏页面/商店时触发
     func nativeAdViewWillPresentFullScreenModal(_ nativeAdView: ABUNativeAdView) {
-//        postMessage("nativeAdViewWillPresentFullScreenModal")
+        //        postMessage("nativeAdViewWillPresentFullScreenModal")
     }
     
-//    /// 视频广告点击
-//    func nativeAdVideoDidClick(_ nativeAdView: ABUNativeAdView?) {
-//        postMessage("nativeAdVideoDidClick")
-//    }
-//
-//    /// 视频广告状态改变
-//    func nativeAdVideo(_ nativeAdView: ABUNativeAdView?, stateDidChanged playerState: ABUPlayerPlayState) {
-//        postMessage("nativeAdVideoStateChange")
-//    }
-//
-//    /// 视频广告播放结束
-//    func nativeAdVideoDidPlayFinish(_ nativeAdView: ABUNativeAdView?) {
-//        postMessage("nativeAdVideoDidPlayFinish")
-//    }
+    //    /// 视频广告点击
+    //    func nativeAdVideoDidClick(_ nativeAdView: ABUNativeAdView?) {
+    //        postMessage("nativeAdVideoDidClick")
+    //    }
+    //
+    //    /// 视频广告状态改变
+    //    func nativeAdVideo(_ nativeAdView: ABUNativeAdView?, stateDidChanged playerState: ABUPlayerPlayState) {
+    //        postMessage("nativeAdVideoStateChange")
+    //    }
+    //
+    //    /// 视频广告播放结束
+    //    func nativeAdVideoDidPlayFinish(_ nativeAdView: ABUNativeAdView?) {
+    //        postMessage("nativeAdVideoDidPlayFinish")
+    //    }
 }
