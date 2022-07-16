@@ -32,7 +32,7 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         case "initSDK":
             initSDK(appId: args["appId"] as! String,result: result)
         case "showSplashAd":
-            showSplashAd(args: args, result: result)
+            splashAd = FlutterGromoreSplash(args: args, result: result)
         case "loadInterstitialAd":
             interstitialManager = FlutterGromoreInterstitialManager(args: args, result: result)
             interstitialManager?.loadAd()
@@ -69,12 +69,6 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
             ABUUserConfig.logEnable = true
             return ABUUserConfig
         }
-        result(true)
-    }
-    
-    // 显示开屏广告
-    private func showSplashAd(args: [String: Any], result: @escaping FlutterResult) {
-        splashAd = FlutterGromoreSplash(args)
         result(true)
     }
     

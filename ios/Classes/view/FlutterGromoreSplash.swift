@@ -10,9 +10,11 @@ import ABUAdSDK
 class FlutterGromoreSplash: NSObject, ABUSplashAdDelegate {
     private var eventId: String?
     private var splashAd: ABUSplashAd?
+    private var result: FlutterResult
     
-    init(_ args: [String: Any]) {
+    init(args: [String: Any], result: @escaping FlutterResult) {
         eventId = args["id"] as? String
+        self.result = result
         super.init()
         initAd(args: args)
     }
@@ -68,11 +70,13 @@ class FlutterGromoreSplash: NSObject, ABUSplashAdDelegate {
     func splashAd(_ splashAd: ABUSplashAd, didFailWithError error: Error?) {
         sendEvent("onSplashAdLoadFail")
         sendEvent("onAdEnd")
+        result(false)
     }
     
     /// 开屏广告关闭
     func splashAdDidClose(_ splashAd: ABUSplashAd) {
         sendEvent("onAdEnd")
+        result(true)
         splashAd.destoryAd()
     }
     
@@ -85,6 +89,7 @@ class FlutterGromoreSplash: NSObject, ABUSplashAdDelegate {
     func splashAdDidShowFailed(_ splashAd: ABUSplashAd, error: Error) {
         sendEvent("onAdShowFail")
         sendEvent("onAdEnd")
+        result(false)
     }
     
     ///点击了开屏广告
