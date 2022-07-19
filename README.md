@@ -138,10 +138,10 @@ dependencies {
 1. 引入广告的基础 SDK，案例中使用 CocoaPods 引入百度和广点通，可见 `example/ios/Podfile` 。引入时需要注意 Adapter 所支持的 SDK 版本范围，可在 GroMore 接入文档查看。
 2. 引入 GroMore 提供的广告 Adapter，按需引入即可，案例中引入百度和广点通。在下载的 `GroMore_iOS_V3.4.0.5` 文件中将需要的 Adapter 复制到项目 `ios/Frameworks` 下，然后链接到 `Build Phases -> Link Binary With Libraries` ，如图：
 
-   ![ios-frameworks](https://raw.githubusercontent.com/50431040/flutter_gromore/main/screenshots/ios-frameworks.png)
+   ![ios-frameworks](./screenshots/ios-frameworks.png)
 3. 对 Adapter 插件库配置 `-force_load` 项目，可见 [穿山甲 GroMore Xcode 编译配置](https://www.csjplatform.com/union/media/union/download/detail?id=108&docId=618372f59e41cf0042bc001b&osType=ios) ，请以穿山甲文档为准。
 
-   ![pangle-xcode](https://raw.githubusercontent.com/50431040/flutter_gromore/main/screenshots/pangle-xcode.png)
+   ![pangle-xcode](./screenshots/pangle-xcode.png)
 4. 建议允许 `http` 访问，`info.plist` 添加：
 
    ```plist
@@ -395,7 +395,7 @@ GromoreFeedView(
 
 使用`await`保证`FlutterGromore.showSplashAd`方法结束后再调用插屏广告的展示方法。
 
-请提[issue](https://github.com/50431040/flutter_gromore/issues)
+其他问题请提[issue](https://github.com/50431040/flutter_gromore/issues)
 
 ## 团队
 
