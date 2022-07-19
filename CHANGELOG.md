@@ -1,3 +1,5 @@
-## 0.0.1
+## 1.0.0
 
-* TODO: Describe initial release.
+- 支持开屏广告
+- 支持插屏广告
+- 支持信息流广告
