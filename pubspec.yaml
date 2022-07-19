@@ -1,7 +1,10 @@
 name: flutter_gromore
 description: 穿山甲Gromore插件
 version: 1.0.0
-homepage:
+homepage: https://github.com/50431040/flutter_gromore
+repository: https://github.com/50431040/flutter_gromore
+documentation: https://github.com/50431040/flutter_gromore/blob/main/README.md
+issue_tracker: https://github.com/50431040/flutter_gromore/issues
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
