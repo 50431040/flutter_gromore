@@ -222,8 +222,8 @@ FlutterGromore.initSDK(
 2. 使用
 
 ```dart
-// 拉起开屏页
-FlutterGromore.showSplashAd(
+// 拉起开屏页（会等待广告关闭或广告渲染失败）
+await FlutterGromore.showSplashAd(
   config: GromoreSplashConfig(
     adUnitId: GoMoreAdConfig.splashId, logo: "launch_image"),
   callback: GromoreSplashCallback(onAdShow: () {
@@ -390,6 +390,10 @@ GromoreFeedView(
 | onShow          | 拒绝弹框显示       | 仅Android可用                                |
 
 ## 问题
+
+1. iOS端的开屏广告只能使用`FlutterGromore.showSplashAd`进行，如果在此时同时加载插屏广告，可能会导致插屏广告出现在开屏广告上方
+
+使用`await`保证`FlutterGromore.showSplashAd`方法结束后再调用插屏广告的展示方法。
 
 请提[issue](https://github.com/50431040/flutter_gromore/issues)
 
