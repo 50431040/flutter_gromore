@@ -5,7 +5,6 @@ import 'package:flutter_gromore/view/gromore_feed_view.dart';
 import 'package:flutter_gromore_example/utils/ad_utils.dart';
 
 class FeedView extends StatefulWidget {
-
   const FeedView({Key? key}) : super(key: key);
 
   @override
@@ -45,26 +44,23 @@ class _FeedViewState extends State<FeedView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return _show ? SizedBox(
-      height: _height,
-      child: GromoreFeedView(
-          creationParams: {
-            "feedId": _feedAdId!
-          },
-          callback: GromoreFeedCallback(
-            onRenderSuccess: (double height) {
-              print("GromoreFeedView | onRenderSuccess | $height");
-              setState(() {
-                _height = height;
-              });
-            },
-            onSelected: () {
-              setState(() {
-                _show = false;
-              });
-            }
-          )),
-    ) : const SizedBox();
+    return _show
+        ? SizedBox(
+            height: _height,
+            child: GromoreFeedView(
+                creationParams: {"feedId": _feedAdId!},
+                callback: GromoreFeedCallback(onRenderSuccess: (double height) {
+                  print("GromoreFeedView | onRenderSuccess | $height");
+                  setState(() {
+                    _height = height;
+                  });
+                }, onSelected: () {
+                  setState(() {
+                    _show = false;
+                  });
+                })),
+          )
+        : const SizedBox();
   }
 
   @override

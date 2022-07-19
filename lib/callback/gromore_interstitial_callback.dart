@@ -30,8 +30,7 @@ class GromoreInterstitialCallback extends GromoreBaseAdCallback {
 
   @override
   void exec(String callbackName, [arguments]) {
-    if (callbackName == "onInterstitialShow" &&
-        onInterstitialShow != null) {
+    if (callbackName == "onInterstitialShow" && onInterstitialShow != null) {
       onInterstitialShow!();
     } else if (callbackName == "onInterstitialShowFail" &&
         onInterstitialShowFail != null) {

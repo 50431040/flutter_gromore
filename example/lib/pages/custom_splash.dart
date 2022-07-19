@@ -24,13 +24,12 @@ class _CustomSplashState extends State<CustomSplash> {
         children: [
           Expanded(
             child: GromoreSplashView(
-                creationParams: GromoreSplashConfig(
-                    adUnitId: GroMoreAdConfig.splashId, height: height - 80),
-            callback: GromoreSplashCallback(
-              onAdEnd: () {
+              creationParams: GromoreSplashConfig(
+                  adUnitId: GroMoreAdConfig.splashId, height: height - 80),
+              callback: GromoreSplashCallback(onAdEnd: () {
                 Navigator.pop(context);
-              }
-            ),),
+              }),
+            ),
           ),
           const SizedBox(
             height: 80,

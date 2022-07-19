@@ -1,4 +1,3 @@
-
 import 'package:flutter_gromore/config/gromore_feed_config.dart';
 import 'package:flutter_gromore/flutter_gromore.dart';
 import 'package:flutter_gromore_example/config/config.dart';
@@ -14,7 +13,8 @@ class AdUtils {
     }
 
     // 加载信息流广告
-    List<String> idList = await FlutterGromore.loadFeedAd(GromoreFeedConfig(adUnitId: GroMoreAdConfig.feedId));
+    List<String> idList = await FlutterGromore.loadFeedAd(
+        GromoreFeedConfig(adUnitId: GroMoreAdConfig.feedId));
 
     if (idList.isNotEmpty) {
       String id = idList.removeLast();

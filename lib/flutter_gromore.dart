@@ -89,13 +89,15 @@ class FlutterGromore {
   }
 
   /// 加载插屏广告
-  static Future<String> loadInterstitialAd(GromoreInterstitialConfig config) async {
+  static Future<String> loadInterstitialAd(
+      GromoreInterstitialConfig config) async {
     assert(isInit);
 
     try {
-      String result = await _methodChannel.invokeMethod("loadInterstitialAd", config.toJson());
+      String result = await _methodChannel.invokeMethod(
+          "loadInterstitialAd", config.toJson());
       return result;
-    } catch(err) {
+    } catch (err) {
       return "";
     }
   }
@@ -112,18 +114,16 @@ class FlutterGromore {
           callback);
     }
 
-    await _methodChannel.invokeMethod("showInterstitialAd", {
-      "interstitialId": interstitialId
-    });
+    await _methodChannel
+        .invokeMethod("showInterstitialAd", {"interstitialId": interstitialId});
   }
 
   /// 移除信息流广告
   static Future<void> removeInterstitialAd(String interstitialId) async {
     assert(isInit);
 
-    await _methodChannel.invokeMethod("removeInterstitialAd", {
-      "interstitialId": interstitialId
-    });
+    await _methodChannel.invokeMethod(
+        "removeInterstitialAd", {"interstitialId": interstitialId});
   }
 
   /// 加载信息流广告
@@ -131,9 +131,10 @@ class FlutterGromore {
     assert(isInit);
 
     try {
-      List result = await _methodChannel.invokeMethod("loadFeedAd", config.toJson());
+      List result =
+          await _methodChannel.invokeMethod("loadFeedAd", config.toJson());
       return List<String>.from(result);
-    } catch(err) {
+    } catch (err) {
       debugPrint(err.toString());
       return [];
     }
@@ -143,8 +144,6 @@ class FlutterGromore {
   static Future<void> removeFeedAd(String feedId) async {
     assert(isInit);
 
-    await _methodChannel.invokeMethod("removeFeedAd", {
-      "feedId": feedId
-    });
+    await _methodChannel.invokeMethod("removeFeedAd", {"feedId": feedId});
   }
 }
