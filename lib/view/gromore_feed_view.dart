@@ -10,6 +10,7 @@ import 'package:flutter_gromore/callback/gromore_method_channel_handler.dart';
 import 'package:flutter_gromore/constants/gromore_constans.dart';
 
 import 'package:flutter_gromore/flutter_gromore.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 /// 信息流广告组件
 class GromoreFeedView extends StatefulWidget {
@@ -27,6 +28,10 @@ class GromoreFeedView extends StatefulWidget {
 }
 
 class _GromoreFeedViewState extends State<GromoreFeedView> {
+  final UniqueKey _detectorKey = UniqueKey();
+
+  MethodChannel? _methodChannel;
+
   @override
   Widget build(BuildContext context) {
     if (!FlutterGromore.isInit) {
@@ -67,14 +72,30 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
                 ..create();
             },
           )
-        : UiKitView(
-            viewType: viewType,
-            creationParams: widget.creationParams,
-            creationParamsCodec: const StandardMessageCodec(),
-            onPlatformViewCreated: (id) {
-              // 注册事件回调
-              GromoreMethodChannelHandler<GromoreFeedCallback>.register(
-                  "$viewType/$id", widget.callback);
-            });
+        : VisibilityDetector(
+            key: _detectorKey,
+            child: UiKitView(
+                viewType: viewType,
+                creationParams: widget.creationParams,
+                creationParamsCodec: const StandardMessageCodec(),
+                onPlatformViewCreated: (id) {
+                  final String channelName = "$viewType/$id";
+                  _methodChannel = MethodChannel(channelName);
+                  // 注册事件回调
+                  GromoreMethodChannelHandler<GromoreFeedCallback>.register(
+                      channelName, widget.callback);
+                }),
+            onVisibilityChanged: (VisibilityInfo visibilityInfo) {
+              if (!mounted) return;
+              final Offset offset = (context.findRenderObject() as RenderBox)
+                  .localToGlobal(Offset.zero);
+              _methodChannel?.invokeMethod('updateVisibleBounds', {
+                'x': offset.dx + visibilityInfo.visibleBounds.left,
+                'y': offset.dy + visibilityInfo.visibleBounds.top,
+                'width': visibilityInfo.visibleBounds.width,
+                'height': visibilityInfo.visibleBounds.height,
+              });
+            },
+          );
   }
 }

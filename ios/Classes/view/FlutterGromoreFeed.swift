@@ -8,18 +8,18 @@
 import Foundation
 import ABUAdSDK
 
-class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate, ABUNativeAdVideoDelegate, FlutterGromoreBase {
-    var methodChannel: FlutterMethodChannel?
+class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate, ABUNativeAdVideoDelegate {
+    var methodChannel: FlutterMethodChannel
     /// 容器
     private var container: FlutterGromoreIntercptPenetrateView
     /// 传递过来的参数
     private var createParams: [String: Any]
     
     init(frame: CGRect, id: Int64, params: Any?, messenger: FlutterBinaryMessenger) {
-        container = FlutterGromoreIntercptPenetrateView(frame: frame)
+        methodChannel = FlutterMethodChannel(name: "\(FlutterGromoreContants.feedViewTypeId)/\(id)", binaryMessenger: messenger)
+        container = FlutterGromoreIntercptPenetrateView(frame: frame, methodChannel: methodChannel)
         createParams = params as? [String : Any] ?? [:]
         super.init()
-        methodChannel = initMethodChannel(channelName: "\(FlutterGromoreContants.feedViewTypeId)/\(id)", messenger: messenger)
         initAd()
     }
     
@@ -33,6 +33,10 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
                 adView.render()
             }
         }
+    }
+    
+    private func postMessage(_ method: String, arguments: Any? = nil) {
+        methodChannel.invokeMethod(method, arguments: arguments)
     }
     
     func view() -> UIView {
