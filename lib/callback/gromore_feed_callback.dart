@@ -27,15 +27,16 @@ class GromoreFeedCallback extends GromoreBaseAdCallback {
   /// 拒绝弹框显示
   final GromoreVoidCallback? onShow;
 
-  GromoreFeedCallback(
-      {this.onAdClick,
-      this.onAdShow,
-      this.onRenderFail,
-      this.onRenderSuccess,
-      this.onSelected,
-      this.onCancel,
-      this.onRefuse,
-      this.onShow});
+  GromoreFeedCallback({
+    this.onAdClick,
+    this.onAdShow,
+    this.onRenderFail,
+    this.onRenderSuccess,
+    this.onSelected,
+    this.onCancel,
+    this.onRefuse,
+    this.onShow,
+  });
 
   /// 执行回调
   @override
