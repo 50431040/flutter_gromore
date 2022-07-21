@@ -86,6 +86,7 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
                       channelName, widget.callback);
                 }),
             onVisibilityChanged: (VisibilityInfo visibilityInfo) {
+              if (!mounted) return;
               final Offset offset = (context.findRenderObject() as RenderBox)
                   .localToGlobal(Offset.zero);
               _methodChannel?.invokeMethod('updateVisibleBounds', {
