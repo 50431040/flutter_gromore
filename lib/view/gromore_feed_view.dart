@@ -33,6 +33,12 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
   MethodChannel? _methodChannel;
 
   @override
+  void initState() {
+    VisibilityDetectorController.instance.updateInterval = Duration.zero;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (!FlutterGromore.isInit) {
       print("============== 请先初始化SDK ==============");
