@@ -34,7 +34,8 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
 
   @override
   void initState() {
-    VisibilityDetectorController.instance.updateInterval = Duration.zero;
+    VisibilityDetectorController.instance.updateInterval =
+        const Duration(milliseconds: 100);
     super.initState();
   }
 
@@ -93,9 +94,12 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
                 }),
             onVisibilityChanged: (VisibilityInfo visibilityInfo) {
               if (!mounted) return;
+              // 被遮盖了
+              final bool isCovered = visibilityInfo.visibleFraction != 1.0;
               final Offset offset = (context.findRenderObject() as RenderBox)
                   .localToGlobal(Offset.zero);
               _methodChannel?.invokeMethod('updateVisibleBounds', {
+                'isCovered': isCovered,
                 'x': offset.dx + visibilityInfo.visibleBounds.left,
                 'y': offset.dy + visibilityInfo.visibleBounds.top,
                 'width': visibilityInfo.visibleBounds.width,

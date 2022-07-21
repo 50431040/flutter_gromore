@@ -9,6 +9,8 @@
 class FlutterGromoreIntercptPenetrateView: UIView {
     /// 存在穿透问题？
     var isPermeable: Bool = false
+    /// 广告是否被覆盖
+    var isCovered: Bool = false
     /// 广告的可见区域
     var visibleBounds: CGRect = CGRect.zero
     
@@ -25,6 +27,7 @@ class FlutterGromoreIntercptPenetrateView: UIView {
         switch call.method {
         case "updateVisibleBounds":
             let args: [String: Any] = call.arguments as! [String: Any]
+            isCovered = args["isCovered"] as! Bool
             visibleBounds = CGRect(x: args["x"] as! Double, y: args["y"] as! Double, width: args["width"] as! Double, height: args["height"] as! Double)
             result(true)
         default:
@@ -36,11 +39,11 @@ class FlutterGromoreIntercptPenetrateView: UIView {
         if isPermeable, let overlay = getFlutterOverlayView() {
             // 在窗口的点击位置
             let windowPoint: CGPoint = convert(point, to: Utils.getVC().view)
-            // 点击位置不在可见区域
+            // 被覆盖时 -> 点击位置不在可见区域
             // 或
             // 点击位置在 PlatformView 被遮盖时形成的 FlutterOverlayView 上时阻断点击穿透
             // TODO: PlatformView 被遮盖一部分时无法被正常点击（形成了 FlutterOverlayView）
-            if !visibleBounds.contains(windowPoint) || overlay.frame.contains(windowPoint) {
+            if (isCovered && !visibleBounds.contains(windowPoint)) || overlay.frame.contains(windowPoint) {
                 return false
             }
         }
