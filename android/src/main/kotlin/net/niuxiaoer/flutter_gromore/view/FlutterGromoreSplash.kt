@@ -121,12 +121,12 @@ class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdL
     private fun sendEvent(msg: String) = AdEventHandler.getInstance().sendEvent(AdEvent(id, msg))
 
     private fun finishActivity() {
+        Utils.splashResult?.success(true);
+        sendEvent("onAdEnd")
+
         finish()
         // 设置退出动画
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-
-        Utils.splashResult?.success(true);
-        sendEvent("onAdEnd")
     }
 
     override fun onDestroy() {
@@ -158,33 +158,35 @@ class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdL
     override fun onAdShowFail(p0: AdError) {
         Log.d(TAG, "onAdShowFail -- ${p0.message} -- ${p0.code}")
 
-        finishActivity()
         sendEvent("onAdShowFail")
+        finishActivity()
     }
 
     override fun onAdSkip() {
         Log.d(TAG, "onAdSkip")
 
-        finishActivity()
         sendEvent("onAdSkip")
+        finishActivity()
     }
 
     override fun onAdDismiss() {
         Log.d(TAG, "onAdDismiss")
 
-        finishActivity()
         sendEvent("onAdDismiss")
+        finishActivity()
     }
 
     override fun onSplashAdLoadFail(p0: AdError) {
         Log.d(TAG, "onSplashAdLoadFail")
 
-        finishActivity()
         sendEvent("onSplashAdLoadFail")
+        finishActivity()
     }
 
     override fun onSplashAdLoadSuccess() {
         Log.d(TAG, "onSplashAdLoadSuccess")
+
+        sendEvent("onSplashAdLoadSuccess")
 
         if (!isFinishing) {
             container.removeAllViews()
@@ -192,15 +194,13 @@ class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdL
         } else {
             finishActivity()
         }
-
-        sendEvent("onSplashAdLoadSuccess")
     }
 
     override fun onAdLoadTimeout() {
         Log.d(TAG, "onAdLoadTimeout")
 
-        finishActivity()
         sendEvent("onAdLoadTimeout")
+        finishActivity()
     }
 
 }
