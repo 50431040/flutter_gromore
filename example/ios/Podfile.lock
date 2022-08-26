@@ -1,22 +1,7 @@
 PODS:
-  - Ads-CN (4.3.0.5):
-    - Ads-CN/BUAdSDK (= 4.3.0.5)
-  - Ads-CN/BUAdSDK (4.3.0.5):
-    - Ads-CN/BUFoundation
-    - Ads-CN/Domestic
-  - Ads-CN/BUFoundation (4.3.0.5):
-    - BURelyFoundation (= 0.0.1.47)
-  - Ads-CN/Domestic (4.3.0.5):
-    - Ads-CN/BUFoundation
   - BaiduMobAdSDK (4.87)
-  - BURelyFoundation (0.0.1.47):
-    - BURelyFoundation/HM (= 0.0.1.47)
-    - BURelyFoundation/NETWork (= 0.0.1.47)
-  - BURelyFoundation/HM (0.0.1.47)
-  - BURelyFoundation/NETWork (0.0.1.47)
   - Flutter (1.0.0)
   - flutter_gromore (0.0.1):
-    - Ads-CN (= 4.3.0.5)
     - Flutter
   - GDTMobSDK (4.13.65):
     - GDTMobSDK/GDTMobSDK (= 4.13.65)
@@ -30,9 +15,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - Ads-CN
     - BaiduMobAdSDK
-    - BURelyFoundation
     - GDTMobSDK
 
 EXTERNAL SOURCES:
@@ -42,11 +25,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_gromore/ios"
 
 SPEC CHECKSUMS:
-  Ads-CN: b6b1294ba4e938168475ceacc786f7263d8b9747
   BaiduMobAdSDK: 618ea4c41d9206c3e27ad95a2d52e5cba9dd3cae
-  BURelyFoundation: 5e7f811867d3ee91ed20e426c505e31c55674256
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  flutter_gromore: 1c21f1f8e53eb6c4693b7416e27aada96bb1ca5c
+  flutter_gromore: a5fb7da5249fcbdc07b48c2d9da8349086c60d6b
   GDTMobSDK: b9e79e44a8fd4b5d2fe7fede57877dcbc27f7a8e
 
 PODFILE CHECKSUM: e48007a1b1bc2384afbbe68d3a59c8a041c7b8f5
