@@ -20,7 +20,7 @@ import net.niuxiaoer.flutter_gromore.event.AdEventHandler
 import net.niuxiaoer.flutter_gromore.utils.Utils
 
 // Activity实例
-class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdLoadCallback {
+class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAdLoadCallback {
 
     private val TAG: String = this::class.java.simpleName
 
@@ -35,6 +35,9 @@ class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdL
     // 广告容器宽高
     private var containerWidth: Int = 0
     private var containerHeight: Int = 0
+
+    // 是否已关闭
+    private var closed: Boolean = false
 
     // 初始化广告
     private fun initAd() {
@@ -121,6 +124,12 @@ class FlutterGromoreSplash: AppCompatActivity(), GMSplashAdListener, GMSplashAdL
     private fun sendEvent(msg: String) = AdEventHandler.getInstance().sendEvent(AdEvent(id, msg))
 
     private fun finishActivity() {
+        if (closed) {
+            return
+        }
+
+        closed = true
+
         Utils.splashResult?.success(true);
         sendEvent("onAdEnd")
 

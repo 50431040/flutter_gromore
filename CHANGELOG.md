@@ -10,4 +10,8 @@
 
 ## 1.0.2
 
-- 修复Android端插屏广告事件通信调用顺序导致部分机型程序崩溃的问题
+- 修复Android端开屏广告事件通信调用顺序导致部分机型程序崩溃的问题
+
+## 1.0.3
+
+- 修复FlutterGromoreSplash手动跳过时可能刚好触发了onAdDismiss事件，调用了两次finishActivity方法，导致App崩溃的问题
