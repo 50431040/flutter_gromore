@@ -17,11 +17,17 @@ import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedCache
 import net.niuxiaoer.flutter_gromore.utils.Utils
 
 
-class FlutterGromoreFeed(private val context: Context, viewId: Int, creationParams: Map<String?, Any?>, binaryMessenger: BinaryMessenger) :
-        FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.feedViewTypeId}/$viewId"),
-        PlatformView,
-        GMNativeExpressAdListener,
-        GMDislikeCallback {
+class FlutterGromoreFeed(
+    private val context: Context,
+    private val activity: Activity,
+    viewId: Int,
+    creationParams: Map<String?, Any?>,
+    binaryMessenger: BinaryMessenger
+) :
+    FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.feedViewTypeId}/$viewId"),
+    PlatformView,
+    GMNativeExpressAdListener,
+    GMDislikeCallback {
 
     private val TAG: String = this::class.java.simpleName
 
@@ -31,12 +37,16 @@ class FlutterGromoreFeed(private val context: Context, viewId: Int, creationPara
     // 广告model
     private var mGMNativeAd: GMNativeAd? = null
 
-    private var layoutParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    private var layoutParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(
+        ViewGroup.LayoutParams.WRAP_CONTENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
+    )
 
     init {
         container.layoutParams = layoutParams
         // 从缓存中取广告
-        mGMNativeAd = FlutterGromoreFeedCache.getCacheFeedAd((creationParams["feedId"] as String).toInt())
+        mGMNativeAd =
+            FlutterGromoreFeedCache.getCacheFeedAd((creationParams["feedId"] as String).toInt())
         initAd()
     }
 
@@ -48,7 +58,7 @@ class FlutterGromoreFeed(private val context: Context, viewId: Int, creationPara
 
             // 是否有不喜欢按钮
             if (it.hasDislike()) {
-                it.setDislikeCallback(context as Activity?, this)
+                it.setDislikeCallback(activity, this)
             }
 
             it.setNativeAdListener(this)
@@ -107,7 +117,10 @@ class FlutterGromoreFeed(private val context: Context, viewId: Int, creationPara
         }?.takeIf {
             it.measuredHeight > 0
         }?.let {
-            postMessage("onRenderSuccess", mapOf("height" to it.measuredHeight / Utils.getDensity(context)))
+            postMessage(
+                "onRenderSuccess",
+                mapOf("height" to it.measuredHeight / Utils.getDensity(context))
+            )
         }
 
     }

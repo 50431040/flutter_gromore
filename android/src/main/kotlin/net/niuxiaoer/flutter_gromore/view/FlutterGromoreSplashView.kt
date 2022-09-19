@@ -17,11 +17,17 @@ import net.niuxiaoer.flutter_gromore.constants.FlutterGromoreConstants
 import net.niuxiaoer.flutter_gromore.utils.Utils
 
 
-class FlutterGromoreSplashView(private val context: Context, viewId: Int, private val creationParams: Map<String?, Any?>?, binaryMessenger: BinaryMessenger) :
-        FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.splashTypeId}/$viewId"),
-        PlatformView,
-        GMSplashAdListener,
-        GMSplashAdLoadCallback {
+class FlutterGromoreSplashView(
+    private val context: Context,
+    private val activity: Activity,
+    viewId: Int,
+    private val creationParams: Map<String?, Any?>?,
+    binaryMessenger: BinaryMessenger
+) :
+    FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.splashTypeId}/$viewId"),
+    PlatformView,
+    GMSplashAdListener,
+    GMSplashAdLoadCallback {
 
     private val TAG: String = this::class.java.simpleName
 
@@ -40,7 +46,7 @@ class FlutterGromoreSplashView(private val context: Context, viewId: Int, privat
         val adUnitId = creationParams["adUnitId"] as String
         require(adUnitId.isNotEmpty())
 
-        mTTSplashAd = GMSplashAd(context as Activity, adUnitId)
+        mTTSplashAd = GMSplashAd(activity, adUnitId)
         mTTSplashAd?.setAdSplashListener(this)
 
         // 注意开屏广告view：width >=70%屏幕宽；height >=50%屏幕高，否则会影响计费。
@@ -51,20 +57,22 @@ class FlutterGromoreSplashView(private val context: Context, viewId: Int, privat
         val preload = creationParams["preload"] as? Boolean ?: true
         val volume = creationParams["volume"] as? Float ?: 1f
         val timeout = creationParams["timeout"] as? Int ?: 3000
-        val buttonType = creationParams["buttonType"] as? Int ?: TTAdConstant.SPLASH_BUTTON_TYPE_FULL_SCREEN
-        val downloadType = creationParams["downloadType"] as? Int ?: TTAdConstant.DOWNLOAD_TYPE_POPUP
+        val buttonType =
+            creationParams["buttonType"] as? Int ?: TTAdConstant.SPLASH_BUTTON_TYPE_FULL_SCREEN
+        val downloadType =
+            creationParams["downloadType"] as? Int ?: TTAdConstant.DOWNLOAD_TYPE_POPUP
 
         container.layoutParams = FrameLayout.LayoutParams(containerWidth, containerHeight)
 
         val adSlot = GMAdSlotSplash.Builder()
-                .setImageAdSize(containerWidth, containerHeight)
-                .setSplashPreLoad(preload)
-                .setMuted(muted)
-                .setVolume(volume)
-                .setTimeOut(timeout)
-                .setSplashButtonType(buttonType)
-                .setDownloadType(downloadType)
-                .build()
+            .setImageAdSize(containerWidth, containerHeight)
+            .setSplashPreLoad(preload)
+            .setMuted(muted)
+            .setVolume(volume)
+            .setTimeOut(timeout)
+            .setSplashButtonType(buttonType)
+            .setDownloadType(downloadType)
+            .build()
 
         mTTSplashAd?.loadAd(adSlot, this)
     }
