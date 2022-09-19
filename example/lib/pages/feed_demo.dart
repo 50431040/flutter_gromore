@@ -31,12 +31,12 @@ class _FeedDemoState extends State<FeedDemo> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      RaisedButton(
+                      ElevatedButton(
                           child: Text('确认'),
                           onPressed: () {
                             Navigator.of(context).pop();
                           }),
-                      RaisedButton(
+                      ElevatedButton(
                           child: Text('取消'),
                           onPressed: () {
                             Navigator.of(context).pop();
