@@ -52,6 +52,7 @@ android {
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -85,6 +86,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.android.support:multidex:1.0.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.gromore.cn:gdt-adapter:4.462.1332.0"   //gdt adapter
     implementation 'com.qq.e.union:union:4.462.1332'// 广点通广告 SDK
