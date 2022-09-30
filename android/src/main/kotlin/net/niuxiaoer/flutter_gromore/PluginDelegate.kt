@@ -1,6 +1,7 @@
 package net.niuxiaoer.flutter_gromore
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.bytedance.msdk.api.v2.GMAdConfig
@@ -19,7 +20,11 @@ import net.niuxiaoer.flutter_gromore.utils.Utils
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreInterstitial
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreSplash
 
-class PluginDelegate(private val activity: Activity, private val binaryMessenger: BinaryMessenger) : MethodChannel.MethodCallHandler {
+class PluginDelegate(
+    private val context: Context,
+    private val activity: Activity,
+    private val binaryMessenger: BinaryMessenger
+) : MethodChannel.MethodCallHandler {
     private val TAG: String = this::class.java.simpleName
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -31,7 +36,7 @@ class PluginDelegate(private val activity: Activity, private val binaryMessenger
         when (method) {
             // 同时请求：READ_PHONE_STATE, COARSE_LOCATION, FINE_LOCATION, WRITE_EXTERNAL_STORAGE权限
             "requestPermissionIfNecessary" -> {
-                GMMediationAdSdk.requestPermissionIfNecessary(activity)
+                GMMediationAdSdk.requestPermissionIfNecessary(context)
                 result.success(true)
             }
             // 初始化
@@ -64,7 +69,7 @@ class PluginDelegate(private val activity: Activity, private val binaryMessenger
             // 加载信息流广告
             "loadFeedAd" -> {
                 require(arguments != null && arguments["adUnitId"] != null)
-                FlutterGromoreFeedManager(arguments, activity, result)
+                FlutterGromoreFeedManager(arguments, context, result)
             }
             // 移除信息流广告
             "removeFeedAd" -> {
@@ -87,12 +92,12 @@ class PluginDelegate(private val activity: Activity, private val binaryMessenger
         require(appId.isNotEmpty())
 
         val config = GMAdConfig.Builder()
-                .setAppId(appId)
-                .setAppName(appName)
-                .setDebug(debug)
-                .build()
+            .setAppId(appId)
+            .setAppName(appName)
+            .setDebug(debug)
+            .build()
 
-        GMMediationAdSdk.initialize(activity.applicationContext, config)
+        GMMediationAdSdk.initialize(context, config)
     }
 
     // 开屏广告
@@ -100,7 +105,7 @@ class PluginDelegate(private val activity: Activity, private val binaryMessenger
 
         require(arguments != null)
 
-        val intent = Intent(activity, FlutterGromoreSplash::class.java).apply {
+        val intent = Intent(context, FlutterGromoreSplash::class.java).apply {
             putExtra("id", arguments["id"] as? String)
             putExtra("adUnitId", arguments["adUnitId"] as? String)
             putExtra("logo", arguments["logo"] as? String)
