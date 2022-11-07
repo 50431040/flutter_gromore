@@ -55,5 +55,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.appcompat:appcompat:1.4.1"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "com.gromore.cn:gromore-sdk:3.4.0.3"
+    implementation "by.gm_mediation.com:gromore-sdk:3.7.0.2"
 }
