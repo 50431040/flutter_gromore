@@ -1,5 +1,7 @@
 # Flutter版穿山甲Gromore广告插件
 
+> 新增激活鸟广告插件 ： [传送门](https://github.com/nxe-team/flutter_jihuoniao)
+
 ## 特点
 
 - 使用kotlin和swift语言开发

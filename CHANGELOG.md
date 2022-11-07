@@ -15,3 +15,7 @@
 ## 1.0.3
 
 - 修复FlutterGromoreSplash手动跳过时可能刚好触发了onAdDismiss事件，调用了两次finishActivity方法，导致App崩溃的问题
+
+## 1.0.4
+
+- 修复context和activity类型混用
