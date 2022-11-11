@@ -103,6 +103,10 @@ class PluginDelegate(
         GMMediationAdSdk.initialize(context, config)
     }
 
+    /**
+     * GroMore 本地缓存配置
+     * 由穿山甲后台导出配置信息，减少配置拉取失败率
+     */
     private fun loadLocalConfig(): JSONObject? {
         return try {
             val inputStream: InputStream = context.assets.open("gromore_local_config")
