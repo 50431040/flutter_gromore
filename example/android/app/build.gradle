@@ -90,8 +90,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.gromore.cn:gdt-adapter:4.462.1332.0"   //gdt adapter
     implementation 'com.qq.e.union:union:4.462.1332'// 广点通广告 SDK
-    implementation "com.gromore.cn:pangle-adapter:4.4.0.9.0" //穿山甲 adapter
-    implementation 'com.pangle.cn:ads-sdk-pro:4.4.0.9' //穿山甲广告 SDK
+    implementation "com.gromore.cn:pangle-adapter:4.8.0.8.3" //穿山甲 adapter
+    implementation 'com.pangle.cn:ads-sdk-pro:4.8.0.8' //穿山甲广告 SDK
     implementation "com.gromore.cn:baidu-adapter:9.21.1" //百度 adapter
     implementation(name:'Baidu_MobAds_SDK-release_v9.213',ext:'aar') //百度 SDK
 }

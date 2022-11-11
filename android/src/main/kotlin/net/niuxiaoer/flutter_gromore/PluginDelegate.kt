@@ -19,6 +19,8 @@ import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreInterstitialManager
 import net.niuxiaoer.flutter_gromore.utils.Utils
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreInterstitial
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreSplash
+import org.json.JSONObject
+import java.io.InputStream
 
 class PluginDelegate(
     private val context: Context,
@@ -94,10 +96,24 @@ class PluginDelegate(
         val config = GMAdConfig.Builder()
             .setAppId(appId)
             .setAppName(appName)
+            .setCustomLocalConfig(loadLocalConfig())
             .setDebug(debug)
             .build()
 
         GMMediationAdSdk.initialize(context, config)
+    }
+
+    private fun loadLocalConfig(): JSONObject? {
+        return try {
+            val inputStream: InputStream = context.assets.open("gromore_local_config")
+            val text: String = inputStream.bufferedReader().use {
+                it.readText()
+            }
+            JSONObject(text)
+        } catch (error: Exception) {
+            Log.d(TAG,"gromore_local_config read fail")
+            null;
+        }
     }
 
     // 开屏广告
