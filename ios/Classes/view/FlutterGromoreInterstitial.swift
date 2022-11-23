@@ -25,7 +25,7 @@ class FlutterGromoreInterstitial: NSObject, FlutterGromoreBase, ABUInterstitialP
     func initAd() {
         if let ad = interstitialAd, ad.isReady {
             ad.delegate = self
-            ad.show(fromRootViewController: Utils.getVC(), extroInfos: nil)
+            ad.show(fromRootViewController: Utils.getVC(), extraInfos: nil)
         }
         
     }

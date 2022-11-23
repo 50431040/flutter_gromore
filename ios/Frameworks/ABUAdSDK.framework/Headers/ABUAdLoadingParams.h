@@ -11,6 +11,9 @@ extern NSString *const ABUAdLoadingParamLinkID;
 /// 聚合广告位ID，NSString
 extern NSString *const ABUAdLoadingParamMediationRitID;
 
+/// 场景ID，NSString
+extern NSString *const ABUAdLoadingParamScenarioID;
+
 /// ADN广告位ID，NSString
 extern NSString *const ABUAdLoadingParamMediaRitID;
 
@@ -75,6 +78,9 @@ extern NSString *const ABUAdLoadingParamRVExtra;
 /// 期望ZoomOutView， NSNumber/BOOL
 extern NSString *const ABUAdLoadingParamSPNeedZoomOutIfCan;
 
+/// 是否需要开屏卡片功能，NSNumber/BOOL
+extern NSString *const ABUAdLoadingParamSPSupportCardView;
+
 /// 自定义底部视图，UIView
 extern NSString *const ABUAdLoadingParamSPCustomBottomView;
 
@@ -87,7 +93,7 @@ extern NSString *const ABUAdLoadingParamSPTolerateTimeout;
 /// 开屏点击区域，NSNumber/NSInteger/ABUSplashButtonType
 extern NSString *const ABUAdLoadingParamSPButtonType;
 
-#pragma mark - Native广告
+#pragma mark - Native/Draw广告
 /// 期望广告图片尺寸，NSValue/CGSize
 extern NSString *const ABUAdLoadingParamNAExpectImageSize;
 

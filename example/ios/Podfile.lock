@@ -1,22 +1,46 @@
 PODS:
-  - Ads-CN (4.3.0.5):
-    - Ads-CN/BUAdSDK (= 4.3.0.5)
-  - Ads-CN/BUAdSDK (4.3.0.5):
-    - Ads-CN/BUFoundation
-    - Ads-CN/Domestic
-  - Ads-CN/BUFoundation (4.3.0.5):
-    - BURelyFoundation (= 0.0.1.47)
-  - Ads-CN/Domestic (4.3.0.5):
-    - Ads-CN/BUFoundation
+  - Ads-CN (4.8.0.7):
+    - Ads-CN/BUAdSDK (= 4.8.0.7)
+  - Ads-CN/BUAdSDK (4.8.0.7):
+    - Ads-CN/Dep_Accurate
+  - Ads-CN/Dep_Accurate (4.8.0.7):
+    - BUAdSDK (= 0.1.0.24)
+    - BURelyFoundation/CSJ (= 0.0.3.13)
   - BaiduMobAdSDK (4.87)
-  - BURelyFoundation (0.0.1.47):
-    - BURelyFoundation/HM (= 0.0.1.47)
-    - BURelyFoundation/NETWork (= 0.0.1.47)
-  - BURelyFoundation/HM (0.0.1.47)
-  - BURelyFoundation/NETWork (0.0.1.47)
+  - BUAdSDK (0.1.0.24):
+    - BUAdSDK/BUAdSDK (= 0.1.0.24)
+  - BUAdSDK/BUAdSDK (0.1.0.24)
+  - BURelyFoundation/AFNetworking (0.0.3.13)
+  - BURelyFoundation/BURelyFoundation (0.0.3.13)
+  - BURelyFoundation/CSJ (0.0.3.13):
+    - BURelyFoundation/AFNetworking
+    - BURelyFoundation/BURelyFoundation
+    - BURelyFoundation/Foundation
+    - BURelyFoundation/Gecko
+    - BURelyFoundation/HM
+    - BURelyFoundation/NETWork
+    - BURelyFoundation/SDWebImage
+    - BURelyFoundation/YYModel
+    - BURelyFoundation/ZFPlayer
+    - BURelyFoundation/Zip
+  - BURelyFoundation/Foundation (0.0.3.13):
+    - BURelyFoundation/NETWork
+  - BURelyFoundation/Gecko (0.0.3.13):
+    - BURelyFoundation/Foundation
+  - BURelyFoundation/HM (0.0.3.13)
+  - BURelyFoundation/NETWork (0.0.3.13):
+    - BURelyFoundation/AFNetworking
+  - BURelyFoundation/SDWebImage (0.0.3.13):
+    - BURelyFoundation/Foundation
+  - BURelyFoundation/YYModel (0.0.3.13)
+  - BURelyFoundation/ZFPlayer (0.0.3.13):
+    - BURelyFoundation/Foundation
+    - BURelyFoundation/Zip
+  - BURelyFoundation/Zip (0.0.3.13):
+    - BURelyFoundation/Foundation
   - Flutter (1.0.0)
   - flutter_gromore (0.0.1):
-    - Ads-CN (= 4.3.0.5)
+    - Ads-CN (= 4.8.0.7)
     - Flutter
   - GDTMobSDK (4.13.65):
     - GDTMobSDK/GDTMobSDK (= 4.13.65)
@@ -32,6 +56,7 @@ SPEC REPOS:
   trunk:
     - Ads-CN
     - BaiduMobAdSDK
+    - BUAdSDK
     - BURelyFoundation
     - GDTMobSDK
 
@@ -42,11 +67,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_gromore/ios"
 
 SPEC CHECKSUMS:
-  Ads-CN: b6b1294ba4e938168475ceacc786f7263d8b9747
+  Ads-CN: 3faad259231222f264a3dd7f14de12d3788af271
   BaiduMobAdSDK: 618ea4c41d9206c3e27ad95a2d52e5cba9dd3cae
-  BURelyFoundation: 5e7f811867d3ee91ed20e426c505e31c55674256
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  flutter_gromore: 1c21f1f8e53eb6c4693b7416e27aada96bb1ca5c
+  BUAdSDK: 5528f72f7b9b478a12743ea23af7bdb9746efc00
+  BURelyFoundation: 92b5a155543721655445b54ddbbf3035a0c6f16e
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_gromore: d4196e5b59adce5a89ee65467ed336b926fa75ea
   GDTMobSDK: b9e79e44a8fd4b5d2fe7fede57877dcbc27f7a8e
 
 PODFILE CHECKSUM: e48007a1b1bc2384afbbe68d3a59c8a041c7b8f5
