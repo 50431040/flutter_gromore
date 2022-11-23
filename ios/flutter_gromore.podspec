@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.platform = :ios, '8.0'
 
   # 引入 GroMore 基础 SDK
-  s.dependency 'Ads-CN', '4.3.0.5'
+  s.dependency 'Ads-CN', '4.8.0.7'
   s.vendored_frameworks = 'Frameworks/ABUAdSDK.framework'
   s.static_framework = true
   # Flutter.framework does not contain a i386 slice.

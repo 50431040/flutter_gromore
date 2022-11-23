@@ -7,6 +7,7 @@
 
 #import "ABUBaseAd.h"
 #import "ABUSplashZoomOutView.h"
+#import "ABUSplashCardView.h"
 #import "ABUSplashUserData.h"
 #import "ABUAdSDKConst.h"
 
@@ -14,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class ABUSplashAd;
 @class ABUAdPackage;
+@class ABUDictionary;
 
 /// 开屏广告回调协议
 @protocol ABUSplashAdDelegate <NSObject>
@@ -52,10 +54,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 关闭广告详情页回调
 /// @param splashAd 广告管理对象
-- (void)splashAdWillDissmissFullScreenModal:(ABUSplashAd *)splashAd ABU_DEPRECATED_MSG_ATTRIBUTE("接口即将废弃，请使用 splashAdWillDismissFullScreenModal:");
-
-/// 关闭广告详情页回调
-/// @param splashAd 广告管理对象
 - (void)splashAdWillDismissFullScreenModal:(ABUSplashAd *)splashAd;
 
 /// 广告倒计时结束回调
@@ -82,6 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 开屏广告构建方法
 /// @param unitID 广告位ID
 - (instancetype)initWithAdUnitID:(NSString *)unitID;
+
 /// 代理回调对象
 @property (nonatomic, weak) id<ABUSplashAdDelegate> delegate;
 
@@ -111,9 +110,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) ABUSplashButtonType splashButtonType;
 
 /// zoom out 视图，需adn和adapter支持，可能为空
-@property (readonly) ABUSplashZoomOutView * _Nullable zoomOutView;
+@property (nonatomic, strong, readonly, nullable) ABUSplashZoomOutView *zoomOutView;
+
+/// The display priority of cardview is higher than that of zoomview. Now only valid for adn:pangle.
+@property (nonatomic, assign) BOOL supportCardView; // default is NO
+
+/// When it is support splash card advertisement, it has value. Now only valid for adn:pangle.
+@property (nonatomic, strong, readonly, nullable) ABUSplashCardView *cardView;
 
 @property (nonatomic, assign, readonly) BOOL isReady;
+
+/// 广告的扩展信息，可能为nil
+- (ABUDictionary *_Nullable)extraData;
 
 /// 返回显示广告对应的rit
 - (NSString *)getAdNetworkRitId ABU_DEPRECATED_MSG_ATTRIBUTE("接口即将废弃，请使用`getShowEcpmInfo`代替");

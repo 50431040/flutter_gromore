@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "ABUCustomAdapter.h"
 #import "ABUCustomDrawAdapterBridge.h"
+#import "ABUVideoAdReportSupport.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param parameter 广告加载的参数
 - (void)loadDrawAdWithSlotID:(NSString *)slotID andSize:(CGSize)size andParameter:(NSDictionary *)parameter;
 
+@optional
 /// 渲染广告，为模板广告时会回调该方法，需对广告进行渲染
 /// @param expressAdView 模板广告
 - (void)renderForExpressAdView:(UIView *)expressAdView;
@@ -38,11 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param views 可点击视图组
 - (void)registerContainerView:(__kindof UIView *)containerView andClickableViews:(NSArray<__kindof UIView *> *)views forDrawAd:(id)drawAd;
 
-/// 当前加载的广告的状态
-- (ABUMediatedAdStatus)mediatedAdStatus;
-
-@optional
-
 /// 代理，开发者需使用该对象回调事件，Objective-C下自动生成无需设置，Swift需声明
 @property (nonatomic, weak, nullable) id<ABUCustomDrawAdapterBridge> bridge;
 
@@ -56,6 +53,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param expressAdView 模板广告视图
 /// @param drawAd GroMore包装的广告数据
 - (void)adViewWillAddToSuperViewWithExpressAdView:(__kindof UIView *)expressAdView orMediatedAd:(ABUMediatedNativeAd *)drawAd;
+
+/// 上报dislike的原因，仅限非模板广告自定义关闭按钮时使用
+/// @param ad GroMore包装的非模板广告数据
+/// @param reasons dislike的原因。数据基于ADN提供的原因修改
+- (void)reportDislikeAd:(ABUMediatedNativeAd *)ad withReasons:(NSArray<ABUDislikeReason *> *)reasons;
+
+- (void)reportVideoEvent:(ABUVideoAdEvent)event forAd:(ABUMediatedNativeAd *)ad withParameters:(NSDictionary *)parameters;
 
 @end
 
