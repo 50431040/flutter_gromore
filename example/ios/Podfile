@@ -32,6 +32,7 @@ target 'Runner' do
   use_modular_headers!
   
   # SDK 版本需要查看 GroMore 提供 Adapter 的支持范围
+  # TODO: Example 未更新SDK版本号
   pod 'BaiduMobAdSDK', '4.87'
   pod 'GDTMobSDK', '4.13.65'
 
