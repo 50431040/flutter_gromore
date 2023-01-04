@@ -76,7 +76,7 @@ class PluginDelegate(
             // 移除信息流广告
             "removeFeedAd" -> {
                 require(arguments != null && arguments["feedId"] != null)
-                FlutterGromoreFeedCache.removeCacheFeedAd((arguments["feedId"] as String).toInt())
+                FlutterGromoreFeedCache.removeCacheFeedAd(arguments["feedId"] as String)
                 result.success(true)
             }
         }

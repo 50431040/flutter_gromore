@@ -70,11 +70,12 @@ class FlutterGromoreFeedManager(private val params: Map<String, Any?>,
 
     /// 信息流广告加载成功
     override fun onAdLoaded(p0: MutableList<GMNativeAd>) {
-        var feedIdList: MutableList<String> = ArrayList()
+        val feedIdList: MutableList<String> = ArrayList()
+        val adUnitId = params["adUnitId"] as String
 
         p0.forEach {
-            val id: Int = it.hashCode()
-            feedIdList.add(id.toString())
+            val id: String = "${adUnitId}_${it.hashCode()}"
+            feedIdList.add(id)
             FlutterGromoreFeedCache.addCacheFeedAd(id, it)
         }
 

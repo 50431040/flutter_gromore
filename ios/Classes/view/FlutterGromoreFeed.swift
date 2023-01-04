@@ -102,7 +102,8 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
         postMessage("onSelected")
         if let adView = nativeAdView {
             adView.removeFromSuperview()
-            FlutterGromoreFeedCache.removeAd(key: adView.adViewID)
+            let adId: String = createParams["feedId"] as! String
+            FlutterGromoreFeedCache.removeAd(key: adId)
         }
         removeAdView()
     }
