@@ -30,7 +30,7 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -48,7 +48,7 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.android.niu_xiaoer"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -88,10 +88,16 @@ repositories {
 dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "com.gromore.cn:gdt-adapter:4.462.1332.0"   //gdt adapter
-    implementation 'com.qq.e.union:union:4.462.1332'// 广点通广告 SDK
-    implementation "com.gromore.cn:pangle-adapter:4.8.0.8.3" //穿山甲 adapter
-    implementation 'com.pangle.cn:ads-sdk-pro:4.8.0.8' //穿山甲广告 SDK
-    implementation "com.gromore.cn:baidu-adapter:9.21.1" //百度 adapter
-    implementation(name:'Baidu_MobAds_SDK-release_v9.213',ext:'aar') //百度 SDK
+    // 穿山甲 SDK
+    implementation(name: 'open_ad_sdk_5.0.0.4', ext: 'aar')
+    // 穿山甲 Adapter
+    implementation 'by.gm_mediation.com:pangle-adapter:5.0.0.4.0'
+    // 优量汇 SDK
+    implementation(name: 'GDTSDK.unionNormal.4.500.1370', ext: 'aar')
+    // 优量汇 Adapter
+    implementation 'by.gm_mediation.com:gdt-adapter:4.500.1370.0'
+    // 百度 SDK
+    implementation(name: 'Baidu_MobAds_SDK_v9.251', ext: 'aar')
+    // 百度 Adapter
+    implementation 'by.gm_mediation.com:baidu-adapter:9.251.0'
 }

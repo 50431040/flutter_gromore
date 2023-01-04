@@ -6,8 +6,9 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        // GroMore SDK
         maven {
-            url "https://artifact.bytedance.com/repository/pangle"
+            url 'https://artifact.bytedance.com/repository/pangle'
         }
     }
 
@@ -21,8 +22,9 @@ rootProject.allprojects {
     repositories {
         google()
         mavenCentral()
+        // GroMore SDK
         maven {
-            url "https://artifact.bytedance.com/repository/pangle"
+            url 'https://artifact.bytedance.com/repository/pangle'
         }
     }
 }
@@ -55,5 +57,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.appcompat:appcompat:1.4.1"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "by.gm_mediation.com:gromore-sdk:3.7.0.2"
+    // GroMore SDK
+    implementation 'by.gm_mediation.com:gromore-sdk:3.9.0.2'
 }

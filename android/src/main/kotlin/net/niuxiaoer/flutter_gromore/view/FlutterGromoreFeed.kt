@@ -42,11 +42,14 @@ class FlutterGromoreFeed(
         ViewGroup.LayoutParams.WRAP_CONTENT
     )
 
+    private val cachedAdId: String
+
     init {
         container.layoutParams = layoutParams
+        cachedAdId = creationParams["feedId"] as String
         // 从缓存中取广告
         mGMNativeAd =
-            FlutterGromoreFeedCache.getCacheFeedAd((creationParams["feedId"] as String).toInt())
+            FlutterGromoreFeedCache.getCacheFeedAd(cachedAdId)
         initAd()
     }
 
@@ -70,6 +73,7 @@ class FlutterGromoreFeed(
         container.removeAllViews()
         mGMNativeAd?.destroy()
         mGMNativeAd = null
+        FlutterGromoreFeedCache.removeCacheFeedAd(cachedAdId)
     }
 
     override fun getView(): View {
