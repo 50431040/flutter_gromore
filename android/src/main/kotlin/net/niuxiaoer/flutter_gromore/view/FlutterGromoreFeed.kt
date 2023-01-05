@@ -116,7 +116,8 @@ class FlutterGromoreFeed(
 
         ad?.apply {
             // 计算渲染后的高度
-            measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+            measure(View.MeasureSpec.makeMeasureSpec(Utils.getScreenWidthInPx(context), View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(Utils.getScreenHeightInPx(context), View.MeasureSpec.UNSPECIFIED))
             Log.d(TAG, "measuredHeight - $measuredHeight")
         }?.takeIf {
             it.measuredHeight > 0
