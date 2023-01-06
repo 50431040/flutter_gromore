@@ -18,6 +18,8 @@ import net.niuxiaoer.flutter_gromore.R
 import net.niuxiaoer.flutter_gromore.event.AdEvent
 import net.niuxiaoer.flutter_gromore.event.AdEventHandler
 import net.niuxiaoer.flutter_gromore.utils.Utils
+import java.util.Timer
+import kotlin.concurrent.schedule
 
 // Activity实例
 class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAdLoadCallback {
@@ -38,6 +40,11 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
 
     // 是否已关闭
     private var closed: Boolean = false
+
+    // 加载后没有回调
+    private var isNoCallback: Boolean = true
+
+    private var timer: Timer = Timer()
 
     // 初始化广告
     private fun initAd() {
@@ -70,6 +77,13 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
             .build()
 
         mTTSplashAd?.loadAd(adSlot, this)
+
+        // 没有加载回调后关闭该Activity
+        timer.schedule(6000) {
+            if (!isFinishing && isNoCallback) {
+                runOnUiThread { finishActivity() }
+            }
+        }
     }
 
     // 初始化
@@ -141,6 +155,7 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
     }
 
     override fun onDestroy() {
+        timer.cancel()
         // 销毁
         mTTSplashAd?.destroy()
         mTTSplashAd = null
@@ -189,6 +204,7 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
 
     override fun onSplashAdLoadFail(p0: AdError) {
         Log.d(TAG, "onSplashAdLoadFail")
+        isNoCallback = false;
 
         sendEvent("onSplashAdLoadFail")
         finishActivity()
@@ -196,6 +212,7 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
 
     override fun onSplashAdLoadSuccess() {
         Log.d(TAG, "onSplashAdLoadSuccess")
+        isNoCallback = false;
 
         sendEvent("onSplashAdLoadSuccess")
 
@@ -209,6 +226,7 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
 
     override fun onAdLoadTimeout() {
         Log.d(TAG, "onAdLoadTimeout")
+        isNoCallback = false;
 
         sendEvent("onAdLoadTimeout")
         finishActivity()
