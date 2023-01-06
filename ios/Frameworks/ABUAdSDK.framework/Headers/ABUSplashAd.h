@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param error 出错信息
 - (void)splashAd:(ABUSplashAd *)splashAd didFailWithError:(NSError *_Nullable)error;
 
-/// 广告即将展示回调
+/// 广告展示回调(此回调兼容adn sdk的willVisible & didVisible回调,处理特殊逻辑时,请谨慎使用)
 /// @param splashAd 广告管理对象
 - (void)splashAdWillVisible:(ABUSplashAd *)splashAd;
 

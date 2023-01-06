@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<paths>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
     <external-path name="tt_external_root" path="." />
     <external-path name="tt_external_download" path="Download" />
     <external-files-path name="tt_external_files_download" path="Download" />

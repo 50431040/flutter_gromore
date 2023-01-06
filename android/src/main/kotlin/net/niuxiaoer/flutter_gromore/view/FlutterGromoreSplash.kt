@@ -55,18 +55,19 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
         val preload = intent.getBooleanExtra("preload", true)
         val volume = intent.getFloatExtra("volume", 1f)
         val timeout = intent.getIntExtra("timeout", 3) * 1000
-        val buttonType = intent.getIntExtra("buttonType", TTAdConstant.SPLASH_BUTTON_TYPE_FULL_SCREEN)
+        val buttonType =
+            intent.getIntExtra("buttonType", TTAdConstant.SPLASH_BUTTON_TYPE_FULL_SCREEN)
         val downloadType = intent.getIntExtra("downloadType", TTAdConstant.DOWNLOAD_TYPE_POPUP)
 
         val adSlot = GMAdSlotSplash.Builder()
-                .setImageAdSize(containerWidth, containerHeight)
-                .setSplashPreLoad(preload)
-                .setMuted(muted)
-                .setVolume(volume)
-                .setTimeOut(timeout)
-                .setSplashButtonType(buttonType)
-                .setDownloadType(downloadType)
-                .build()
+            .setImageAdSize(containerWidth, containerHeight)
+            .setSplashPreLoad(preload)
+            .setMuted(muted)
+            .setVolume(volume)
+            .setTimeOut(timeout)
+            .setSplashButtonType(buttonType)
+            .setDownloadType(downloadType)
+            .build()
 
         mTTSplashAd?.loadAd(adSlot, this)
     }
@@ -118,7 +119,8 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
      * @param resName 资源名称，不带后缀
      * @return 返回资源id
      */
-    private fun getMipmapId(resName: String) = resources.getIdentifier(resName, "mipmap", packageName)
+    private fun getMipmapId(resName: String) =
+        resources.getIdentifier(resName, "mipmap", packageName)
 
     // 发送事件
     private fun sendEvent(msg: String) = AdEventHandler.getInstance().sendEvent(AdEvent(id, msg))

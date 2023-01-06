@@ -37,11 +37,13 @@ class FlutterGromoreFeedManager: NSObject, ABUNativeAdsManagerDelegate {
     func nativeAdsManagerSuccess(toLoad adsManager: ABUNativeAdsManager, nativeAds nativeAdViewArray: [ABUNativeAdView]?) {
         // 将广告视图的 Key 返回给 Flutter 端
         var adsKey: [String] = []
+        let adUnitId: String = args["adUnitId"] as! String
         if let ads = nativeAdViewArray {
             ads.forEach { ad in
-                adsKey.append(ad.adViewID)
+                let adId: String = "\(adUnitId)_\(ad.adViewID)"
+                adsKey.append(adId)
                 // 将广告存下来
-                FlutterGromoreFeedCache.addAd(ad)
+                FlutterGromoreFeedCache.addAd(adId, ad)
             }
         }
         result(adsKey)

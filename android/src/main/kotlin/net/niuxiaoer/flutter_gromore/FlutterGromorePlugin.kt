@@ -1,7 +1,5 @@
 package net.niuxiaoer.flutter_gromore
 
-import androidx.annotation.NonNull
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -27,7 +25,7 @@ class FlutterGromorePlugin : FlutterPlugin, ActivityAware {
     private lateinit var flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
     private lateinit var binaryMessenger: BinaryMessenger
 
-    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         this.flutterPluginBinding = flutterPluginBinding
         binaryMessenger = flutterPluginBinding.binaryMessenger
 
@@ -35,7 +33,7 @@ class FlutterGromorePlugin : FlutterPlugin, ActivityAware {
         eventChannel = EventChannel(binaryMessenger, FlutterGromoreConstants.eventChannelName)
     }
 
-    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         methodChannel.setMethodCallHandler(null)
         eventChannel.setStreamHandler(null)
     }

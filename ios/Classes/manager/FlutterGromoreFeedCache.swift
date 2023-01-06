@@ -10,8 +10,8 @@ import ABUAdSDK
 class FlutterGromoreFeedCache: NSObject {
     private static var ads: [String: ABUNativeAdView] = [:]
     
-    static func addAd(_ ad: ABUNativeAdView) {
-        ads[ad.adViewID] = ad
+    static func addAd(_ id: String,_ ad: ABUNativeAdView) {
+        ads[id] = ad
     }
     
     static func removeAd(key: String) {
