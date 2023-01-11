@@ -139,6 +139,7 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
     // 发送事件
     private fun sendEvent(msg: String) = AdEventHandler.getInstance().sendEvent(AdEvent(id, msg))
 
+    @Synchronized
     private fun finishActivity() {
         if (closed) {
             return
@@ -147,6 +148,7 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
         closed = true
 
         Utils.splashResult?.success(true);
+        Utils.splashResult = null;
         sendEvent("onAdEnd")
 
         finish()
