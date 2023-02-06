@@ -27,6 +27,9 @@ class GromoreFeedCallback extends GromoreBaseAdCallback {
   /// 拒绝弹框显示
   final GromoreVoidCallback? onShow;
 
+  /// 进程被终止
+  final GromoreVoidCallback? onAdTerminate;
+
   GromoreFeedCallback({
     this.onAdClick,
     this.onAdShow,
@@ -36,6 +39,7 @@ class GromoreFeedCallback extends GromoreBaseAdCallback {
     this.onCancel,
     this.onRefuse,
     this.onShow,
+    this.onAdTerminate,
   });
 
   /// 执行回调
@@ -57,6 +61,8 @@ class GromoreFeedCallback extends GromoreBaseAdCallback {
       onRefuse!();
     } else if (callbackName == "onShow" && onShow != null) {
       onShow!();
+    } else if (callbackName == "onAdTerminate" && onAdTerminate != null) {
+      onAdTerminate!();
     }
   }
 }

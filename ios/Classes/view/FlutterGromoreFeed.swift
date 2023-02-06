@@ -15,6 +15,9 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
     /// 传递过来的参数
     private var createParams: [String: Any]
     
+    /// 广告已终止，避免多次回调
+    private var isTerminate = false
+    
     init(frame: CGRect, id: Int64, params: Any?, messenger: FlutterBinaryMessenger) {
         methodChannel = FlutterMethodChannel(name: "\(FlutterGromoreContants.feedViewTypeId)/\(id)", binaryMessenger: messenger)
         container = FlutterGromoreIntercptPenetrateView(frame: frame, methodChannel: methodChannel)
@@ -55,6 +58,18 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
         FlutterGromoreFeedCache.removeAd(key: adId)
     }
     
+    /// 检测广告是否被终止，WKWebView占用内存较大时，部分进程被终止导致白屏
+    /// 根据白屏时 WKCompositingView 从 UIView 上卸载进行判断
+    private func checkAdTerminate(_ views: [UIView]) -> Bool {
+        for view in views {
+            if !view.subviews.isEmpty {
+                return checkAdTerminate(view.subviews)
+            }
+            return !String(describing: view).contains("WKCompositingView")
+        }
+        return false
+    }
+    
     /// 广告渲染成功(仅针对原生模板)
     func nativeAdExpressViewRenderSuccess(_ nativeExpressAdView: ABUNativeAdView) {
         postMessage("onRenderSuccess", arguments: ["height": nativeExpressAdView.bounds.height])
@@ -81,10 +96,16 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
             // 穿山甲广告每次滑入视图时都会调用 “用户申请展示广告”
             // Guess: BUNativeExpressAdView 大概在 viewWillAppear 调用了展示广告，打算移除这一层
             // 层级结构：ABUNativeAdView -> BUNativeExpressAdView -> BUWKWebViewClient
-            if let pangleNativeAdView = nativeAdView.subviews.first,
-               let pangleWebView = pangleNativeAdView.subviews.first {
-                pangleNativeAdView.removeFromSuperview()
-                nativeAdView.addSubview(pangleWebView)
+            //
+            // if let pangleNativeAdView = nativeAdView.subviews.first,
+            //    let pangleWebView = pangleNativeAdView.subviews.first {
+            //     pangleNativeAdView.removeFromSuperview()
+            //     nativeAdView.addSubview(pangleWebView)
+            // }
+            // 穿山甲信息流使用WKWebView，加载过多时之前的信息流会白屏
+            if !isTerminate, checkAdTerminate(container.subviews) {
+                isTerminate = true
+                postMessage("onAdTerminate")
             }
         }
     }
