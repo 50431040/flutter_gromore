@@ -51,6 +51,8 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
         for v: UIView in container.subviews {
             v.removeFromSuperview()
         }
+        let adId: String = createParams["feedId"] as! String
+        FlutterGromoreFeedCache.removeAd(key: adId)
     }
     
     /// 广告渲染成功(仅针对原生模板)
@@ -102,8 +104,6 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
         postMessage("onSelected")
         if let adView = nativeAdView {
             adView.removeFromSuperview()
-            let adId: String = createParams["feedId"] as! String
-            FlutterGromoreFeedCache.removeAd(key: adId)
         }
         removeAdView()
     }
