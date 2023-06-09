@@ -7,13 +7,11 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
-import com.bytedance.msdk.adapter.util.UIUtils
-import com.bytedance.msdk.api.AdError
-import com.bytedance.msdk.api.TTAdConstant
-import com.bytedance.msdk.api.v2.ad.splash.GMSplashAd
-import com.bytedance.msdk.api.v2.ad.splash.GMSplashAdListener
-import com.bytedance.msdk.api.v2.ad.splash.GMSplashAdLoadCallback
-import com.bytedance.msdk.api.v2.slot.GMAdSlotSplash
+import com.bytedance.sdk.openadsdk.AdSlot
+import com.bytedance.sdk.openadsdk.TTAdNative
+import com.bytedance.sdk.openadsdk.TTAdSdk
+import com.bytedance.sdk.openadsdk.TTSplashAd
+import com.bytedance.sdk.openadsdk.mediation.ad.MediationAdSlot
 import net.niuxiaoer.flutter_gromore.R
 import net.niuxiaoer.flutter_gromore.event.AdEvent
 import net.niuxiaoer.flutter_gromore.event.AdEventHandler
@@ -22,14 +20,14 @@ import java.util.Timer
 import kotlin.concurrent.schedule
 
 // Activity实例
-class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAdLoadCallback {
+class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, TTSplashAd.AdInteractionListener {
 
     private val TAG: String = this::class.java.simpleName
 
     // 广告容器
     private lateinit var container: FrameLayout
     private lateinit var logoContainer: AppCompatImageView
-    private var mTTSplashAd: GMSplashAd? = null
+    private var splashAd: TTSplashAd? = null
 
     // activity id
     private lateinit var id: String
@@ -55,28 +53,27 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
         val adUnitId = intent.getStringExtra("adUnitId")
         require(adUnitId != null && adUnitId.isNotEmpty())
 
-        mTTSplashAd = GMSplashAd(this, adUnitId)
-        mTTSplashAd?.setAdSplashListener(this)
-
         val muted = intent.getBooleanExtra("muted", false)
         val preload = intent.getBooleanExtra("preload", true)
         val volume = intent.getFloatExtra("volume", 1f)
-        val timeout = intent.getIntExtra("timeout", 3) * 1000
-        val buttonType =
-            intent.getIntExtra("buttonType", TTAdConstant.SPLASH_BUTTON_TYPE_FULL_SCREEN)
-        val downloadType = intent.getIntExtra("downloadType", TTAdConstant.DOWNLOAD_TYPE_POPUP)
+        val isSplashShakeButton = intent.getBooleanExtra("splashShakeButton", true)
+        val isBidNotify = intent.getBooleanExtra("bidNotify", false)
 
-        val adSlot = GMAdSlotSplash.Builder()
-            .setImageAdSize(containerWidth, containerHeight)
-            .setSplashPreLoad(preload)
-            .setMuted(muted)
-            .setVolume(volume)
-            .setTimeOut(timeout)
-            .setSplashButtonType(buttonType)
-            .setDownloadType(downloadType)
-            .build()
+        val adNativeLoader = TTAdSdk.getAdManager().createAdNative(this)
 
-        mTTSplashAd?.loadAd(adSlot, this)
+        val adSlot = AdSlot.Builder()
+                .setCodeId(adUnitId)
+                .setImageAcceptedSize(containerWidth, containerHeight)
+                .setMediationAdSlot(MediationAdSlot.Builder()
+                        .setSplashPreLoad(preload)
+                        .setMuted(muted)
+                        .setVolume(volume)
+                        .setSplashShakeButton(isSplashShakeButton)
+                        .setBidNotify(isBidNotify)
+                        .build())
+                .build()
+
+        adNativeLoader.loadSplashAd(adSlot, this)
 
         // 没有加载回调后关闭该Activity
         timer.schedule(6000) {
@@ -94,7 +91,7 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
         containerWidth = Utils.getScreenWidthInPx(this)
         containerHeight = Utils.getScreenHeightInPx(this)
         // 隐藏底部菜单
-        UIUtils.hideBottomUIMenu(this)
+        Utils.hideBottomUIMenu(this)
         // 状态栏透明
         Utils.setTranslucent(this)
         // logo显示
@@ -134,7 +131,7 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
      * @return 返回资源id
      */
     private fun getMipmapId(resName: String) =
-        resources.getIdentifier(resName, "mipmap", packageName)
+            resources.getIdentifier(resName, "mipmap", packageName)
 
     // 发送事件
     private fun sendEvent(msg: String) = AdEventHandler.getInstance().sendEvent(AdEvent(id, msg))
@@ -158,9 +155,8 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
 
     override fun onDestroy() {
         timer.cancel()
-        // 销毁
-        mTTSplashAd?.destroy()
-        mTTSplashAd = null
+        splashAd?.mediationManager?.destroy()
+        splashAd = null
         super.onDestroy()
     }
 
@@ -173,21 +169,14 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
         init()
     }
 
-    override fun onAdClicked() {
+    override fun onAdClicked(p0: View?, p1: Int) {
         Log.d(TAG, "onAdClicked")
         sendEvent("onAdClicked")
     }
 
-    override fun onAdShow() {
+    override fun onAdShow(p0: View?, p1: Int) {
         Log.d(TAG, "onAdShow")
         sendEvent("onAdShow")
-    }
-
-    override fun onAdShowFail(p0: AdError) {
-        Log.d(TAG, "onAdShowFail -- ${p0.message} -- ${p0.code}")
-
-        sendEvent("onAdShowFail")
-        finishActivity()
     }
 
     override fun onAdSkip() {
@@ -197,41 +186,47 @@ class FlutterGromoreSplash : AppCompatActivity(), GMSplashAdListener, GMSplashAd
         finishActivity()
     }
 
-    override fun onAdDismiss() {
+    override fun onAdTimeOver() {
         Log.d(TAG, "onAdDismiss")
 
         sendEvent("onAdDismiss")
         finishActivity()
     }
 
-    override fun onSplashAdLoadFail(p0: AdError) {
+    override fun onError(p0: Int, p1: String?) {
         Log.d(TAG, "onSplashAdLoadFail")
-        isNoCallback = false;
+        isNoCallback = false
 
         sendEvent("onSplashAdLoadFail")
         finishActivity()
     }
 
-    override fun onSplashAdLoadSuccess() {
-        Log.d(TAG, "onSplashAdLoadSuccess")
-        isNoCallback = false;
-
-        sendEvent("onSplashAdLoadSuccess")
-
-        if (!isFinishing) {
-            container.removeAllViews()
-            mTTSplashAd?.showAd(container)
-        } else {
-            finishActivity()
-        }
-    }
-
-    override fun onAdLoadTimeout() {
+    override fun onTimeout() {
         Log.d(TAG, "onAdLoadTimeout")
-        isNoCallback = false;
+        isNoCallback = false
 
         sendEvent("onAdLoadTimeout")
         finishActivity()
+    }
+
+    override fun onSplashAdLoad(ad: TTSplashAd?) {
+        Log.d(TAG, "onSplashAdLoadSuccess")
+        sendEvent("onSplashAdLoadSuccess")
+        isNoCallback = false
+
+        ad?.let {
+            splashAd = it
+            it.setSplashInteractionListener(this)
+
+            if (!isFinishing) {
+                container.removeAllViews()
+                it.splashView?.let {  splashView ->
+                    container.addView(splashView)
+                }
+            } else {
+                finishActivity()
+            }
+        }
     }
 
 }

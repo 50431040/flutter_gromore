@@ -115,11 +115,12 @@ class _HomePageState extends State<HomePage> {
               child: const Text("初始化SDK"),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: handleRequestPermission,
-              child: const Text("请求非必要权限"),
-            ),
-            const SizedBox(height: 20),
+            // 已废弃
+            // ElevatedButton(
+            //   onPressed: handleRequestPermission,
+            //   child: const Text("请求非必要权限"),
+            // ),
+            // const SizedBox(height: 20),
             ElevatedButton(
               onPressed: showSplashAd,
               child: const Text("开屏广告"),

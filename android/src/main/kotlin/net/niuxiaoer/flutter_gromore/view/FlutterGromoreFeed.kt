@@ -7,9 +7,9 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import com.bytedance.msdk.api.v2.GMDislikeCallback
-import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeAd
-import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeExpressAdListener
+import com.bytedance.sdk.openadsdk.TTAdDislike
+import com.bytedance.sdk.openadsdk.TTFeedAd
+import com.bytedance.sdk.openadsdk.mediation.ad.MediationExpressRenderListener
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.platform.PlatformView
 import net.niuxiaoer.flutter_gromore.constants.FlutterGromoreConstants
@@ -18,16 +18,15 @@ import net.niuxiaoer.flutter_gromore.utils.Utils
 
 
 class FlutterGromoreFeed(
-    private val context: Context,
-    private val activity: Activity,
-    viewId: Int,
-    creationParams: Map<String?, Any?>,
-    binaryMessenger: BinaryMessenger
+        private val context: Context,
+        private val activity: Activity,
+        viewId: Int,
+        creationParams: Map<String?, Any?>,
+        binaryMessenger: BinaryMessenger
 ) :
-    FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.feedViewTypeId}/$viewId"),
-    PlatformView,
-    GMNativeExpressAdListener,
-    GMDislikeCallback {
+        FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.feedViewTypeId}/$viewId"),
+        PlatformView,
+        TTAdDislike.DislikeInteractionCallback, MediationExpressRenderListener {
 
     private val TAG: String = this::class.java.simpleName
 
@@ -35,11 +34,11 @@ class FlutterGromoreFeed(
     private var container: FrameLayout = FrameLayout(context)
 
     // 广告model
-    private var mGMNativeAd: GMNativeAd? = null
+    private var mGMNativeAd: TTFeedAd? = null
 
     private var layoutParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(
-        ViewGroup.LayoutParams.WRAP_CONTENT,
-        ViewGroup.LayoutParams.WRAP_CONTENT
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
     )
 
     private val cachedAdId: String
@@ -49,22 +48,25 @@ class FlutterGromoreFeed(
         cachedAdId = creationParams["feedId"] as String
         // 从缓存中取广告
         mGMNativeAd =
-            FlutterGromoreFeedCache.getCacheFeedAd(cachedAdId)
+                FlutterGromoreFeedCache.getCacheFeedAd(cachedAdId)
         initAd()
     }
 
     private fun showAd() {
 
         mGMNativeAd?.takeIf {
-            it.isReady
+            it.mediationManager.isReady
         }?.let {
 
             // 是否有不喜欢按钮
-            if (it.hasDislike()) {
+            if (it.mediationManager.hasDislike()) {
                 it.setDislikeCallback(activity, this)
             }
 
-            it.setNativeAdListener(this)
+            if (it.mediationManager.isExpress) {
+                it.setExpressRenderListener(this)
+            }
+
             it.render()
         }
     }
@@ -100,42 +102,38 @@ class FlutterGromoreFeed(
     }
 
     // 必须在onRenderSuccess进行广告展示，否则会导致广告无法展示
-    override fun onRenderSuccess(width: Float, height: Float) {
+    override fun onRenderSuccess(p0: View?, width: Float, height: Float, isExpress: Boolean) {
         Log.d(TAG, "onRenderSuccess - $width - $height")
 
-        val ad: View? = mGMNativeAd?.expressView
-
-        ad?.parent?.let {
-            (it as? ViewGroup)?.removeView(ad)
-        }
-
-        if (ad != null) {
-            container.removeAllViews()
-            container.setBackgroundColor(Color.WHITE)
-            container.addView(ad, layoutParams)
+        val ad = mGMNativeAd?.adView
+        ad?.let { view ->
+            (view.parent as? ViewGroup)?.removeView(view)
         }
 
         ad?.apply {
-            // 计算渲染后的高度
-            measure(View.MeasureSpec.makeMeasureSpec(Utils.getScreenWidthInPx(context), View.MeasureSpec.UNSPECIFIED),
-                    View.MeasureSpec.makeMeasureSpec(Utils.getScreenHeightInPx(context), View.MeasureSpec.UNSPECIFIED))
-            Log.d(TAG, "measuredHeight - $measuredHeight")
-        }?.takeIf {
-            it.measuredHeight > 0
-        }?.let {
+            container.removeAllViews()
+            container.setBackgroundColor(Color.WHITE)
+            container.addView(ad)
             postMessage(
-                "onRenderSuccess",
-                mapOf("height" to it.measuredHeight / Utils.getDensity(context))
+                    "onRenderSuccess",
+                    mapOf("height" to height)
             )
         }
 
-    }
+//        ad?.apply {
+//            // 计算渲染后的高度
+//            measure(View.MeasureSpec.makeMeasureSpec(Utils.getScreenWidthInPx(context), View.MeasureSpec.UNSPECIFIED),
+//                    View.MeasureSpec.makeMeasureSpec(Utils.getScreenHeightInPx(context), View.MeasureSpec.UNSPECIFIED))
+//            Log.d(TAG, "measuredHeight - $measuredHeight")
+//        }?.takeIf {
+//            it.measuredHeight > 0
+//        }?.let {
+//            postMessage(
+//                    "onRenderSuccess",
+//                    mapOf("height" to it.measuredHeight / Utils.getDensity(context))
+//            )
+//        }
 
-    // 用户选择不喜欢原因后，移除广告展示
-    override fun onSelected(p0: Int, p1: String?) {
-        Log.d(TAG, "dislike-onSelected")
-        postMessage("onSelected")
-        removeAdView()
     }
 
     override fun onCancel() {
@@ -143,14 +141,16 @@ class FlutterGromoreFeed(
         postMessage("onCancel")
     }
 
-    override fun onRefuse() {
-        Log.d(TAG, "dislike-onRefuse")
-        postMessage("onRefuse")
-    }
-
     override fun onShow() {
         Log.d(TAG, "dislike-onShow")
         postMessage("onShow")
+    }
+
+    // 用户选择不喜欢原因后，移除广告展示
+    override fun onSelected(p0: Int, p1: String?, p2: Boolean) {
+        Log.d(TAG, "dislike-onSelected")
+        postMessage("onSelected")
+        removeAdView()
     }
 
     override fun initAd() {

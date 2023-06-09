@@ -2,72 +2,61 @@ package net.niuxiaoer.flutter_gromore.manager
 
 import android.app.Activity
 import android.util.Log
-import com.bytedance.msdk.api.AdError
-import com.bytedance.msdk.api.v2.GMMediationAdSdk
-import com.bytedance.msdk.api.v2.GMSettingConfigCallback
-import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAd
-import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdLoadCallback
-import com.bytedance.msdk.api.v2.slot.GMAdOptionUtil
-import com.bytedance.msdk.api.v2.slot.GMAdSlotInterstitialFull
+import com.bytedance.sdk.openadsdk.*
+import com.bytedance.sdk.openadsdk.mediation.ad.MediationAdSlot
 import io.flutter.plugin.common.MethodChannel
 
 class FlutterGromoreInterstitialManager(private val params: Map<String, Any?>,
                                         private val activity: Activity,
-                                        private val result: MethodChannel.Result) :
-        GMInterstitialFullAdLoadCallback,
-        GMSettingConfigCallback {
+                                        private val result: MethodChannel.Result) : TTAdNative.FullScreenVideoAdListener {
 
-    private var mInterstitialAd: GMInterstitialFullAd? = null
 
     init {
-        loadAdWithCallback()
-    }
-
-    /// 加载插屏广告，如果没有config配置会等到加载完config配置后才去请求广告
-    private fun loadAdWithCallback() {
-        if (GMMediationAdSdk.configLoadSuccess()) {
-            loadAd()
-        } else {
-            GMMediationAdSdk.registerConfigCallback(this)
-        }
+        loadAd()
     }
 
     private fun loadAd() {
         val adUnitId = params["adUnitId"] as? String
-        val width = params["width"] as? Double
-        val height = params["height"] as? Double
+        // 默认为竖
+        val orientation = params["orientation"] as? Int ?: TTAdConstant.VERTICAL
+        // 静音
+        val muted = params["muted"] as? Boolean ?: true
+        // 音量
+        val volume = params["volume"] as? Float ?: 0.7f
 
-        require(adUnitId != null && adUnitId.isNotEmpty() && width != null && height != null)
+        require(adUnitId != null && adUnitId.isNotEmpty())
 
-        mInterstitialAd = GMInterstitialFullAd(activity, adUnitId)
-
-        val adSlotInterstitialFull = GMAdSlotInterstitialFull.Builder()
-                .setGMAdSlotBaiduOption(GMAdOptionUtil.getGMAdSlotBaiduOption().build())
-                .setGMAdSlotGDTOption(GMAdOptionUtil.getGMAdSlotGDTOption().build())
-                .setImageAdSize(width.toInt(), height.toInt())
+        val adNativeLoader =
+                TTAdSdk.getAdManager().createAdNative(activity)
+        val adslot = AdSlot.Builder()
+                .setCodeId(adUnitId) // 广告位id
+                .setAdCount(1) // 请求的广告数
+                .setOrientation(orientation)
+                .setMediationAdSlot(
+                        MediationAdSlot.Builder()
+                                .setMuted(muted)
+                                .setVolume(volume)
+                                .build()) // 聚合广告请求配置
                 .build()
 
-        mInterstitialAd?.loadAd(adSlotInterstitialFull, this)
+        adNativeLoader.loadFullScreenVideoAd(adslot, this)
     }
 
-    override fun onInterstitialFullLoadFail(error: AdError) {
-        Log.d("InterstitialManager", "onInterstitialLoadFail - ${error.code} - ${error.message}")
-        mInterstitialAd?.destroy()
-        mInterstitialAd = null
-        result.error(error.code.toString(), error.message, error.toString())
+    override fun onError(p0: Int, p1: String?) {
+        Log.d("InterstitialManager", "onInterstitialLoadFail - $p0 - $p1")
+        result.error(p0.toString(), p1, p1)
     }
 
-    override fun onInterstitialFullAdLoad() {
-        mInterstitialAd?.let {
-            FlutterGromoreInterstitialCache.addCacheInterstitialAd(mInterstitialAd.hashCode(), it)
-            result.success(mInterstitialAd.hashCode().toString())
+    override fun onFullScreenVideoAdLoad(ad: TTFullScreenVideoAd?) {
+        ad?.let {
+            FlutterGromoreInterstitialCache.addCacheInterstitialAd(ad.hashCode(), it)
+            result.success(ad.hashCode().toString())
         }
     }
 
-    override fun onInterstitialFullCached() {
+    override fun onFullScreenVideoCached() {
     }
 
-    override fun configLoad() {
-        loadAd()
+    override fun onFullScreenVideoCached(p0: TTFullScreenVideoAd?) {
     }
 }

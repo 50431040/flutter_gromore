@@ -4,14 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.bytedance.msdk.api.v2.GMAdConfig
-import com.bytedance.msdk.api.v2.GMMediationAdSdk
-import io.flutter.BuildConfig
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import net.niuxiaoer.flutter_gromore.event.AdEventHandler
 import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedCache
 import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedManager
 import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreInterstitialCache
@@ -19,13 +14,11 @@ import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreInterstitialManager
 import net.niuxiaoer.flutter_gromore.utils.Utils
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreInterstitial
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreSplash
-import org.json.JSONObject
-import java.io.InputStream
 
 class PluginDelegate(
-    private val context: Context,
-    private val activity: Activity,
-    private val binaryMessenger: BinaryMessenger
+        private val context: Context,
+        private val activity: Activity,
+        private val binaryMessenger: BinaryMessenger
 ) : MethodChannel.MethodCallHandler {
     private val TAG: String = this::class.java.simpleName
 
@@ -36,15 +29,15 @@ class PluginDelegate(
         Log.d(TAG, method)
 
         when (method) {
+            // TODO
             // 同时请求：READ_PHONE_STATE, COARSE_LOCATION, FINE_LOCATION, WRITE_EXTERNAL_STORAGE权限
             "requestPermissionIfNecessary" -> {
-                GMMediationAdSdk.requestPermissionIfNecessary(context)
+                // GMMediationAdSdk.requestPermissionIfNecessary(context)
                 result.success(true)
             }
             // 初始化
             "initSDK" -> {
-                initSDK(arguments)
-                result.success(true)
+                InitGromore(context).initSDK(arguments, result)
             }
             // 开屏
             "showSplashAd" -> {
@@ -79,44 +72,6 @@ class PluginDelegate(
                 FlutterGromoreFeedCache.removeCacheFeedAd(arguments["feedId"] as String)
                 result.success(true)
             }
-        }
-    }
-
-    // 初始化SDK
-    private fun initSDK(arguments: Map<String, Any?>?) {
-        require(arguments != null)
-
-        // 取出传递的参数
-        val appId = arguments["appId"] as? String ?: ""
-        val appName = arguments["appName"] as? String ?: ""
-        val debug = arguments["debug"] as? Boolean ?: BuildConfig.DEBUG
-
-        require(appId.isNotEmpty())
-
-        val config = GMAdConfig.Builder()
-            .setAppId(appId)
-            .setAppName(appName)
-            .setCustomLocalConfig(loadLocalConfig())
-            .setDebug(debug)
-            .build()
-
-        GMMediationAdSdk.initialize(context, config)
-    }
-
-    /**
-     * GroMore 本地缓存配置
-     * 由穿山甲后台导出配置信息，减少配置拉取失败率
-     */
-    private fun loadLocalConfig(): JSONObject? {
-        return try {
-            val inputStream: InputStream = context.assets.open("gromore_local_config")
-            val text: String = inputStream.bufferedReader().use {
-                it.readText()
-            }
-            JSONObject(text)
-        } catch (error: Exception) {
-            Log.d(TAG,"gromore_local_config read fail")
-            null;
         }
     }
 

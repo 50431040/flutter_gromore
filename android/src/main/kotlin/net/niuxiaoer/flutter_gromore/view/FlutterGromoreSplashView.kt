@@ -5,12 +5,11 @@ import android.content.Context
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
-import com.bytedance.msdk.api.AdError
-import com.bytedance.msdk.api.TTAdConstant
-import com.bytedance.msdk.api.v2.ad.splash.GMSplashAd
-import com.bytedance.msdk.api.v2.ad.splash.GMSplashAdListener
-import com.bytedance.msdk.api.v2.ad.splash.GMSplashAdLoadCallback
-import com.bytedance.msdk.api.v2.slot.GMAdSlotSplash
+import com.bytedance.sdk.openadsdk.AdSlot
+import com.bytedance.sdk.openadsdk.TTAdNative
+import com.bytedance.sdk.openadsdk.TTAdSdk
+import com.bytedance.sdk.openadsdk.TTSplashAd
+import com.bytedance.sdk.openadsdk.mediation.ad.MediationAdSlot
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.platform.PlatformView
 import net.niuxiaoer.flutter_gromore.constants.FlutterGromoreConstants
@@ -18,23 +17,21 @@ import net.niuxiaoer.flutter_gromore.utils.Utils
 
 
 class FlutterGromoreSplashView(
-    private val context: Context,
-    private val activity: Activity,
-    viewId: Int,
-    private val creationParams: Map<String?, Any?>?,
-    binaryMessenger: BinaryMessenger
+        private val context: Context,
+        private val activity: Activity,
+        viewId: Int,
+        private val creationParams: Map<String?, Any?>?,
+        binaryMessenger: BinaryMessenger
 ) :
-    FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.splashTypeId}/$viewId"),
-    PlatformView,
-    GMSplashAdListener,
-    GMSplashAdLoadCallback {
+        FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.splashTypeId}/$viewId"),
+        PlatformView, TTAdNative.SplashAdListener, TTSplashAd.AdInteractionListener {
 
     private val TAG: String = this::class.java.simpleName
 
     // 开屏广告容器
     private var container: FrameLayout = FrameLayout(context)
 
-    private var mTTSplashAd: GMSplashAd? = null
+    private var splashAd: TTSplashAd? = null
 
     init {
         initAd()
@@ -46,8 +43,7 @@ class FlutterGromoreSplashView(
         val adUnitId = creationParams["adUnitId"] as String
         require(adUnitId.isNotEmpty())
 
-        mTTSplashAd = GMSplashAd(activity, adUnitId)
-        mTTSplashAd?.setAdSplashListener(this)
+        val adNativeLoader = TTAdSdk.getAdManager().createAdNative(activity)
 
         // 注意开屏广告view：width >=70%屏幕宽；height >=50%屏幕高，否则会影响计费。
         // 开屏广告可支持的尺寸：图片尺寸传入与展示区域大小保持一致，避免素材变形
@@ -56,31 +52,29 @@ class FlutterGromoreSplashView(
         val muted = creationParams["muted"] as? Boolean ?: false
         val preload = creationParams["preload"] as? Boolean ?: true
         val volume = creationParams["volume"] as? Float ?: 1f
-        val timeout = creationParams["timeout"] as? Int ?: 3000
-        val buttonType =
-            creationParams["buttonType"] as? Int ?: TTAdConstant.SPLASH_BUTTON_TYPE_FULL_SCREEN
-        val downloadType =
-            creationParams["downloadType"] as? Int ?: TTAdConstant.DOWNLOAD_TYPE_POPUP
+        val isSplashShakeButton = creationParams["splashShakeButton"] as? Boolean ?: true
+        val isBidNotify = creationParams["bidNotify"] as? Boolean ?: false
 
         container.layoutParams = FrameLayout.LayoutParams(containerWidth, containerHeight)
 
-        val adSlot = GMAdSlotSplash.Builder()
-            .setImageAdSize(containerWidth, containerHeight)
-            .setSplashPreLoad(preload)
-            .setMuted(muted)
-            .setVolume(volume)
-            .setTimeOut(timeout)
-            .setSplashButtonType(buttonType)
-            .setDownloadType(downloadType)
-            .build()
+        val adSlot = AdSlot.Builder()
+                .setImageAcceptedSize(containerWidth, containerHeight)
+                .setMediationAdSlot(MediationAdSlot.Builder()
+                        .setSplashPreLoad(preload)
+                        .setMuted(muted)
+                        .setVolume(volume)
+                        .setSplashShakeButton(isSplashShakeButton)
+                        .setBidNotify(isBidNotify)
+                        .build())
+                .build()
 
-        mTTSplashAd?.loadAd(adSlot, this)
+        adNativeLoader.loadSplashAd(adSlot, this)
     }
 
     private fun finishSplash() {
         // 销毁
-        mTTSplashAd?.destroy()
-        mTTSplashAd = null
+        splashAd?.mediationManager?.destroy()
+        splashAd = null
 
         postMessage("onAdEnd")
     }
@@ -93,21 +87,14 @@ class FlutterGromoreSplashView(
         finishSplash()
     }
 
-    override fun onAdClicked() {
+    override fun onAdClicked(p0: View?, p1: Int) {
         Log.d(TAG, "onAdClicked")
         postMessage("onAdClicked")
     }
 
-    override fun onAdShow() {
+    override fun onAdShow(p0: View?, p1: Int) {
         Log.d(TAG, "onAdShow")
         postMessage("onAdShow")
-    }
-
-    override fun onAdShowFail(p0: AdError) {
-        Log.d(TAG, "onAdShowFail")
-
-        finishSplash()
-        postMessage("onAdShowFail")
     }
 
     override fun onAdSkip() {
@@ -117,34 +104,40 @@ class FlutterGromoreSplashView(
         postMessage("onAdSkip")
     }
 
-    override fun onAdDismiss() {
+    override fun onAdTimeOver() {
         Log.d(TAG, "onAdDismiss")
 
         finishSplash()
         postMessage("onAdDismiss")
     }
 
-    override fun onSplashAdLoadFail(p0: AdError) {
+    override fun onError(p0: Int, p1: String?) {
         Log.d(TAG, "onSplashAdLoadFail")
 
         finishSplash()
         postMessage("onSplashAdLoadFail")
     }
 
-    override fun onSplashAdLoadSuccess() {
-        Log.d(TAG, "onSplashAdLoadSuccess")
-
-        container.removeAllViews()
-        mTTSplashAd?.showAd(container)
-
-        postMessage("onSplashAdLoadSuccess")
-    }
-
-    override fun onAdLoadTimeout() {
+    override fun onTimeout() {
         Log.d(TAG, "onAdLoadTimeout")
 
         finishSplash()
         postMessage("onAdLoadTimeout")
+    }
+
+    override fun onSplashAdLoad(ad: TTSplashAd?) {
+        Log.d(TAG, "onSplashAdLoadSuccess")
+        postMessage("onSplashAdLoadSuccess")
+
+        ad?.let {
+            splashAd = it
+            it.setSplashInteractionListener(this)
+
+            container.removeAllViews()
+            it.splashView?.let {  splashView ->
+                container.addView(splashView)
+            }
+        }
     }
 
 }

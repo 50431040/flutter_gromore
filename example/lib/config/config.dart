@@ -10,32 +10,32 @@ class GroMoreAdConfig {
   /// APP-ID
   static String get appId {
     if (Platform.isAndroid) {
-      return '5220552';
+      return '5320035';
     }
-    return '5220559';
+    return '5320035';
   }
 
   /// 开屏广告ID
   static String get splashId {
     if (Platform.isAndroid) {
-      return '102082953';
+      return '102357892';
     }
-    return '102083881';
+    return '102357892';
   }
 
   /// 信息流广告ID
   static String get feedId {
     if (Platform.isAndroid) {
-      return '102083741';
+      return '102360311';
     }
-    return '102083975';
+    return '102360311';
   }
 
   /// 插屏广告ID
   static String get interstitialId {
     if (Platform.isAndroid) {
-      return '102073230';
+      return '102360214';
     }
-    return '102082993';
+    return '102360214';
   }
 }

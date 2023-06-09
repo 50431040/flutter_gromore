@@ -8,6 +8,7 @@ import android.view.View
 import android.view.WindowManager
 import io.flutter.plugin.common.MethodChannel
 
+
 class Utils {
     companion object {
         // 开屏广告result，在开屏广告关闭后返回给dart端
@@ -42,5 +43,22 @@ class Utils {
                 }
             }
         }
+
+        /* 隐藏虚拟按键 */
+        fun hideBottomUIMenu(activity: Activity) {
+            //隐藏虚拟按键，并且全屏
+            if (Build.VERSION.SDK_INT <= 11 && Build.VERSION.SDK_INT < 19) {
+                // lower api
+                activity.window.decorView.systemUiVisibility = View.GONE
+            } else if (Build.VERSION.SDK_INT > 19) {
+                //for new api versions.
+                val decorView: View = activity.window.decorView
+                val uiOptions = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN)
+                decorView.systemUiVisibility = uiOptions
+            }
+        }
+
+
     }
 }

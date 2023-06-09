@@ -30,7 +30,7 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -88,16 +88,13 @@ repositories {
 dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    // 穿山甲 SDK
-    implementation(name: 'open_ad_sdk_5.0.0.4', ext: 'aar')
-    // 穿山甲 Adapter
-    implementation 'by.gm_mediation.com:pangle-adapter:5.0.0.4.0'
-    // 优量汇 SDK
-    implementation(name: 'GDTSDK.unionNormal.4.500.1370', ext: 'aar')
-    // 优量汇 Adapter
-    implementation 'by.gm_mediation.com:gdt-adapter:4.500.1370.0'
-    // 百度 SDK
-    implementation(name: 'Baidu_MobAds_SDK_v9.251', ext: 'aar')
+
+    // 广点通 SDK
+    implementation(name: 'GDTSDK.unionNormal.4.530.1400', ext: 'aar')
+    // 广点通 Adapter
+    implementation "com.pangle.cn:mediation-gdt-adapter:4.530.1400.1"
+    // 百度SDK
+    implementation(name: 'Baidu_MobAds_SDK_v9.29', ext: 'aar')
     // 百度 Adapter
-    implementation 'by.gm_mediation.com:baidu-adapter:9.251.0'
+    implementation "com.pangle.cn:mediation-baidu-adapter:9.29.1"
 }
