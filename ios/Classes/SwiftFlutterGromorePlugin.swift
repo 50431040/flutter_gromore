@@ -7,7 +7,9 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     private static var messenger: FlutterBinaryMessenger? = nil
     private var splashAd: FlutterGromoreSplash?
     private var interstitialManager: FlutterGromoreInterstitialManager?
+    private var rewardManager: FlutterGromoreRewardManager?
     private var interstitialFullAd: FlutterGromoreInterstitial?
+    private var rewardAd: FlutterGromoreReward?
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: FlutterGromoreContants.methodChannelName, binaryMessenger: registrar.messenger())
@@ -44,6 +46,11 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
             feedManager.loadAd()
         case "removeFeedAd":
             removeFeedAd(args: args, result: result)
+        case "loadRewardAd":
+            rewardManager = FlutterGromoreRewardManager(args: args, result: result)
+            rewardManager?.loadAd()
+        case "showRewardAd":
+            rewardAd = FlutterGromoreReward(messenger: SwiftFlutterGromorePlugin.messenger!, arguments: args, result: result)
         default:
             result(FlutterMethodNotImplemented)
         }

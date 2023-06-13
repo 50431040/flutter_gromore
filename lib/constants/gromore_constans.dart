@@ -12,4 +12,7 @@ class FlutterGromoreConstants {
 
   // 开屏广告注册名
   static const splashTypeId = "flutter_gromore_splash";
+
+  // 开屏广告注册名
+  static const rewardTypeId = "flutter_gromore_reward";
 }

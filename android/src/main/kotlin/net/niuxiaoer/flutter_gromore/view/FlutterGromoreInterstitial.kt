@@ -18,9 +18,11 @@ class FlutterGromoreInterstitial(private val activity: Activity,
     private val TAG: String = this::class.java.simpleName
 
     private var mInterstitialAd: TTFullScreenVideoAd? = null
+    private var interstitialId: Int = 0
 
     init {
-        mInterstitialAd = FlutterGromoreInterstitialCache.getCacheInterstitialAd((creationParams["interstitialId"] as String).toInt())
+        interstitialId = (creationParams["interstitialId"] as String).toInt()
+        mInterstitialAd = FlutterGromoreInterstitialCache.getCacheInterstitialAd(interstitialId)
         initAd()
     }
 
@@ -42,6 +44,8 @@ class FlutterGromoreInterstitial(private val activity: Activity,
     private fun destroyAd() {
         mInterstitialAd?.mediationManager?.destroy()
         mInterstitialAd = null
+
+        FlutterGromoreInterstitialCache.removeCacheInterstitialAd(interstitialId)
     }
 
     // 广告展示

@@ -17,4 +17,7 @@ struct FlutterGromoreContants {
     
     // 插屏
     static let interstitialTypeId = "flutter_gromore_interstitial"
+    
+    // 激励视频
+    static let rewardTypeId = "flutter_gromore_reward"
 }

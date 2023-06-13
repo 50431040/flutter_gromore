@@ -403,6 +403,56 @@ GromoreFeedView(
 | onShow          | 拒绝弹框显示           | 仅Android可用                                |
 | onAdTerminate   | 广告被强制移除         | 仅iOS可用，当收到此回调时应当移除该组件      |
 
+### 激励视频
+
+1. 说明
+
+- 先加载广告id，成功后再渲染展示
+- 没有服务端奖励验证功能
+
+2. 使用
+
+```dart
+String rewardAdId = await FlutterGromore.loadRewardAd(
+  GromoreRewardConfig(adUnitId: GroMoreAdConfig.rewardId));
+
+if (rewardAdId.isNotEmpty) {
+  showRewardAd(rewardAdId);
+}
+
+Future<void> showRewardAd(String rewardId) async {
+  await FlutterGromore.showRewardAd(rewardId: rewardId, callback: GromoreRewardCallback(
+    onRewardVerify: (bool verify) {
+      if (verify) {
+        // 如果需要在关闭广告后再判断，可以先把这个值用变量存储一下，在onAdClose回调中根据变量的值进行判断
+        print("恭喜你，获得奖励");
+      }
+    }
+  ));
+}
+```
+
+3. 配置（GromoreRewardConfig）
+
+| 参数名      | 说明                                                    | 必填 |
+| ----------- | ------------------------------------------------------- | ---- |
+| adUnitId    | 信息流广告位id                                          | 是   |
+| orientation | 播放方向。竖屏：1，横屏：2。默认为竖屏。仅Android端有效 | 否   |
+| muted       | 是否静音，默认为true                                    | 否   |
+| volume      | 音量，默认为0。仅Android端有效                          | 否   |
+
+4. 回调（GromoreFeedCallback，命名和 **Android** 聚合文档基本一致）
+
+| 回调方法名        | 说明                                              | 备注                         |
+| ----------------- | ------------------------------------------------- | ---------------------------- |
+| onAdShow          | 广告的展示回调                                    |                              |
+| onAdVideoBarClick | 广告的下载bar点击回调，非所有广告商的广告都会触发 |                              |
+| onAdClose         | 广告关闭的回调                                    |                              |
+| onVideoComplete   | 视频播放完毕的回调，非所有广告商的广告都会触发    |                              |
+| onVideoError      | 视频播放失败的回调                                |                              |
+| onRewardVerify    | 激励视频播放完毕，验证是否有效发放奖励的回调      | 参数 verify 表示是否验证成功 |
+| onSkippedVideo    | 跳过视频播放                                      |                              |
+
 ## 问题
 
 1. iOS端的开屏广告只能使用`FlutterGromore.showSplashAd`进行，如果在此时同时加载插屏广告，可能会导致插屏广告出现在开屏广告上方

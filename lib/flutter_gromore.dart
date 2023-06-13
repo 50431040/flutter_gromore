@@ -6,9 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gromore/callback/gromore_base_callback.dart';
 import 'package:flutter_gromore/callback/gromore_interstitial_callback.dart';
 import 'package:flutter_gromore/callback/gromore_method_channel_handler.dart';
+import 'package:flutter_gromore/callback/gromore_reward_callback.dart';
 import 'package:flutter_gromore/callback/gromore_splash_callback.dart';
 import 'package:flutter_gromore/config/gromore_feed_config.dart';
 import 'package:flutter_gromore/config/gromore_interstitial_config.dart';
+import 'package:flutter_gromore/config/gromore_reward_config.dart';
 import 'package:flutter_gromore/config/gromore_splash_config.dart';
 import 'package:flutter_gromore/constants/gromore_constans.dart';
 
@@ -146,5 +148,41 @@ class FlutterGromore {
     assert(isInit);
 
     await _methodChannel.invokeMethod("removeFeedAd", {"feedId": feedId});
+  }
+
+  /// 加载激励广告
+  /// 加载失败会返回空字符串
+  static Future<String> loadRewardAd(GromoreRewardConfig config) async {
+    assert(isInit);
+
+    try {
+      String result =
+          await _methodChannel.invokeMethod("loadRewardAd", config.toJson());
+      return result;
+    } catch (err) {
+      return "";
+    }
+  }
+
+  /// 展示激励广告
+  /// 返回值表示是否展示成功
+  /// 若需验证是否有效发放奖励，请在GromoreRewardCallback中传入onRewardVerify回调
+  static Future<bool> showRewardAd(
+      {required String rewardId, GromoreRewardCallback? callback}) async {
+    assert(isInit);
+
+    assert(rewardId.isNotEmpty);
+
+    try {
+      if (callback != null) {
+        GromoreMethodChannelHandler<GromoreRewardCallback>.register(
+            "${FlutterGromoreConstants.rewardTypeId}/$rewardId", callback);
+      }
+
+      return await _methodChannel
+          .invokeMethod("showRewardAd", {"rewardId": rewardId});
+    } catch (_) {
+      return false;
+    }
   }
 }

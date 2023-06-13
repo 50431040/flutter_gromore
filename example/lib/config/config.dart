@@ -38,4 +38,12 @@ class GroMoreAdConfig {
     }
     return '102360214';
   }
+
+  /// 激励视频广告ID
+  static String get rewardId {
+    if (Platform.isAndroid) {
+      return '102363841';
+    }
+    return '102363841';
+  }
 }

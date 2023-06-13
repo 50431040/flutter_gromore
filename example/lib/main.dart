@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gromore/callback/gromore_interstitial_callback.dart';
+import 'package:flutter_gromore/callback/gromore_reward_callback.dart';
 import 'package:flutter_gromore/callback/gromore_splash_callback.dart';
 import 'package:flutter_gromore/config/gromore_interstitial_config.dart';
+import 'package:flutter_gromore/config/gromore_reward_config.dart';
 import 'package:flutter_gromore/config/gromore_splash_config.dart';
 import 'package:flutter_gromore/flutter_gromore.dart';
 import 'package:flutter_gromore/utils/gromore_ad_size.dart';
@@ -116,6 +118,28 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  /// 加载激励视频广告
+  Future<void> loadRewardAd() async {
+    String rewardAdId = await FlutterGromore.loadRewardAd(
+        GromoreRewardConfig(adUnitId: GroMoreAdConfig.rewardId));
+
+    if (rewardAdId.isNotEmpty) {
+      showRewardAd(rewardAdId);
+    }
+  }
+
+  /// 激励视频广告
+  Future<void> showRewardAd(String rewardId) async {
+    await FlutterGromore.showRewardAd(rewardId: rewardId, callback: GromoreRewardCallback(
+      onRewardVerify: (bool verify) {
+        if (verify) {
+          // 如果需要在关闭广告后再判断，可以先把这个值用变量存储一下，在onAdClose回调中根据变量的值进行判断
+          print("恭喜你，获得奖励");
+        }
+      }
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -149,7 +173,6 @@ class _HomePageState extends State<HomePage> {
             //   onPressed: showSplashAdView,
             //   child: const Text("开屏广告（自定义布局）"),
             // ),
-            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: showFeedAd,
               child: const Text("信息流广告"),
@@ -158,6 +181,11 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: showInterstitialAd,
               child: const Text("插屏广告"),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: loadRewardAd,
+              child: const Text("激励视频广告"),
             ),
           ],
         ),

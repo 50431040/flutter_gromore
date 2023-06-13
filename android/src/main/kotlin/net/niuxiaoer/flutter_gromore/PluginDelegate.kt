@@ -7,12 +7,10 @@ import android.util.Log
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedCache
-import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedManager
-import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreInterstitialCache
-import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreInterstitialManager
+import net.niuxiaoer.flutter_gromore.manager.*
 import net.niuxiaoer.flutter_gromore.utils.Utils
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreInterstitial
+import net.niuxiaoer.flutter_gromore.view.FlutterGromoreReward
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreSplash
 
 class PluginDelegate(
@@ -69,6 +67,16 @@ class PluginDelegate(
                 require(arguments != null && arguments["feedId"] != null)
                 FlutterGromoreFeedCache.removeCacheFeedAd(arguments["feedId"] as String)
                 result.success(true)
+            }
+            // 加载激励广告
+            "loadRewardAd" -> {
+                require(arguments != null && arguments["adUnitId"] != null)
+                FlutterGromoreRewardManager(arguments, activity, result)
+            }
+            // 展示激励广告
+            "showRewardAd" -> {
+                require(arguments != null && arguments["rewardId"] != null)
+                FlutterGromoreReward(activity, binaryMessenger, arguments, result)
             }
         }
     }

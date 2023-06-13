@@ -12,13 +12,15 @@ class FlutterGromoreInterstitial: NSObject, FlutterGromoreBase, BUNativeExpressF
     private var args: [String: Any]
     private var interstitialAd: BUNativeExpressFullscreenVideoAd?
     private var result: FlutterResult
+    private var interstitialId: String = ""
     
     init(messenger: FlutterBinaryMessenger, arguments: [String: Any], result: @escaping FlutterResult) {
         args = arguments
         self.result = result
         super.init()
-        interstitialAd = FlutterGromoreInterstitialCache.getAd(key: arguments["interstitialId"] as! String)
-        methodChannel = initMethodChannel(channelName: "\(FlutterGromoreContants.interstitialTypeId)/\(arguments["interstitialId"] ?? "")", messenger: messenger)
+        interstitialId = arguments["interstitialId"] as! String
+        interstitialAd = FlutterGromoreInterstitialCache.getAd(key: interstitialId)
+        methodChannel = initMethodChannel(channelName: "\(FlutterGromoreContants.interstitialTypeId)/\(interstitialId)", messenger: messenger)
         initAd()
     }
     
@@ -27,6 +29,11 @@ class FlutterGromoreInterstitial: NSObject, FlutterGromoreBase, BUNativeExpressF
             ad.delegate = self
             ad.show(fromRootViewController: Utils.getVC())
         }
+    }
+    
+    func destroyAd() {
+        FlutterGromoreInterstitialCache.removeAd(key: interstitialId)
+        interstitialAd = nil
     }
     
     // 展示插全屏广告
@@ -38,12 +45,14 @@ class FlutterGromoreInterstitial: NSObject, FlutterGromoreBase, BUNativeExpressF
     func nativeExpressFullscreenVideoAdDidClose(_ fullscreenVideoAd: BUNativeExpressFullscreenVideoAd) {
         postMessage("onInterstitialClosed")
         result(true)
+        destroyAd()
     }
     
     // 渲染失败
     func nativeExpressFullscreenVideoAdViewRenderFail(_ rewardedVideoAd: BUNativeExpressFullscreenVideoAd, error: Error?) {
         postMessage("onInterstitialShowFail")
         result(false)
+        destroyAd()
     }
     
     // 点击
