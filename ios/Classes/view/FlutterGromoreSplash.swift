@@ -5,11 +5,12 @@
 //  Created by Anand on 2022/5/31.
 //
 
-import ABUAdSDK
+import BUAdSDK
 
-class FlutterGromoreSplash: NSObject, ABUSplashAdDelegate {
+class FlutterGromoreSplash: NSObject, BUSplashAdDelegate {
+    
     private var eventId: String?
-    private var splashAd: ABUSplashAd?
+    private var splashAd: BUSplashAd?
     private var result: FlutterResult
     
     init(args: [String: Any], result: @escaping FlutterResult) {
@@ -21,16 +22,18 @@ class FlutterGromoreSplash: NSObject, ABUSplashAdDelegate {
     
     /// 初始化广告
     private func initAd(args: [String: Any]) {
-        // 配置开屏广告
-        splashAd = ABUSplashAd(adUnitID: args["adUnitId"] as! String)
+        let slot = BUAdSlot()
+        slot.id = args["adUnitId"] as! String
+        
+        splashAd = BUSplashAd(slot: slot, adSize: CGSize(
+            width: UIScreen.main.bounds.size.width,
+            height: UIScreen.main.bounds.size.height * 0.85
+        ))
         splashAd?.delegate = self
-        splashAd?.rootViewController = Utils.getVC()
-        splashAd?.tolerateTimeout = TimeInterval(args["timeout"] as? Int ?? 3)
-        splashAd?.splashButtonType = ABUSplashButtonType(rawValue: args["buttonType"] as? Int ?? 1)!
         // 展示 logo
         let logo: String = args["logo"] as? String ?? ""
         if !logo.isEmpty {
-            splashAd?.customBottomView = generateLogoContainer(name: logo)
+            splashAd?.mediation?.customBottomView = generateLogoContainer(name: logo)
         }
         // 加载开屏广告
         splashAd?.loadData()
@@ -60,47 +63,56 @@ class FlutterGromoreSplash: NSObject, ABUSplashAdDelegate {
         }
     }
     
-    /// 开屏广告加载完成
-    func splashAdDidLoad(_ splashAd: ABUSplashAd) {
+    // 开屏广告加载完成
+    func splashAdLoadSuccess(_ splashAd: BUSplashAd) {
         sendEvent("onSplashAdLoadSuccess")
-        splashAd.show(in: UIApplication.shared.keyWindow!)
+        splashAd.showSplashView(inRootViewController: UIApplication.shared.keyWindow!.rootViewController!)
     }
     
-    /// 开屏广告加载失败
-    func splashAd(_ splashAd: ABUSplashAd, didFailWithError error: Error?) {
+    // 开屏广告加载失败
+    func splashAdLoadFail(_ splashAd: BUSplashAd, error: BUAdError?) {
         sendEvent("onSplashAdLoadFail")
         sendEvent("onAdEnd")
         result(false)
     }
     
-    /// 开屏广告关闭
-    func splashAdDidClose(_ splashAd: ABUSplashAd) {
-        sendEvent("onAdEnd")
-        result(true)
-        splashAd.destoryAd()
+    func splashAdRenderSuccess(_ splashAd: BUSplashAd) {
+        
     }
     
-    /// 开屏广告即将展示
-    func splashAdWillVisible(_ splashAd: ABUSplashAd) {
-        sendEvent("onAdShow")
-    }
-    
-    /// 开屏广告显示失败
-    func splashAdDidShowFailed(_ splashAd: ABUSplashAd, error: Error) {
-        sendEvent("onAdShowFail")
+    func splashAdRenderFail(_ splashAd: BUSplashAd, error: BUAdError?) {
         sendEvent("onAdEnd")
         result(false)
     }
     
-    ///点击了开屏广告
-    func splashAdDidClick(_ splashAd: ABUSplashAd) {
-        sendEvent("onAdClicked")
+    func splashAdWillShow(_ splashAd: BUSplashAd) {
+        sendEvent("onAdShow")
     }
     
-    /// 开屏广告倒计时结束
-    func splashAdCountdown(toZero splashAd: ABUSplashAd) {
+    func splashAdDidShow(_ splashAd: BUSplashAd) {
+        sendEvent("onAdShow")
+    }
+    
+    func splashAdViewControllerDidClose(_ splashAd: BUSplashAd) {
+        
+    }
+    
+    func splashVideoAdDidPlayFinish(_ splashAd: BUSplashAd, didFailWithError error: Error) {
         sendEvent("onAdDismiss")
     }
     
-    // TODO: 安卓端还有 onAdLoadTimeout、onAdSkip
+    func splashAdDidClick(_ splashAd: BUSplashAd) {
+        
+    }
+    
+    func splashAdDidClose(_ splashAd: BUSplashAd, closeType: BUSplashAdCloseType) {
+        sendEvent("onAdEnd")
+        result(true)
+        splashAd.mediation?.destoryAd()
+    }
+    
+    func splashDidCloseOtherController(_ splashAd: BUSplashAd, interactionType: BUInteractionType) {
+        
+    }
+
 }

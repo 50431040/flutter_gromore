@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
-# platform :ios, '9.0'
+# platform :ios, '11.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -33,7 +33,9 @@ target 'Runner' do
   
   # SDK 版本需要查看 GroMore 提供 Adapter 的支持范围
   pod 'BaiduMobAdSDK', '5.101'
+  pod 'CSJMBaiduAdapter', '5.13.0'
   pod 'GDTMobSDK', '4.14.02'
+  pod 'CSJMGdtAdapter', '4.14.20.0'
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end

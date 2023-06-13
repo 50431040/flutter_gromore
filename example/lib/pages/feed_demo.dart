@@ -60,7 +60,7 @@ class _FeedDemoState extends State<FeedDemo> {
               child: ListView.builder(
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              if (index % 5 == 0) {
+              if (index % 4 == 0) {
                 return const FeedView();
               }
 

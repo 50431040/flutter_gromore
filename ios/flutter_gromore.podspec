@@ -16,10 +16,14 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   s.platform = :ios, '8.0'
-
-  # 引入 GroMore 基础 SDK
-  s.dependency 'Ads-CN', '4.9.0.6'
-  s.vendored_frameworks = 'Frameworks/ABUAdSDK.framework'
+  
+  s.dependency 'Ads-Fusion-CN-Beta', '5.1.7.0'
+  s.subspec 'Ads-CSJ' do |cs|
+    cs.dependency 'Ads-Fusion-CN-Beta/Ads-CSJ'
+  end
+  s.subspec 'CSJMediation' do |cs|
+    cs.dependency 'Ads-Fusion-CN-Beta/CSJMediation'
+  end
   s.static_framework = true
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

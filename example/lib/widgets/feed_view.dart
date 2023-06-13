@@ -33,6 +33,7 @@ class _FeedViewState extends State<FeedView>
 
   loadFeedAd() async {
     String? feedAdId = await AdUtils.getFeedAdId();
+    print("loadFeedAd $feedAdId");
     if (feedAdId != null && feedAdId.isNotEmpty) {
       setState(() {
         _feedAdId = feedAdId;

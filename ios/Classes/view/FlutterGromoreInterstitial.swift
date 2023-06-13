@@ -5,12 +5,12 @@
 //  Created by jlq on 2022/6/1.
 //
 
-import ABUAdSDK
+import BUAdSDK
 
-class FlutterGromoreInterstitial: NSObject, FlutterGromoreBase, ABUInterstitialProAdDelegate {
+class FlutterGromoreInterstitial: NSObject, FlutterGromoreBase, BUNativeExpressFullscreenVideoAdDelegate {
     var methodChannel: FlutterMethodChannel?
     private var args: [String: Any]
-    private var interstitialAd: ABUInterstitialProAd?
+    private var interstitialAd: BUNativeExpressFullscreenVideoAd?
     private var result: FlutterResult
     
     init(messenger: FlutterBinaryMessenger, arguments: [String: Any], result: @escaping FlutterResult) {
@@ -23,36 +23,31 @@ class FlutterGromoreInterstitial: NSObject, FlutterGromoreBase, ABUInterstitialP
     }
     
     func initAd() {
-        if let ad = interstitialAd, ad.isReady {
+        if let ad = interstitialAd, ad.mediation?.isReady ?? false {
             ad.delegate = self
-            ad.show(fromRootViewController: Utils.getVC(), extraInfos: nil)
+            ad.show(fromRootViewController: Utils.getVC())
         }
-        
     }
     
-    /// 展示插全屏广告
-    func interstitialProAdDidVisible(_ interstitialProAd: ABUInterstitialProAd) {
+    // 展示插全屏广告
+    func nativeExpressFullscreenVideoAdDidVisible(_ fullscreenVideoAd: BUNativeExpressFullscreenVideoAd) {
         postMessage("onInterstitialShow")
     }
     
-    func interstitialProAdDidShowFailed(_ interstitialProAd: ABUInterstitialProAd, error: Error) {
-        postMessage("onInterstitialShowFail")
-        result(false)
-    }
-    
-    /// 点击插全屏广告
-    func interstitialProAdDidClick(_ interstitialProAd: ABUInterstitialProAd) {
-        postMessage("onInterstitialAdClick")
-    }
-    
-    /// 插全屏广告关闭
-    func interstitialProAdDidClose(_ interstitialProAd: ABUInterstitialProAd) {
+    // 广告关闭
+    func nativeExpressFullscreenVideoAdDidClose(_ fullscreenVideoAd: BUNativeExpressFullscreenVideoAd) {
         postMessage("onInterstitialClosed")
         result(true)
     }
     
-    /// 即将弹出广告详情页
-    func interstitialProAdWillPresentFullScreenModal(_ interstitialProAd: ABUInterstitialProAd) {
-        postMessage("onAdOpened")
+    // 渲染失败
+    func nativeExpressFullscreenVideoAdViewRenderFail(_ rewardedVideoAd: BUNativeExpressFullscreenVideoAd, error: Error?) {
+        postMessage("onInterstitialShowFail")
+        result(false)
+    }
+    
+    // 点击
+    func nativeExpressFullscreenVideoAdDidClick(_ fullscreenVideoAd: BUNativeExpressFullscreenVideoAd) {
+        postMessage("onInterstitialAdClick")
     }
 }

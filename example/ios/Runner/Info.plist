@@ -48,5 +48,14 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>SKAdNetworkIdentifier</key>
+	<array>
+		<string>x2jnk7ly8j.skadnetwork</string>
+		<string>238da6jt44.skadnetwork</string>
+		<string>f7s53z58qe.skadnetwork</string>
+		<string></string>
+	</array>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>

@@ -6,9 +6,11 @@
 //
 
 import Foundation
-import ABUAdSDK
+import BUAdSDK
 
-class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate, ABUNativeAdVideoDelegate {
+class FlutterGromoreFeed: NSObject, FlutterPlatformView, BUMNativeAdDelegate {
+    
+    
     var methodChannel: FlutterMethodChannel
     /// 容器
     private var container: FlutterGromoreIntercptPenetrateView
@@ -17,6 +19,8 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
     
     /// 广告已终止，避免多次回调
     private var isTerminate = false
+    
+    private var feedAd: BUNativeAd?
     
     init(frame: CGRect, id: Int64, params: Any?, messenger: FlutterBinaryMessenger) {
         methodChannel = FlutterMethodChannel(name: "\(FlutterGromoreContants.feedViewTypeId)/\(id)", binaryMessenger: messenger)
@@ -28,12 +32,12 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
     
     func initAd() {
         let adViewId: String = createParams["feedId"] as! String
-        if let adView: ABUNativeAdView = FlutterGromoreFeedCache.getAd(key: adViewId) {
-            adView.rootViewController = Utils.getVC()
-            adView.delegate = self
-            adView.videoDelegate = self
-            if adView.isExpressAd {
-                adView.render()
+        if let ad: BUNativeAd = FlutterGromoreFeedCache.getAd(key: adViewId) {
+            ad.rootViewController = Utils.getVC()
+            ad.delegate = self
+            if ad.mediation?.isExpressAd ?? false {
+                feedAd = ad
+                ad.mediation?.render()
             }
         }
     }
@@ -58,41 +62,58 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
         FlutterGromoreFeedCache.removeAd(key: adId)
     }
     
-    /// 检测广告是否被终止，WKWebView占用内存较大时，部分进程被终止导致白屏
-    /// 根据白屏时 WKCompositingView 从 UIView 上卸载进行判断
-    private func checkAdTerminate(_ views: [UIView]) -> Bool {
-        for view in views {
-            if !view.subviews.isEmpty {
-                return checkAdTerminate(view.subviews)
+    func nativeAdWillPresentFullScreenModal(_ nativeAd: BUNativeAd) {
+    }
+    
+    func nativeAdExpressViewRenderSuccess(_ nativeAd: BUNativeAd) {
+        if let height = nativeAd.mediation?.canvasView.bounds.height {
+            postMessage("onRenderSuccess", arguments: ["height": height])
+
+            var frame = container.frame
+            frame.size.height = height
+            container.frame = frame
+
+            container.addSubview(nativeAd.mediation!.canvasView)
+            
+            if let adnName = nativeAd.mediation?.getShowEcpmInfo()?.adnName, adnName == "pangle" {
+                // 穿山甲广告存在点击穿透
+                container.isPermeable = true
             }
-            return !String(describing: view).contains("WKCompositingView")
         }
-        return false
     }
     
-    /// 广告渲染成功(仅针对原生模板)
-    func nativeAdExpressViewRenderSuccess(_ nativeExpressAdView: ABUNativeAdView) {
-        postMessage("onRenderSuccess", arguments: ["height": nativeExpressAdView.bounds.height])
-        
-        var frame = container.frame
-        frame.size.height = nativeExpressAdView.bounds.height
-        container.frame = frame
-        
-        container.addSubview(nativeExpressAdView)
-    }
-    
-    /// 广告渲染失败(仅针对原生模板)
-    func nativeAdExpressViewRenderFail(_ nativeExpressAdView: ABUNativeAdView, error: Error?) {
+    func nativeAdExpressViewRenderFail(_ nativeAd: BUNativeAd, error: Error?) {
         postMessage("onRenderFail")
     }
     
-    /// 广告展示
-    func nativeAdDidBecomeVisible(_ nativeAdView: ABUNativeAdView) {
+    func nativeAdVideo(_ nativeAd: BUNativeAd?, stateDidChanged playerState: BUPlayerPlayState) {
+    }
+    
+    func nativeAdVideoDidClick(_ nativeAd: BUNativeAd?) {
+        postMessage("onAdClick")
+    }
+    
+    func nativeAdVideoDidPlayFinish(_ nativeAd: BUNativeAd?) {
+    }
+    
+    func nativeAdShakeViewDidDismiss(_ nativeAd: BUNativeAd?) {
+    }
+    
+    func nativeAdVideo(_ nativeAdView: BUNativeAd?, rewardDidCountDown countDown: Int) {
+    }
+    
+    
+    func nativeAdDidClick(_ nativeAd: BUNativeAd, with view: UIView?) {
+        postMessage("onAdClick")
+    }
+
+    
+    func nativeAdDidBecomeVisible(_ nativeAd: BUNativeAd) {
         postMessage("onAdShow")
-        
-        if let adnName = nativeAdView.getShowEcpmInfo()?.adnName, adnName == "pangle" {
+
+        // if let adnName = nativeAd.mediation?.getShowEcpmInfo()?.adnName, adnName == "pangle" {
             // 穿山甲广告存在点击穿透
-            container.isPermeable = true
+            // container.isPermeable = true
             // 穿山甲广告每次滑入视图时都会调用 “用户申请展示广告”
             // Guess: BUNativeExpressAdView 大概在 viewWillAppear 调用了展示广告，打算移除这一层
             // 层级结构：ABUNativeAdView -> BUNativeExpressAdView -> BUWKWebViewClient
@@ -102,50 +123,19 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, ABUNativeAdViewDelegate
             //     pangleNativeAdView.removeFromSuperview()
             //     nativeAdView.addSubview(pangleWebView)
             // }
-            // 穿山甲信息流使用WKWebView，加载过多时之前的信息流会白屏
-            if !isTerminate, checkAdTerminate(container.subviews) {
-                isTerminate = true
-                postMessage("onAdTerminate")
-            }
-        }
+        // }
     }
-    
-    /// 播放状态改变(仅三方adn支持的视频广告有)
-    func nativeAdExpressView(_ nativeAdView: ABUNativeAdView, stateDidChanged playerState: ABUPlayerPlayState) {
-        //        postMessage("nativeAdExpressViewStateChange")
-    }
-    
-    /// 点击事件
-    func nativeAdDidClick(_ nativeAdView: ABUNativeAdView, with view: UIView?) {
-        postMessage("onAdClick")
-    }
-    
-    /// 点击不喜欢关闭广告
-    func nativeAdExpressViewDidClosed(_ nativeAdView: ABUNativeAdView?, closeReason filterWords: [[AnyHashable : Any]]?) {
+
+    func nativeAd(_ nativeAd: BUNativeAd?, dislikeWithReason filterWords: [BUDislikeWords]?) {
         postMessage("onSelected")
-        if let adView = nativeAdView {
-            adView.removeFromSuperview()
-        }
+        nativeAd?.mediation?.canvasView.removeFromSuperview()
         removeAdView()
     }
     
-    /// 广告即将展示全屏页面/商店时触发
-    func nativeAdViewWillPresentFullScreenModal(_ nativeAdView: ABUNativeAdView) {
-        //        postMessage("nativeAdViewWillPresentFullScreenModal")
-    }
     
-    //    /// 视频广告点击
-    //    func nativeAdVideoDidClick(_ nativeAdView: ABUNativeAdView?) {
-    //        postMessage("nativeAdVideoDidClick")
-    //    }
-    //
-    //    /// 视频广告状态改变
-    //    func nativeAdVideo(_ nativeAdView: ABUNativeAdView?, stateDidChanged playerState: ABUPlayerPlayState) {
-    //        postMessage("nativeAdVideoStateChange")
-    //    }
-    //
-    //    /// 视频广告播放结束
-    //    func nativeAdVideoDidPlayFinish(_ nativeAdView: ABUNativeAdView?) {
-    //        postMessage("nativeAdVideoDidPlayFinish")
-    //    }
+    // 被强制关闭
+    func nativeAd(_ nativeAd: BUNativeAd?, adContainerViewDidRemoved adContainerView: UIView) {
+        postMessage("onAdTerminate")
+    }
+
 }

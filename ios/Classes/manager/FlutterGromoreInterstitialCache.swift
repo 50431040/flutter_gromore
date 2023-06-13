@@ -6,12 +6,12 @@
 //
 
 import Foundation
-import ABUAdSDK
+import BUAdSDK
 
 class FlutterGromoreInterstitialCache: NSObject {
-    private static var ads: [String: ABUInterstitialProAd] = [:]
+    private static var ads: [String: BUNativeExpressFullscreenVideoAd] = [:]
     
-    static func addAd(key: String, ad: ABUInterstitialProAd) {
+    static func addAd(key: String, ad: BUNativeExpressFullscreenVideoAd) {
         ads[key] = ad
     }
     
@@ -19,7 +19,7 @@ class FlutterGromoreInterstitialCache: NSObject {
         ads.removeValue(forKey: key)
     }
     
-    static func getAd(key: String) -> ABUInterstitialProAd? {
+    static func getAd(key: String) -> BUNativeExpressFullscreenVideoAd? {
         return ads[key]
     }
 }

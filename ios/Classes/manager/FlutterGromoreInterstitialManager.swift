@@ -6,12 +6,12 @@
 //
 
 import Foundation
-import ABUAdSDK
+import BUAdSDK
 
-class FlutterGromoreInterstitialManager: NSObject, ABUInterstitialProAdDelegate {
+class FlutterGromoreInterstitialManager: NSObject, BUNativeExpressFullscreenVideoAdDelegate {
     private var args: [String: Any]
     private var result: FlutterResult
-    private var interstitialAd: ABUInterstitialProAd?
+    private var interstitialAd: BUNativeExpressFullscreenVideoAd?
     
     init(args: [String: Any], result: @escaping FlutterResult) {
         self.args = args
@@ -20,27 +20,27 @@ class FlutterGromoreInterstitialManager: NSObject, ABUInterstitialProAdDelegate 
     
     func loadAd() {
         let adUnitId: String = args["adUnitId"] as! String
-        let size: CGSize = CGSize(
-            width: args["width"] as? Double ?? 0,
-            height: args["height"] as? Double ?? 0
-        )
-        interstitialAd = ABUInterstitialProAd(adUnitID: adUnitId, sizeForInterstitial: size)
+
+        let slot = BUAdSlot()
+        slot.mediation.mutedIfCan = true
+        slot.id = adUnitId
+        interstitialAd = BUNativeExpressFullscreenVideoAd(slot: slot)
         if let ad = interstitialAd {
             ad.delegate = self
-            ad.mutedIfCan = true
             ad.loadData()
         }
     }
     
-    /// 插全屏广告加载成功
-    func interstitialProAdDidLoad(_ interstitialProAd: ABUInterstitialProAd) {
-        let id = String(interstitialAd.hashValue)
-        FlutterGromoreInterstitialCache.addAd(key: id, ad: interstitialAd!)
+    // 加载成功
+    func nativeExpressFullscreenVideoAdDidLoad(_ fullscreenVideoAd: BUNativeExpressFullscreenVideoAd) {
+        let id = String(fullscreenVideoAd.hashValue)
+        FlutterGromoreInterstitialCache.addAd(key: id, ad: fullscreenVideoAd)
         result(id)
     }
     
-    /// 插全屏广告加载失败
-    func interstitialProAd(_ interstitialProAd: ABUInterstitialProAd, didFailWithError error: Error?) {
+    // 加载失败
+    func nativeExpressFullscreenVideoAd(_ fullscreenVideoAd: BUNativeExpressFullscreenVideoAd, didFailWithError error: Error?) {
         result(FlutterError(code: "0", message: error?.localizedDescription ?? "", details: error?.localizedDescription ?? ""))
     }
+    
 }

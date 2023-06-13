@@ -138,6 +138,10 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
 
     @Synchronized
     private fun finishActivity() {
+        if (isFinishing) {
+            return
+        }
+
         if (closed) {
             return
         }

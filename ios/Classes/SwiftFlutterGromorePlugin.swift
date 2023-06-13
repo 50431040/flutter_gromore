@@ -1,12 +1,11 @@
 import Flutter
 import UIKit
 import AppTrackingTransparency
-import ABUAdSDK
+import BUAdSDK
 
 public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     private static var messenger: FlutterBinaryMessenger? = nil
     private var splashAd: FlutterGromoreSplash?
-    private var feedManager: FlutterGromoreFeedManager?
     private var interstitialManager: FlutterGromoreInterstitialManager?
     private var interstitialFullAd: FlutterGromoreInterstitial?
     
@@ -30,7 +29,7 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         case "requestATT":
             requestATT(result: result)
         case "initSDK":
-            initSDK(appId: args["appId"] as! String,result: result)
+            initSDK(appId: args["appId"] as! String, result: result, debug: (args["debug"] ?? false) as! Bool)
         case "showSplashAd":
             splashAd = FlutterGromoreSplash(args: args, result: result)
         case "loadInterstitialAd":
@@ -41,8 +40,8 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         case "removeInterstitialAd":
             removeInterstitialAd(args: args, result: result)
         case "loadFeedAd":
-            feedManager = FlutterGromoreFeedManager(args: args, result: result)
-            feedManager?.loadAd()
+            let feedManager = FlutterGromoreFeedManager(args: args, result: result)
+            feedManager.loadAd()
         case "removeFeedAd":
             removeFeedAd(args: args, result: result)
         default:
@@ -64,12 +63,21 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     }
     
     // 初始化SDK
-    private func initSDK(appId: String, result: @escaping FlutterResult) {
-        ABUAdSDKManager.setupSDK(withAppId: appId) { ABUUserConfig in
-            ABUUserConfig.logEnable = true
-            return ABUUserConfig
-        }
-        result(true)
+    private func initSDK(appId: String, result: @escaping FlutterResult, debug: Bool) {
+        
+        let config = BUAdSDKConfiguration()
+        config.appID = appId
+        config.debugLog = debug ? 1 : 0
+        config.useMediation = true
+        config.territory = BUAdSDKTerritory.CN
+        
+        BUAdSDKManager.start(asyncCompletionHandler: {success, error in
+            if success {
+                result(true)
+            } else {
+                result(false)
+            }
+        })
     }
     
     /// 移除缓存中信息流广告

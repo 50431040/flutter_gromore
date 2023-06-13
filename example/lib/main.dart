@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gromore/callback/gromore_interstitial_callback.dart';
 import 'package:flutter_gromore/callback/gromore_splash_callback.dart';
@@ -42,6 +44,12 @@ class _HomePageState extends State<HomePage> {
   /// 请求权限（安卓端）
   void handleRequestPermission() {
     FlutterGromore.requestPermissionIfNecessary();
+  }
+
+  void handleRequestATTPermission() {
+    if (Platform.isIOS) {
+      FlutterGromore.requestATT();
+    }
   }
 
   /// 初始化SDK
@@ -100,6 +108,8 @@ class _HomePageState extends State<HomePage> {
             interstitialId = "";
             loadInterstitialAd();
           }));
+    } else {
+      loadInterstitialAd();
     }
   }
 
@@ -121,6 +131,11 @@ class _HomePageState extends State<HomePage> {
             //   child: const Text("请求非必要权限"),
             // ),
             // const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: handleRequestATTPermission,
+              child: const Text("请求ATT权限"),
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: showSplashAd,
               child: const Text("开屏广告"),
