@@ -1,6 +1,6 @@
 # Flutter版穿山甲Gromore广告插件
 
-如使用的1.x版本请参考[文档](https://github.com/50431040/flutter_gromore/v1.x_README.md)
+如使用的1.x版本请参考[文档](https://github.com/50431040/flutter_gromore/blob/main/v1.x_README.md)
 
 ## 特点
 
