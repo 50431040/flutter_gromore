@@ -59,6 +59,10 @@ class _FeedViewState extends State<FeedView>
                   setState(() {
                     _show = false;
                   });
+                }, onAdTerminate: () {
+                  setState(() {
+                    _show = false;
+                  });
                 })),
           )
         : const SizedBox();

@@ -29,7 +29,7 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         case "requestATT":
             requestATT(result: result)
         case "initSDK":
-            initSDK(appId: args["appId"] as! String, result: result, debug: (args["debug"] ?? false) as! Bool)
+            initSDK(appId: args["appId"] as! String, result: result, debug: args["debug"] as? Bool ?? true, useMediation: args["useMediation"] as? Bool ?? false)
         case "showSplashAd":
             splashAd = FlutterGromoreSplash(args: args, result: result)
         case "loadInterstitialAd":
@@ -63,19 +63,19 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     }
     
     // 初始化SDK
-    private func initSDK(appId: String, result: @escaping FlutterResult, debug: Bool) {
+    private func initSDK(appId: String, result: @escaping FlutterResult, debug: Bool, useMediation: Bool) {
         
         let config = BUAdSDKConfiguration()
         config.appID = appId
         config.debugLog = debug ? 1 : 0
-        config.useMediation = true
+        config.useMediation = useMediation
         config.territory = BUAdSDKTerritory.CN
         
         BUAdSDKManager.start(asyncCompletionHandler: {success, error in
             if success {
                 result(true)
             } else {
-                result(false)
+                result(FlutterError(code: "0", message: error?.localizedDescription ?? "", details: error?.localizedDescription ?? ""))
             }
         })
     }

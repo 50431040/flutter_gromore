@@ -7,17 +7,23 @@ class GromoreInterstitialConfig extends GromoreBaseAdConfig {
   final String adUnitId;
 
   /// 广告尺寸
-  final GromoreAdSize size;
+  @Deprecated("配置将不会生效")
+  final GromoreAdSize? size;
 
-  GromoreInterstitialConfig({required this.adUnitId, required this.size});
+  /// 设置横竖，仅Android可用。竖屏为1，横屏为2。默认竖屏
+  final int? orientation;
+
+  /// 是否静音，默认为true
+  final bool? muted;
+
+  GromoreInterstitialConfig({required this.adUnitId, this.size, this.orientation, this.muted});
 
   @override
   Map toJson() {
     return {
       "id": id,
       "adUnitId": adUnitId,
-      "width": size.width,
-      "height": size.height
+      "muted": muted
     };
   }
 }

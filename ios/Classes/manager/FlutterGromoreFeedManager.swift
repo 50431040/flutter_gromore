@@ -44,7 +44,7 @@ class FlutterGromoreFeedManager: NSObject, BUNativeAdsManagerDelegate {
         
         manager?.delegate = self
         manager?.mediation?.rootViewController = Utils.getVC()
-        manager?.loadAdData(withCount: 3)
+        manager?.loadAdData(withCount: args["count"] as? Int ?? 3)
         
         // 保存引用，不让实例销毁。如果销毁了的话广告的某些事件回调不会触发（巨坑！）
         FlutterGromoreFeedCache.addManager(String(self.hash), self)

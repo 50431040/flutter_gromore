@@ -24,11 +24,10 @@ class FlutterGromoreSplash: NSObject, BUSplashAdDelegate {
     private func initAd(args: [String: Any]) {
         let slot = BUAdSlot()
         slot.id = args["adUnitId"] as! String
+        slot.mediation.mutedIfCan = true
+        slot.mediation.bidNotify = (args["bidNotify"] ?? false) as! Bool
         
-        splashAd = BUSplashAd(slot: slot, adSize: CGSize(
-            width: UIScreen.main.bounds.size.width,
-            height: UIScreen.main.bounds.size.height * 0.85
-        ))
+        splashAd = BUSplashAd(slot: slot, adSize: CGSizeZero)
         splashAd?.delegate = self
         // 展示 logo
         let logo: String = args["logo"] as? String ?? ""
@@ -90,19 +89,18 @@ class FlutterGromoreSplash: NSObject, BUSplashAdDelegate {
     }
     
     func splashAdDidShow(_ splashAd: BUSplashAd) {
-        sendEvent("onAdShow")
+        // sendEvent("onAdShow")
     }
     
     func splashAdViewControllerDidClose(_ splashAd: BUSplashAd) {
-        
     }
     
     func splashVideoAdDidPlayFinish(_ splashAd: BUSplashAd, didFailWithError error: Error) {
-        sendEvent("onAdDismiss")
+        
     }
     
     func splashAdDidClick(_ splashAd: BUSplashAd) {
-        
+        sendEvent("onAdClicked")
     }
     
     func splashAdDidClose(_ splashAd: BUSplashAd, closeType: BUSplashAdCloseType) {

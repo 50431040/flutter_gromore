@@ -13,15 +13,11 @@ class GromoreFeedConfig extends GromoreBaseAdConfig {
   /// 高度，默认为0，0为高度选择自适应参数
   final int? height;
 
-  /// 1-模板信息流,2-原生信息流，默认为1
-  final int? adStyleType;
-
   GromoreFeedConfig(
       {required this.adUnitId,
       this.count,
       this.width,
-      this.height,
-      this.adStyleType});
+      this.height});
 
   @override
   Map toJson() {
@@ -30,7 +26,6 @@ class GromoreFeedConfig extends GromoreBaseAdConfig {
       "count": count,
       "width": width,
       "height": height,
-      "adStyleType": adStyleType
     };
 
     result.removeWhere((key, value) => value == null);

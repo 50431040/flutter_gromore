@@ -27,12 +27,8 @@ class FlutterGromore {
 
   /// 权限申请
   /// 同时请求：READ_PHONE_STATE, COARSE_LOCATION, FINE_LOCATION, WRITE_EXTERNAL_STORAGE权限
-  static Future<void> requestPermissionIfNecessary() async {
-    if (Platform.isIOS) {
-      return;
-    }
-    await _methodChannel.invokeMethod("requestPermissionIfNecessary");
-  }
+  @Deprecated("在2.0版本已废弃")
+  static Future<void> requestPermissionIfNecessary() async {}
 
   /// 申请ATT权限
   /// 以往广告归因依赖于IDFA。从iOS 14开始，只有在获得用户明确许可的前提下，应用才可以访问用户的IDFA数据并向用户投放定向广告。在应用程序调用 App Tracking Transparency 框架向最终用户提出应用程序跟踪授权请求之前，IDFA将不可用。如果某个应用未提出此请求，则读取到的IDFA将返回全为0的字符串，这个可能会导致广告收入降低。
@@ -64,13 +60,18 @@ class FlutterGromore {
   static Future<void> initSDK(
       {required String appId,
       required String appName,
-      required bool debug}) async {
+      required bool debug,
+      bool? useMediation}) async {
     if (isInit) {
       return;
     }
 
-    await _methodChannel.invokeMethod(
-        "initSDK", {"appId": appId, "appName": appName, "debug": debug});
+    await _methodChannel.invokeMethod("initSDK", {
+      "appId": appId,
+      "appName": appName,
+      "debug": debug,
+      "useMediation": useMediation ?? false
+    });
 
     isInit = true;
     _handleEventListener();

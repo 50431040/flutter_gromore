@@ -17,9 +17,6 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, BUMNativeAdDelegate {
     /// 传递过来的参数
     private var createParams: [String: Any]
     
-    /// 广告已终止，避免多次回调
-    private var isTerminate = false
-    
     private var feedAd: BUNativeAd?
     
     init(frame: CGRect, id: Int64, params: Any?, messenger: FlutterBinaryMessenger) {
@@ -136,6 +133,7 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, BUMNativeAdDelegate {
     // 被强制关闭
     func nativeAd(_ nativeAd: BUNativeAd?, adContainerViewDidRemoved adContainerView: UIView) {
         postMessage("onAdTerminate")
+        removeAdView()
     }
 
 }

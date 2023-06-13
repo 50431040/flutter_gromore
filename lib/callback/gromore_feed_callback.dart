@@ -21,9 +21,6 @@ class GromoreFeedCallback extends GromoreBaseAdCallback {
   /// 取消选择
   final GromoreVoidCallback? onCancel;
 
-  /// 拒绝填写原因
-  final GromoreVoidCallback? onRefuse;
-
   /// 拒绝弹框显示
   final GromoreVoidCallback? onShow;
 
@@ -37,7 +34,6 @@ class GromoreFeedCallback extends GromoreBaseAdCallback {
     this.onRenderSuccess,
     this.onSelected,
     this.onCancel,
-    this.onRefuse,
     this.onShow,
     this.onAdTerminate,
   });
@@ -57,8 +53,6 @@ class GromoreFeedCallback extends GromoreBaseAdCallback {
       onSelected!();
     } else if (callbackName == "onCancel" && onCancel != null) {
       onCancel!();
-    } else if (callbackName == "onRefuse" && onRefuse != null) {
-      onRefuse!();
     } else if (callbackName == "onShow" && onShow != null) {
       onShow!();
     } else if (callbackName == "onAdTerminate" && onAdTerminate != null) {

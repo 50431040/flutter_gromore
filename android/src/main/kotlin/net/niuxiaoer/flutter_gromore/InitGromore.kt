@@ -30,15 +30,15 @@ class InitGromore(private val context: Context) : TTAdSdk.InitCallback {
         val appId = arguments["appId"] as? String ?: ""
         val appName = arguments["appName"] as? String ?: ""
         val debug = arguments["debug"] as? Boolean ?: BuildConfig.DEBUG
+        // 是否使用聚合，默认为false
+        val useMediation = arguments["useMediation"] as? Boolean ?: false
 
         require(appId.isNotEmpty())
 
         val config = TTAdConfig.Builder()
                 .appId(appId)
                 .appName(appName)
-                .useTextureView(true)
-                .useMediation(true)
-                .supportMultiProcess(true)
+                .useMediation(useMediation)
                 .setMediationConfig(MediationConfig.Builder().setCustomLocalConfig(loadLocalConfig()).build())
                 .debug(debug)
                 .build()
@@ -65,11 +65,11 @@ class InitGromore(private val context: Context) : TTAdSdk.InitCallback {
 
     override fun success() {
         Log.d(TAG, "init-success")
-        initResult?.success(true)
+        initResult.success(true)
     }
 
     override fun fail(p0: Int, p1: String?) {
         Log.d(TAG, "init-fail")
-        initResult?.error(p0.toString(), p1, p1)
+        initResult.error(p0.toString(), p1, p1)
     }
 }

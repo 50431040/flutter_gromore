@@ -21,8 +21,6 @@ class FlutterGromoreInterstitialManager(private val params: Map<String, Any?>,
         val orientation = params["orientation"] as? Int ?: TTAdConstant.VERTICAL
         // 静音
         val muted = params["muted"] as? Boolean ?: true
-        // 音量
-        val volume = params["volume"] as? Float ?: 0.7f
 
         require(adUnitId != null && adUnitId.isNotEmpty())
 
@@ -35,7 +33,6 @@ class FlutterGromoreInterstitialManager(private val params: Map<String, Any?>,
                 .setMediationAdSlot(
                         MediationAdSlot.Builder()
                                 .setMuted(muted)
-                                .setVolume(volume)
                                 .build()) // 聚合广告请求配置
                 .build()
 

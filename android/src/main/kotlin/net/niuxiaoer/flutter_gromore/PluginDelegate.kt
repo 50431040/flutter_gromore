@@ -29,10 +29,8 @@ class PluginDelegate(
         Log.d(TAG, method)
 
         when (method) {
-            // TODO
             // 同时请求：READ_PHONE_STATE, COARSE_LOCATION, FINE_LOCATION, WRITE_EXTERNAL_STORAGE权限
             "requestPermissionIfNecessary" -> {
-                // GMMediationAdSdk.requestPermissionIfNecessary(context)
                 result.success(true)
             }
             // 初始化

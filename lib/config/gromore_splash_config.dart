@@ -6,9 +6,11 @@ class GromoreSplashConfig extends GromoreBaseAdConfig {
   final String adUnitId;
 
   /// 广告宽度（自定义渲染可用）
+  @Deprecated("自定义渲染将不再维护")
   final double? width;
 
   /// 广告高度（自定义渲染可用）
+  @Deprecated("自定义渲染将不再维护")
   final double? height;
 
   /// 如果传入了logo则会在底部显示logo，logo放在android/app/src/main/res/mipmap下，值不需要文件后缀（非自定义渲染可用）
@@ -23,14 +25,11 @@ class GromoreSplashConfig extends GromoreBaseAdConfig {
   /// 声音配置，与muted配合使用
   final double? volume;
 
-  /// 超时时间，默认3000ms
-  final int? timeout;
+  /// 开屏摇一摇开关，默认为true
+  final bool? isSplashShakeButton;
 
-  /// 按钮样式（1：全屏可点击，2：仅按钮可点击，默认为1）
-  final int? buttonType;
-
-  /// 点击下载样式（0或者1，默认为1）
-  final int? downloadType;
+  /// bidding类型广告，竞价成功或者失败后是否通知对应的adn，默认为false
+  final bool? isBidNotify;
 
   GromoreSplashConfig({
     required this.adUnitId,
@@ -40,9 +39,8 @@ class GromoreSplashConfig extends GromoreBaseAdConfig {
     this.muted,
     this.preload,
     this.volume,
-    this.timeout,
-    this.buttonType,
-    this.downloadType,
+    this.isSplashShakeButton,
+    this.isBidNotify,
   });
 
   @override
@@ -56,9 +54,8 @@ class GromoreSplashConfig extends GromoreBaseAdConfig {
       "muted": muted,
       "preload": preload,
       "volume": volume,
-      "timeout": timeout,
-      "buttonType": buttonType,
-      "downloadType": downloadType
+      "isSplashShakeButton": isSplashShakeButton,
+      "isBidNotify": isBidNotify
     };
     result.removeWhere((key, value) => value == null);
     return result;

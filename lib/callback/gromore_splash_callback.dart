@@ -3,28 +3,28 @@ import 'package:flutter_gromore/types.dart';
 
 /// 开屏广告回调
 class GromoreSplashCallback extends GromoreBaseAdCallback {
-  /// 广告被点击，肯定有回调
+  /// 广告被点击
   final GromoreVoidCallback? onAdClicked;
 
-  /// Splash广告的展示回调,如果是优量汇（GDT）的广告 ,对应的是优量汇的onADExposure（）回调
+  /// 展示成功
   final GromoreVoidCallback? onAdShow;
 
-  /// show失败回调。如果show时发现无可用广告（比如广告过期），会触发该回调。开发者应该在该回调里进行重新请求。
+  /// 展示失败，仅Android可用
   final GromoreVoidCallback? onAdShowFail;
 
-  /// 点击跳过时回调
+  /// 点击跳过，仅Android可用
   final GromoreVoidCallback? onAdSkip;
 
-  /// 广告播放时间结束时调用。 此时一般需要跳过开屏的 Activity，进入应用内容页面
+  /// 倒计时结束，仅Android可用
   final GromoreVoidCallback? onAdDismiss;
 
-  /// 开屏广告加载失败
+  /// 加载失败
   final GromoreVoidCallback? onSplashAdLoadFail;
 
-  /// 开屏广告加载成功，此时会展示广告
+  /// 加载成功，此时会展示广告
   final GromoreVoidCallback? onSplashAdLoadSuccess;
 
-  /// 开屏广告加载超时
+  /// 加载超时，仅Android可用
   final GromoreVoidCallback? onAdLoadTimeout;
 
   /// 开屏广告结束，这个时候会销毁广告（点击跳过、倒计时结束或渲染错误等 理应隐藏广告 的情况都会触发此回调，建议统一在此回调处理路由跳转等逻辑）

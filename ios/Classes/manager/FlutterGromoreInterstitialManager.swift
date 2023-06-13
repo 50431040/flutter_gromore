@@ -22,7 +22,7 @@ class FlutterGromoreInterstitialManager: NSObject, BUNativeExpressFullscreenVide
         let adUnitId: String = args["adUnitId"] as! String
 
         let slot = BUAdSlot()
-        slot.mediation.mutedIfCan = true
+        slot.mediation.mutedIfCan = args["muted"] as? Bool ?? true
         slot.id = adUnitId
         interstitialAd = BUNativeExpressFullscreenVideoAd(slot: slot)
         if let ad = interstitialAd {

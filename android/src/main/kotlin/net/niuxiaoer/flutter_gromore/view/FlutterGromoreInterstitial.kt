@@ -67,7 +67,6 @@ class FlutterGromoreInterstitial(private val activity: Activity,
     // 跳过视频
     override fun onSkippedVideo() {
         Log.d(TAG, "onSkippedVideo")
-        // TODO
     }
 
     // 播放视频完成

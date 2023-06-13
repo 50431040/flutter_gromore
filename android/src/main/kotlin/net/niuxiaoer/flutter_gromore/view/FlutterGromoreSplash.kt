@@ -53,7 +53,7 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
         val adUnitId = intent.getStringExtra("adUnitId")
         require(adUnitId != null && adUnitId.isNotEmpty())
 
-        val muted = intent.getBooleanExtra("muted", false)
+        val muted = intent.getBooleanExtra("muted", true)
         val preload = intent.getBooleanExtra("preload", true)
         val volume = intent.getFloatExtra("volume", 1f)
         val isSplashShakeButton = intent.getBooleanExtra("splashShakeButton", true)
