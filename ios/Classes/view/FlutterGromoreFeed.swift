@@ -66,16 +66,10 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, BUMNativeAdDelegate {
         if let height = nativeAd.mediation?.canvasView.bounds.height {
             postMessage("onRenderSuccess", arguments: ["height": height])
 
-            var frame = container.frame
-            frame.size.height = height
-            container.frame = frame
+            container.frame.size.height = height
+            container.clipsToBounds = true
 
             container.addSubview(nativeAd.mediation!.canvasView)
-            
-            if let adnName = nativeAd.mediation?.getShowEcpmInfo()?.adnName, adnName == "pangle" {
-                // 穿山甲广告存在点击穿透
-                container.isPermeable = true
-            }
         }
     }
     
@@ -107,6 +101,11 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, BUMNativeAdDelegate {
     
     func nativeAdDidBecomeVisible(_ nativeAd: BUNativeAd) {
         postMessage("onAdShow")
+        
+        if let adnName = nativeAd.mediation?.getShowEcpmInfo()?.adnName, adnName == "pangle" {
+            // 穿山甲广告存在点击穿透
+            container.isPermeable = true
+        }
 
         // if let adnName = nativeAd.mediation?.getShowEcpmInfo()?.adnName, adnName == "pangle" {
             // 穿山甲广告存在点击穿透
