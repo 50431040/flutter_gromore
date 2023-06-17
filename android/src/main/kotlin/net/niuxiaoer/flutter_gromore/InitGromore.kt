@@ -13,11 +13,14 @@ import java.io.InputStream
 class InitGromore(private val context: Context) : TTAdSdk.InitCallback {
     private val TAG: String = this::class.java.simpleName
     private lateinit var initResult: MethodChannel.Result
+    // 由于失败后会进行重试，可能会回调多次。这个flag标识是否调用
+    private var resultCalled: Boolean = false
 
     // 初始化SDK
     fun initSDK(arguments: Map<String, Any?>?, result: MethodChannel.Result) {
         // 已经初始化成功
         if (TTAdSdk.isInitSuccess()) {
+            resultCalled = true
             result.success(true)
             return
         }
@@ -65,11 +68,19 @@ class InitGromore(private val context: Context) : TTAdSdk.InitCallback {
 
     override fun success() {
         Log.d(TAG, "init-success")
+        if (resultCalled) {
+            return
+        }
+        resultCalled = true
         initResult.success(true)
     }
 
     override fun fail(p0: Int, p1: String?) {
         Log.d(TAG, "init-fail")
+        if (resultCalled) {
+            return
+        }
+        resultCalled = true
         initResult.error(p0.toString(), p1, p1)
     }
 }
