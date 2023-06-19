@@ -205,7 +205,7 @@ FlutterGromore.requestATT();
 新增参数：useMediation 是否使用聚合功能，默认为false
 
 ```dart
-await FlutterGromore.initSDK(
+bool initResult = await FlutterGromore.initSDK(
   appId: "",
   appName: "",
   debug: true,

@@ -10,6 +10,7 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     private var rewardManager: FlutterGromoreRewardManager?
     private var interstitialFullAd: FlutterGromoreInterstitial?
     private var rewardAd: FlutterGromoreReward?
+    private var initResuleCalled: Bool = false
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: FlutterGromoreContants.methodChannelName, binaryMessenger: registrar.messenger())
@@ -72,6 +73,12 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     // 初始化SDK
     private func initSDK(appId: String, result: @escaping FlutterResult, debug: Bool, useMediation: Bool) {
         
+        // 已经初始化
+        if (BUAdSDKManager.initializationState == BUAdSDKInitializationState.ready) {
+            result(true)
+            return
+        }
+        
         let config = BUAdSDKConfiguration()
         config.appID = appId
         config.debugLog = debug ? 1 : 0
@@ -79,9 +86,15 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         config.territory = BUAdSDKTerritory.CN
         
         BUAdSDKManager.start(asyncCompletionHandler: {success, error in
+            // 已经回调
+            if (self.initResuleCalled) {
+                return
+            }
             if success {
+                self.initResuleCalled = true
                 result(true)
             } else {
+                self.initResuleCalled = true
                 result(FlutterError(code: "0", message: error?.localizedDescription ?? "", details: error?.localizedDescription ?? ""))
             }
         })

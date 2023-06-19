@@ -56,14 +56,16 @@ class _HomePageState extends State<HomePage> {
 
   /// 初始化SDK
   void initSDK() async {
-    await FlutterGromore.initSDK(
+    bool result = await FlutterGromore.initSDK(
         appId: GroMoreAdConfig.appId,
         appName: APP_NAME,
         debug: !IS_PRODUCTION,
         useMediation: true);
 
-    // 加载插屏广告
-    loadInterstitialAd();
+    if (result) {
+      // 加载插屏广告
+      loadInterstitialAd();
+    }
   }
 
   /// 展示开屏广告

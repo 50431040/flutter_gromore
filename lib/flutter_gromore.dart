@@ -59,24 +59,25 @@ class FlutterGromore {
   }
 
   /// 初始化SDK
-  static Future<void> initSDK(
+  static Future<bool> initSDK(
       {required String appId,
       required String appName,
       required bool debug,
       bool? useMediation}) async {
-    if (isInit) {
-      return;
+
+    try {
+      await _methodChannel.invokeMethod("initSDK", {
+        "appId": appId,
+        "appName": appName,
+        "debug": debug,
+        "useMediation": useMediation ?? false
+      });
+      isInit = true;
+      _handleEventListener();
+      return true;
+    } catch (_) {
+      return false;
     }
-
-    await _methodChannel.invokeMethod("initSDK", {
-      "appId": appId,
-      "appName": appName,
-      "debug": debug,
-      "useMediation": useMediation ?? false
-    });
-
-    isInit = true;
-    _handleEventListener();
   }
 
   /// 展示开屏广告
