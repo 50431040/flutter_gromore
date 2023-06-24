@@ -8,33 +8,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.bytedance.sdk.openadsdk.TTAdDislike
-import com.bytedance.sdk.openadsdk.TTFeedAd
-import com.bytedance.sdk.openadsdk.mediation.ad.MediationExpressRenderListener
+import com.bytedance.sdk.openadsdk.TTNativeExpressAd
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.platform.PlatformView
 import net.niuxiaoer.flutter_gromore.constants.FlutterGromoreConstants
-import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreFeedCache
+import net.niuxiaoer.flutter_gromore.manager.FlutterGromoreBannerCache
 import net.niuxiaoer.flutter_gromore.utils.Utils
 
 
-class FlutterGromoreFeed(
+class FlutterGromoreBanner(
         private val context: Context,
         private val activity: Activity,
         viewId: Int,
         creationParams: Map<String?, Any?>,
         binaryMessenger: BinaryMessenger
 ) :
-        FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.feedViewTypeId}/$viewId"),
+        FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.bannerTypeId}/$viewId"),
         PlatformView,
-        TTAdDislike.DislikeInteractionCallback, MediationExpressRenderListener {
+        TTAdDislike.DislikeInteractionCallback, TTNativeExpressAd.ExpressAdInteractionListener {
 
     private val TAG: String = this::class.java.simpleName
 
     // 信息流广告容器
-    private var container: FrameLayout = FrameLayout(context)
+    private var container: FrameLayout = FrameLayout(activity)
 
     // 广告model
-    private var mGMNativeAd: TTFeedAd? = null
+    private var bannerAd: TTNativeExpressAd? = null
 
     private var layoutParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -45,37 +44,30 @@ class FlutterGromoreFeed(
 
     init {
         container.layoutParams = layoutParams
-        cachedAdId = creationParams["feedId"] as String
+        cachedAdId = creationParams["bannerId"] as String
         // 从缓存中取广告
-        mGMNativeAd =
-                FlutterGromoreFeedCache.getCacheFeedAd(cachedAdId)
+        bannerAd =
+                FlutterGromoreBannerCache.getCacheBannerAd(cachedAdId)
         initAd()
     }
 
     private fun showAd() {
 
-        mGMNativeAd?.takeIf {
-            it.mediationManager.isReady
-        }?.let {
-
-            // 是否有不喜欢按钮
+        bannerAd?.let {
             if (it.mediationManager.hasDislike()) {
                 it.setDislikeCallback(activity, this)
             }
-
-            if (it.mediationManager.isExpress) {
-                it.setExpressRenderListener(this)
-            }
-
+            it.setExpressInteractionListener(this)
             it.render()
         }
     }
 
     private fun removeAdView() {
+        Log.e(TAG, "removeAdView")
         container.removeAllViews()
-        mGMNativeAd?.destroy()
-        mGMNativeAd = null
-        FlutterGromoreFeedCache.removeCacheFeedAd(cachedAdId)
+        bannerAd?.destroy()
+        bannerAd = null
+        FlutterGromoreBannerCache.removeCacheBannerAd(cachedAdId)
     }
 
     override fun getView(): View {
@@ -86,12 +78,12 @@ class FlutterGromoreFeed(
         removeAdView()
     }
 
-    override fun onAdClick() {
+    override fun onAdClicked(p0: View?, p1: Int) {
         Log.d(TAG, "onAdClick")
         postMessage("onAdClick")
     }
 
-    override fun onAdShow() {
+    override fun onAdShow(p0: View?, p1: Int) {
         Log.d(TAG, "onAdShow")
         postMessage("onAdShow")
     }
@@ -101,40 +93,41 @@ class FlutterGromoreFeed(
         postMessage("onRenderFail")
     }
 
-    // 必须在onRenderSuccess进行广告展示，否则会导致广告无法展示
-    override fun onRenderSuccess(p0: View?, width: Float, height: Float, isExpress: Boolean) {
-        Log.d(TAG, "onRenderSuccess - $width - $height")
+    override fun onRenderSuccess(p0: View?, width: Float, height: Float) {
+        Log.d(TAG, "onRenderSuccess - $width - $height - ${p0?.measuredHeight}")
 
-        val ad = mGMNativeAd?.adView
-        ad?.let { view ->
-            (view.parent as? ViewGroup)?.removeView(view)
+        val ad = bannerAd?.expressAdView
+        ad?.let {
+            (it as? ViewGroup)?.removeView(ad)
+            container.removeAllViews()
+            container.setBackgroundColor(Color.WHITE)
+            container.addView(ad, FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            ))
         }
 
         ad?.apply {
-            container.removeAllViews()
-            container.setBackgroundColor(Color.WHITE)
-            container.addView(ad)
+            // 计算渲染后的高度
+            measure(View.MeasureSpec.makeMeasureSpec(
+                    0,
+                    View.MeasureSpec.UNSPECIFIED
+            ),
+                    View.MeasureSpec.makeMeasureSpec(
+                            0,
+                            View.MeasureSpec.UNSPECIFIED)
+            )
+            Log.d(TAG, "measuredHeight - $measuredHeight")
+        }?.takeIf {
+            it.measuredHeight > 0
+        }?.let {
             postMessage(
                     "onRenderSuccess",
-                    mapOf("height" to height)
+                    mapOf("height" to it.measuredHeight / Utils.getDensity(context))
             )
         }
-
-//        ad?.apply {
-//            // 计算渲染后的高度
-//            measure(View.MeasureSpec.makeMeasureSpec(Utils.getScreenWidthInPx(context), View.MeasureSpec.UNSPECIFIED),
-//                    View.MeasureSpec.makeMeasureSpec(Utils.getScreenHeightInPx(context), View.MeasureSpec.UNSPECIFIED))
-//            Log.d(TAG, "measuredHeight - $measuredHeight")
-//        }?.takeIf {
-//            it.measuredHeight > 0
-//        }?.let {
-//            postMessage(
-//                    "onRenderSuccess",
-//                    mapOf("height" to it.measuredHeight / Utils.getDensity(context))
-//            )
-//        }
-
     }
+
 
     override fun onCancel() {
         Log.d(TAG, "dislike-onCancel")

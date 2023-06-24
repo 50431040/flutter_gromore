@@ -16,6 +16,9 @@ class FlutterGromoreConstants {
         const val splashTypeId = "flutter_gromore_splash"
 
         // 激励视频
-        const val rewardId = "flutter_gromore_reward"
+        const val rewardTypeId = "flutter_gromore_reward"
+
+        // banner广告
+        const val bannerTypeId = "flutter_gromore_banner"
     }
 }

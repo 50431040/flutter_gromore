@@ -8,6 +8,7 @@ import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 import net.niuxiaoer.flutter_gromore.constants.FlutterGromoreConstants
 import net.niuxiaoer.flutter_gromore.event.AdEventHandler
+import net.niuxiaoer.flutter_gromore.factory.FlutterGromoreBannerFactory
 import net.niuxiaoer.flutter_gromore.factory.FlutterGromoreFeedFactory
 import net.niuxiaoer.flutter_gromore.factory.FlutterGromoreSplashFactory
 
@@ -41,9 +42,9 @@ class FlutterGromorePlugin : FlutterPlugin, ActivityAware {
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         adEventListener = adEventListener ?: AdEventHandler.getInstance()
         pluginDelegate = pluginDelegate ?: PluginDelegate(
-            flutterPluginBinding.applicationContext,
-            binding.activity,
-            binaryMessenger
+                flutterPluginBinding.applicationContext,
+                binding.activity,
+                binaryMessenger
         )
 
         methodChannel.setMethodCallHandler(pluginDelegate)
@@ -51,18 +52,25 @@ class FlutterGromorePlugin : FlutterPlugin, ActivityAware {
 
         // 注册PlatformView
         flutterPluginBinding
-            .platformViewRegistry
-            .registerViewFactory(
-                FlutterGromoreConstants.feedViewTypeId,
-                FlutterGromoreFeedFactory(binding.activity, binaryMessenger)
-            )
+                .platformViewRegistry
+                .registerViewFactory(
+                        FlutterGromoreConstants.feedViewTypeId,
+                        FlutterGromoreFeedFactory(binding.activity, binaryMessenger)
+                )
 
         flutterPluginBinding
-            .platformViewRegistry
-            .registerViewFactory(
-                FlutterGromoreConstants.splashTypeId,
-                FlutterGromoreSplashFactory(binding.activity, binaryMessenger)
-            )
+                .platformViewRegistry
+                .registerViewFactory(
+                        FlutterGromoreConstants.splashTypeId,
+                        FlutterGromoreSplashFactory(binding.activity, binaryMessenger)
+                )
+
+        flutterPluginBinding
+                .platformViewRegistry
+                .registerViewFactory(
+                        FlutterGromoreConstants.bannerTypeId,
+                        FlutterGromoreBannerFactory(binding.activity, binaryMessenger)
+                )
     }
 
     override fun onDetachedFromActivityForConfigChanges() {

@@ -78,6 +78,21 @@ class PluginDelegate(
                 require(arguments != null && arguments["rewardId"] != null)
                 FlutterGromoreReward(activity, binaryMessenger, arguments, result)
             }
+            // 加载banner广告
+            "loadBannerAd" -> {
+                require(arguments != null && arguments["adUnitId"] != null)
+                FlutterGromoreBannerManager(arguments, context, activity, result)
+            }
+            // 移除banner广告
+            "removeBannerAd" -> {
+                require(arguments != null && arguments["bannerId"] != null)
+                FlutterGromoreBannerCache.removeCacheBannerAd(arguments["bannerId"] as String)
+                result.success(true)
+            }
+            else -> {
+                Log.d(TAG, "unknown method $method")
+                result.success(true)
+            }
         }
     }
 

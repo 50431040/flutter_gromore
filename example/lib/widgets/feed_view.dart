@@ -25,9 +25,10 @@ class _FeedViewState extends State<FeedView>
 
   @override
   void dispose() {
-    if (_show) {
-      FlutterGromore.removeFeedAd(_feedAdId!);
-    }
+    // 不需要手动移除，销毁时插件内部会处理
+    // if (_feedAdId != null) {
+    //   FlutterGromore.removeFeedAd(_feedAdId!);
+    // }
     super.dispose();
   }
 

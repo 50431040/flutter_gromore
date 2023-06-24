@@ -10,8 +10,10 @@ import 'package:flutter_gromore/config/gromore_splash_config.dart';
 import 'package:flutter_gromore/flutter_gromore.dart';
 import 'package:flutter_gromore/utils/gromore_ad_size.dart';
 import 'package:flutter_gromore_example/config/config.dart';
+import 'package:flutter_gromore_example/pages/banner_demo.dart';
 import 'package:flutter_gromore_example/pages/feed_demo.dart';
 import 'package:flutter_gromore_example/pages/custom_splash.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,15 +45,23 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String interstitialId = "";
 
-  /// 请求权限（安卓端）
-  void handleRequestPermission() {
-    FlutterGromore.requestPermissionIfNecessary();
+  /// 请求权限（安卓端）【请自行处理权限，有可能会导致广告无法展示】
+  Future<void> handleRequestAndroidPermission() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.phone,
+      Permission.locationWhenInUse,
+      Permission.storage
+    ].request();
+    print(statuses);
   }
 
-  void handleRequestATTPermission() {
+  void handleRequestPermission() {
     if (Platform.isIOS) {
       FlutterGromore.requestATT();
+      return;
     }
+
+    handleRequestAndroidPermission();
   }
 
   /// 初始化SDK
@@ -132,14 +142,20 @@ class _HomePageState extends State<HomePage> {
 
   /// 激励视频广告
   Future<void> showRewardAd(String rewardId) async {
-    await FlutterGromore.showRewardAd(rewardId: rewardId, callback: GromoreRewardCallback(
-      onRewardVerify: (bool verify) {
-        if (verify) {
-          // 如果需要在关闭广告后再判断，可以先把这个值用变量存储一下，在onAdClose回调中根据变量的值进行判断
-          print("恭喜你，获得奖励");
-        }
-      }
-    ));
+    await FlutterGromore.showRewardAd(
+        rewardId: rewardId,
+        callback: GromoreRewardCallback(onRewardVerify: (bool verify) {
+          if (verify) {
+            // 如果需要在关闭广告后再判断，可以先把这个值用变量存储一下，在onAdClose回调中根据变量的值进行判断
+            print("恭喜你，获得奖励");
+          }
+        }));
+  }
+
+  /// 展示banner广告
+  void showBannerAd() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const BannerDemo()));
   }
 
   @override
@@ -154,15 +170,9 @@ class _HomePageState extends State<HomePage> {
               child: const Text("初始化SDK"),
             ),
             const SizedBox(height: 20),
-            // 已废弃
-            // ElevatedButton(
-            //   onPressed: handleRequestPermission,
-            //   child: const Text("请求非必要权限"),
-            // ),
-            // const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: handleRequestATTPermission,
-              child: const Text("请求ATT权限"),
+              onPressed: handleRequestPermission,
+              child: const Text("请求权限"),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -188,6 +198,11 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: loadRewardAd,
               child: const Text("激励视频广告"),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: showBannerAd,
+              child: const Text("banner广告"),
             ),
           ],
         ),

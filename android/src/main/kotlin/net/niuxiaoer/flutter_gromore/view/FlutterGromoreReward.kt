@@ -14,7 +14,7 @@ class FlutterGromoreReward(
         messenger: BinaryMessenger,
         creationParams: Map<String, Any?>,
         private val result: MethodChannel.Result) :
-        FlutterGromoreBase(messenger, "${FlutterGromoreConstants.rewardId}/${creationParams["rewardId"]}"),
+        FlutterGromoreBase(messenger, "${FlutterGromoreConstants.rewardTypeId}/${creationParams["rewardId"]}"),
         TTRewardVideoAd.RewardAdInteractionListener {
 
     private val TAG: String = this::class.java.simpleName
