@@ -187,25 +187,4 @@ class FlutterGromore {
       return false;
     }
   }
-
-  /// 加载banner广告
-  static Future<List<String>> loadBannerAd(GromoreBannerConfig config) async {
-    assert(isInit);
-
-    try {
-      List result =
-      await _methodChannel.invokeMethod("loadBannerAd", config.toJson());
-      return List<String>.from(result);
-    } catch (err) {
-      debugPrint(err.toString());
-      return [];
-    }
-  }
-
-  /// 移除banner广告，一般不需要调用
-  static Future<void> removeBannerAd(String bannerId) async {
-    assert(isInit);
-
-    await _methodChannel.invokeMethod("removeBannerAd", {"bannerId": bannerId});
-  }
 }

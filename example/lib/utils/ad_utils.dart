@@ -26,23 +26,4 @@ class AdUtils {
 
     return null;
   }
-
-  /// 获取banner广告id
-  static Future<String?> getBannerAdId() async {
-    if (bannerAdIdList.isNotEmpty) {
-      return bannerAdIdList.removeLast();
-    }
-
-    // 加载信息流广告
-    List<String> idList = await FlutterGromore.loadBannerAd(
-        GromoreBannerConfig(adUnitId: GroMoreAdConfig.bannerId));
-
-    if (idList.isNotEmpty) {
-      String id = idList.removeLast();
-      bannerAdIdList.addAll(idList);
-      return id;
-    }
-
-    return null;
-  }
 }
