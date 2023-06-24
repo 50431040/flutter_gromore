@@ -29,7 +29,10 @@ class _BannerViewState extends State<BannerView>
         ? SizedBox(
             height: _height,
             child: GromoreBannerView(
-                creationParams: {"adUnitId": GroMoreAdConfig.bannerId, "height": _bannerHeight.toString()},
+                creationParams: {
+                  "adUnitId": GroMoreAdConfig.bannerId,
+                  "height": _bannerHeight.toString()
+                },
                 callback: GromoreBannerCallback(onRenderSuccess: () {
                   print("GromoreBannerView | onRenderSuccess");
                   setState(() {

@@ -19,7 +19,7 @@
 - ✅ 开屏广告
 - ✅ 插屏广告
 - ✅ 信息流广告
-- 🔲 Banner广告
+- ✅  Banner广告
 - ✅ 激励广告
 
 ## 2.0版本特性
@@ -453,6 +453,62 @@ Future<void> showRewardAd(String rewardId) async {
 | onVideoError      | 视频播放失败的回调                                |                              |
 | onRewardVerify    | 激励视频播放完毕，验证是否有效发放奖励的回调      | 参数 verify 表示是否验证成功 |
 | onSkippedVideo    | 跳过视频播放                                      |                              |
+
+### Banner广告
+
+1. 说明
+
+- 不需要加载广告id
+- 高度为申请广告位时选择的高度
+- 具体使用参考example
+
+2. 使用
+
+```dart
+SizedBox(
+  height: _height,
+  child: GromoreBannerView(
+    creationParams: {"adUnitId": GroMoreAdConfig.bannerId, "height": _bannerHeight.toString()},
+    callback: GromoreBannerCallback(onRenderSuccess: () {
+      print("GromoreBannerView | onRenderSuccess");
+      setState(() {
+        _height = _bannerHeight;
+      });
+    }, onSelected: () {
+      setState(() {
+        _show = false;
+      });
+    }, onLoadError: () {
+      setState(() {
+        _show = false;
+      });
+    }, onAdTerminate: () {
+      setState(() {
+        _show = false;
+      });
+    })),
+)
+```
+
+3. 配置（GromoreFeedConfig）
+
+| 参数名   | 说明                           | 必填 |
+| -------- | ------------------------------ | ---- |
+| adUnitId | 信息流广告位id                 | 是   |
+| width    | 宽度，默认宽度占满。String类型 | 否   |
+| height   | 高度，默认为150。String类型    | 否   |
+
+4. 回调（GromoreBannerCallback，命名和 **Android** 聚合文档基本一致）
+
+| 回调方法名      | 说明                          | 备注      |
+| --------------- | ----------------------------- | --------- |
+| onAdClick       | banner广告点击                |           |
+| onAdShow        | banner广告展示，仅Android可用 |           |
+| onRenderFail    | 模板渲染失败                  |           |
+| onRenderSuccess | 模板渲染成功                  |           |
+| onSelected      | 用户选择不喜欢原因            |           |
+| onAdTerminate   | 进程被终止                    | 仅iOS可用 |
+| onLoadError     | 广告加载失败                  |           |
 
 ## 问题
 
