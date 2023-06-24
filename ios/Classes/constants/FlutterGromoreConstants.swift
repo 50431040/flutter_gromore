@@ -20,4 +20,7 @@ struct FlutterGromoreContants {
     
     // 激励视频
     static let rewardTypeId = "flutter_gromore_reward"
+    
+    // banner广告
+    static let bannerTypeId = "flutter_gromore_banner"
 }

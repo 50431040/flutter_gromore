@@ -21,6 +21,7 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         messenger = registrar.messenger()
         registrar.addMethodCallDelegate(instance, channel: channel)
         registrar.register(FlutterGromoreFactory(messenger: registrar.messenger()), withId: FlutterGromoreContants.feedViewTypeId)
+        registrar.register(FlutterGromoreBannerFactory(messenger: registrar.messenger()), withId: FlutterGromoreContants.bannerTypeId)
         
     }
     
