@@ -62,8 +62,12 @@ class _GromoreSplashViewState extends State<GromoreSplashView> {
                   params.onFocusChanged(true);
                 },
               )
-                ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
                 ..addOnPlatformViewCreatedListener((id) {
+                  if (!mounted) {
+                    return;
+                  }
+                  params.onPlatformViewCreated(id);
+
                   // 注册事件回调
                   if (widget.callback != null) {
                     GromoreMethodChannelHandler<GromoreSplashCallback>.register(

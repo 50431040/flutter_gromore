@@ -70,8 +70,12 @@ class _GromoreBannerViewState extends State<GromoreBannerView> {
                   params.onFocusChanged(true);
                 },
               )
-                ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
                 ..addOnPlatformViewCreatedListener((id) {
+                  if (!mounted) {
+                    return;
+                  }
+                  params.onPlatformViewCreated(id);
+
                   // 注册事件回调
                   GromoreMethodChannelHandler<GromoreBannerCallback>.register(
                       "$viewType/$id", widget.callback);

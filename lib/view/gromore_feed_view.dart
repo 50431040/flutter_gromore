@@ -70,8 +70,12 @@ class _GromoreFeedViewState extends State<GromoreFeedView> {
                   params.onFocusChanged(true);
                 },
               )
-                ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
                 ..addOnPlatformViewCreatedListener((id) {
+                  if (!mounted) {
+                    return;
+                  }
+                  params.onPlatformViewCreated(id);
+
                   // 注册事件回调
                   GromoreMethodChannelHandler<GromoreFeedCallback>.register(
                       "$viewType/$id", widget.callback);
