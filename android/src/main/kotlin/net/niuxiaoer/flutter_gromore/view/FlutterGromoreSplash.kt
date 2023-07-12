@@ -36,14 +36,6 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
     private var containerWidth: Int = 0
     private var containerHeight: Int = 0
 
-    // 是否已关闭
-    private var closed: Boolean = false
-
-    // 加载后没有回调
-    private var isNoCallback: Boolean = true
-
-    private var timer: Timer = Timer()
-
     // 初始化广告
     private fun initAd() {
         var tmp = intent.getStringExtra("id")
@@ -74,13 +66,6 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
                 .build()
 
         adNativeLoader.loadSplashAd(adSlot, this)
-
-        // 没有加载回调后关闭该Activity
-        timer.schedule(6000) {
-            if (!isFinishing && isNoCallback) {
-                runOnUiThread { finishActivity() }
-            }
-        }
     }
 
     // 初始化
@@ -90,10 +75,6 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
         logoContainer = findViewById(R.id.splash_ad_logo)
         containerWidth = Utils.getScreenWidthInPx(this)
         containerHeight = Utils.getScreenHeightInPx(this)
-        // 隐藏底部菜单
-        Utils.hideBottomUIMenu(this)
-        // 状态栏透明
-        Utils.setTranslucent(this)
         // logo显示
         handleLogo()
         // 初始化开屏广告
@@ -142,30 +123,18 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
             return
         }
 
-        if (closed) {
-            return
-        }
-
-        closed = true
-
-        Utils.splashResult?.success(true);
-        Utils.splashResult = null;
-        sendEvent("onAdEnd")
-
         finish()
         // 设置退出动画
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 
     override fun onDestroy() {
-        timer.cancel()
+        super.onDestroy()
         splashAd?.mediationManager?.destroy()
         splashAd = null
-        super.onDestroy()
-    }
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        return true
+        Utils.splashResult?.success(true);
+        Utils.splashResult = null;
+        sendEvent("onAdEnd")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -185,50 +154,43 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
 
     override fun onAdSkip() {
         Log.d(TAG, "onAdSkip")
-
         sendEvent("onAdSkip")
+
         finishActivity()
     }
 
     override fun onAdTimeOver() {
         Log.d(TAG, "onAdDismiss")
-
         sendEvent("onAdDismiss")
+
         finishActivity()
     }
 
     override fun onError(p0: Int, p1: String?) {
         Log.d(TAG, "onSplashAdLoadFail")
-        isNoCallback = false
-
         sendEvent("onSplashAdLoadFail")
+
         finishActivity()
     }
 
     override fun onTimeout() {
         Log.d(TAG, "onAdLoadTimeout")
-        isNoCallback = false
-
         sendEvent("onAdLoadTimeout")
+
         finishActivity()
     }
 
     override fun onSplashAdLoad(ad: TTSplashAd?) {
         Log.d(TAG, "onSplashAdLoadSuccess")
         sendEvent("onSplashAdLoadSuccess")
-        isNoCallback = false
 
         ad?.let {
             splashAd = it
             it.setSplashInteractionListener(this)
 
-            if (!isFinishing) {
-                container.removeAllViews()
-                it.splashView?.let {  splashView ->
-                    container.addView(splashView)
-                }
-            } else {
-                finishActivity()
+            container.removeAllViews()
+            it.splashView?.let {  splashView ->
+                container.addView(splashView)
             }
         }
     }
