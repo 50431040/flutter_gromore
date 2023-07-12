@@ -97,18 +97,18 @@ class _GromoreBannerViewState extends State<GromoreBannerView> {
                       channelName, widget.callback);
                 }),
             onVisibilityChanged: (VisibilityInfo visibilityInfo) {
-              // if (!mounted) return;
-              // // 被遮盖了
-              // final bool isCovered = visibilityInfo.visibleFraction != 1.0;
-              // final Offset offset = (context.findRenderObject() as RenderBox)
-              //     .localToGlobal(Offset.zero);
-              // _methodChannel?.invokeMethod('updateVisibleBounds', {
-              //   'isCovered': isCovered,
-              //   'x': offset.dx + visibilityInfo.visibleBounds.left,
-              //   'y': offset.dy + visibilityInfo.visibleBounds.top,
-              //   'width': visibilityInfo.visibleBounds.width,
-              //   'height': visibilityInfo.visibleBounds.height,
-              // });
+              if (!mounted) return;
+              // 被遮盖了
+              final bool isCovered = visibilityInfo.visibleFraction != 1.0;
+              final Offset offset = (context.findRenderObject() as RenderBox)
+                  .localToGlobal(Offset.zero);
+              _methodChannel?.invokeMethod('updateVisibleBounds', {
+                'isCovered': isCovered,
+                'x': offset.dx + visibilityInfo.visibleBounds.left,
+                'y': offset.dy + visibilityInfo.visibleBounds.top,
+                'width': visibilityInfo.visibleBounds.width,
+                'height': visibilityInfo.visibleBounds.height,
+              });
             },
           );
   }

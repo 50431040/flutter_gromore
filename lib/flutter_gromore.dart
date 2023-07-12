@@ -8,7 +8,6 @@ import 'package:flutter_gromore/callback/gromore_interstitial_callback.dart';
 import 'package:flutter_gromore/callback/gromore_method_channel_handler.dart';
 import 'package:flutter_gromore/callback/gromore_reward_callback.dart';
 import 'package:flutter_gromore/callback/gromore_splash_callback.dart';
-import 'package:flutter_gromore/config/gromore_banner_config.dart';
 import 'package:flutter_gromore/config/gromore_feed_config.dart';
 import 'package:flutter_gromore/config/gromore_interstitial_config.dart';
 import 'package:flutter_gromore/config/gromore_reward_config.dart';
