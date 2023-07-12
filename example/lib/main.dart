@@ -79,13 +79,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// 展示开屏广告
-  void showSplashAd() {
-    FlutterGromore.showSplashAd(
+  Future<void> showSplashAd() async {
+    await FlutterGromore.showSplashAd(
         config: GromoreSplashConfig(
             adUnitId: GroMoreAdConfig.splashId, logo: "launch_image"),
         callback: GromoreSplashCallback(onAdShow: () {
           print("callback --- onAdShow");
         }));
+
+    print("showSplashAd success");
   }
 
   /// 展示自定义布局开屏广告
