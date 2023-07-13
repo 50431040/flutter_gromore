@@ -6,11 +6,11 @@ class GromoreSplashConfig extends GromoreBaseAdConfig {
   final String adUnitId;
 
   /// 广告宽度（自定义渲染可用）
-  @Deprecated("自定义渲染将不再维护")
+  /// 将不再维护
   final double? width;
 
   /// 广告高度（自定义渲染可用）
-  @Deprecated("自定义渲染将不再维护")
+  /// 将不再维护
   final double? height;
 
   /// 如果传入了logo则会在底部显示logo，logo放在android/app/src/main/res/mipmap下，值不需要文件后缀（非自定义渲染可用）

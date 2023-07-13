@@ -7,7 +7,7 @@ class GromoreInterstitialConfig extends GromoreBaseAdConfig {
   final String adUnitId;
 
   /// 广告尺寸
-  @Deprecated("配置将不会生效")
+  /// 配置将不会生效，已过时
   final GromoreAdSize? size;
 
   /// 设置横竖，仅Android可用。竖屏为1，横屏为2。默认竖屏
