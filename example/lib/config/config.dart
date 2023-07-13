@@ -12,7 +12,7 @@ class GroMoreAdConfig {
     if (Platform.isAndroid) {
       return '5320035';
     }
-    return '5320035';
+    return '5410502';
   }
 
   /// 开屏广告ID
@@ -20,15 +20,15 @@ class GroMoreAdConfig {
     if (Platform.isAndroid) {
       return '102357892';
     }
-    return '102357892';
+    return '102392509';
   }
 
   /// 信息流广告ID
   static String get feedId {
     if (Platform.isAndroid) {
-      return '102360311';
+      return '102361544';
     }
-    return '102360311';
+    return '102391145';
   }
 
   /// 插屏广告ID
@@ -36,7 +36,7 @@ class GroMoreAdConfig {
     if (Platform.isAndroid) {
       return '102360214';
     }
-    return '102360214';
+    return '102390665';
   }
 
   /// 激励视频广告ID

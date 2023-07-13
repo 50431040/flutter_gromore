@@ -97,4 +97,8 @@ dependencies {
     implementation(name: 'Baidu_MobAds_SDK_v9.29', ext: 'aar')
     // 百度 Adapter
     implementation "com.pangle.cn:mediation-baidu-adapter:9.29.1"
+    // 快手SDK
+    implementation(name: 'kssdk-ad-3.3.44', ext: 'aar')
+    // 快手 Adapter
+    implementation "com.pangle.cn:mediation-ks-adapter:3.3.44.1"
 }

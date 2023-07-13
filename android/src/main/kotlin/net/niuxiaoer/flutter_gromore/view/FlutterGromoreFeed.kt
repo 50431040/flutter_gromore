@@ -114,25 +114,29 @@ class FlutterGromoreFeed(
             container.removeAllViews()
             container.setBackgroundColor(Color.WHITE)
             container.addView(ad)
-            postMessage(
-                    "onRenderSuccess",
-                    mapOf("height" to height)
-            )
+            if (height > 0) {
+                postMessage(
+                        "onRenderSuccess",
+                        mapOf("height" to height)
+                )
+                return
+            }
         }
 
-//        ad?.apply {
-//            // 计算渲染后的高度
-//            measure(View.MeasureSpec.makeMeasureSpec(Utils.getScreenWidthInPx(context), View.MeasureSpec.UNSPECIFIED),
-//                    View.MeasureSpec.makeMeasureSpec(Utils.getScreenHeightInPx(context), View.MeasureSpec.UNSPECIFIED))
-//            Log.d(TAG, "measuredHeight - $measuredHeight")
-//        }?.takeIf {
-//            it.measuredHeight > 0
-//        }?.let {
-//            postMessage(
-//                    "onRenderSuccess",
-//                    mapOf("height" to it.measuredHeight / Utils.getDensity(context))
-//            )
-//        }
+        // 兼容height小于等于0的情况，如 快手广告
+        ad?.apply {
+            // 计算渲染后的高度
+            measure(View.MeasureSpec.makeMeasureSpec(Utils.getScreenWidthInPx(context), View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(Utils.getScreenHeightInPx(context), View.MeasureSpec.UNSPECIFIED))
+            Log.d(TAG, "measuredHeight - $measuredHeight")
+        }?.takeIf {
+            it.measuredHeight > 0
+        }?.let {
+            postMessage(
+                    "onRenderSuccess",
+                    mapOf("height" to it.measuredHeight / Utils.getDensity(context))
+            )
+        }
 
     }
 

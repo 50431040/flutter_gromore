@@ -36,6 +36,8 @@ target 'Runner' do
   pod 'CSJMBaiduAdapter', '5.13.0'
   pod 'GDTMobSDK', '4.14.02'
   pod 'CSJMGdtAdapter', '4.14.20.0'
+  pod 'KSAdSDK', '3.3.40'
+  pod 'CSJMKsAdapter', '3.3.42.0'
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
