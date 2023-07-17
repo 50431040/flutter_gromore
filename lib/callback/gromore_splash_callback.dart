@@ -30,6 +30,12 @@ class GromoreSplashCallback extends GromoreBaseAdCallback {
   /// 开屏广告结束，这个时候会销毁广告（点击跳过、倒计时结束或渲染错误等 理应隐藏广告 的情况都会触发此回调，建议统一在此回调处理路由跳转等逻辑）
   final GromoreVoidCallback? onAdEnd;
 
+  /// 触发开屏广告自动关闭（由于存在异常场景，导致广告无法正常展示，但无相关回调）
+  final GromoreVoidCallback? onAutoClose;
+
+  /// 触发开屏广告自动跳过（由于存在部分场景，导致广告无法跳过）
+  final GromoreVoidCallback? onAutoSkip;
+
   GromoreSplashCallback(
       {this.onAdClicked,
       this.onAdShowFail,
@@ -39,7 +45,9 @@ class GromoreSplashCallback extends GromoreBaseAdCallback {
       this.onSplashAdLoadSuccess,
       this.onAdLoadTimeout,
       this.onAdEnd,
-      this.onAdShow})
+      this.onAdShow,
+      this.onAutoClose,
+      this.onAutoSkip})
       : super();
 
   /// 执行回调
@@ -65,6 +73,10 @@ class GromoreSplashCallback extends GromoreBaseAdCallback {
       onAdLoadTimeout!();
     } else if (callbackName == "onAdEnd" && onAdEnd != null) {
       onAdEnd!();
+    } else if (callbackName == "onAutoClose" && onAutoClose != null) {
+      onAutoClose!();
+    } else if (callbackName == "onAutoSkip" && onAutoSkip != null) {
+      onAutoSkip!();
     }
   }
 }

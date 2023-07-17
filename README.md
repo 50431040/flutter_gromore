@@ -221,6 +221,7 @@ bool initResult = await FlutterGromore.initSDK(
 - 开屏广告提供了两种方式：第一种是自渲染（仅Android端可用，不建议使用，**后续将不进行维护**），第二种是拉起原生Activity
 - 自渲染方式以Widget的方式提供
 - 原生页面方式支持传入logo，渲染时logo会在底部显示（logo值不需要文件后缀）
+- 经线上反馈，部分场景下会导致开屏广告的activity无法关闭。所以增加了延时器自动关闭，事件为 onAutoClose 和 onAutoSkip
 
 2. 使用
 
@@ -276,6 +277,8 @@ child: GromoreSplashView(
 | onSplashAdLoadSuccess | 加载成功，此时会展示广告                                     |
 | onAdLoadTimeout       | 加载超时，仅Android可用                                      |
 | onAdEnd               | 开屏广告结束，这个时候会销毁广告（点击跳过、倒计时结束或渲染错误等 理应隐藏广告 的情况都会触发此回调，建议统一在此回调处理路由跳转等逻辑） |
+| onAutoClose           | 开屏广告自动关闭，超过6s未触发onAdShow回调时会执行（由于存在异常场景，导致广告无法正常展示，但无相关回调） |
+| onAutoSkip            | 开屏广告自动跳过，onAdShow回调触发后6s内未关闭广告时会执行（由于存在部分场景，导致广告无法跳过） |
 
 ### 插全屏广告
 

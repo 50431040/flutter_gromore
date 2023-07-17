@@ -16,7 +16,7 @@ import net.niuxiaoer.flutter_gromore.R
 import net.niuxiaoer.flutter_gromore.event.AdEvent
 import net.niuxiaoer.flutter_gromore.event.AdEventHandler
 import net.niuxiaoer.flutter_gromore.utils.Utils
-import java.util.Timer
+import java.util.*
 import kotlin.concurrent.schedule
 
 // Activity实例
@@ -35,6 +35,14 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
     // 广告容器宽高
     private var containerWidth: Int = 0
     private var containerHeight: Int = 0
+
+    // 广告未展示时 自动关闭广告的延时器
+    private var closeAdTimer = Timer()
+    // 广告已经展示时 自动关闭广告的延时器
+    private var skipAdTimer = Timer()
+
+    // 广告已经展示
+    private var adShow = false
 
     // 初始化广告
     private fun initAd() {
@@ -66,6 +74,17 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
                 .build()
 
         adNativeLoader.loadSplashAd(adSlot, this)
+
+        // 6秒后广告未展示，延时自动关闭
+        closeAdTimer.schedule(6000) {
+            if (!isFinishing && !adShow) {
+                runOnUiThread {
+                    Log.d(TAG, "closeAdTimer exec")
+                    sendEvent("onAutoClose")
+                    finishActivity()
+                }
+            }
+        }
     }
 
     // 初始化
@@ -130,6 +149,9 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
 
     override fun onDestroy() {
         super.onDestroy()
+        closeAdTimer.cancel()
+        skipAdTimer.cancel()
+
         splashAd?.mediationManager?.destroy()
         splashAd = null
         Utils.splashResult?.success(true);
@@ -148,8 +170,22 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
     }
 
     override fun onAdShow(p0: View?, p1: Int) {
+        adShow = true
+        closeAdTimer.cancel()
+
         Log.d(TAG, "onAdShow")
         sendEvent("onAdShow")
+
+        // 6s后自动跳过广告
+        skipAdTimer.schedule(6000) {
+            if (!isFinishing) {
+                runOnUiThread {
+                    Log.d(TAG, "skipAdTimer exec")
+                    sendEvent("onAutoSkip")
+                    finishActivity()
+                }
+            }
+        }
     }
 
     override fun onAdSkip() {
@@ -184,14 +220,19 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
         Log.d(TAG, "onSplashAdLoadSuccess")
         sendEvent("onSplashAdLoadSuccess")
 
-        ad?.let {
-            splashAd = it
-            it.setSplashInteractionListener(this)
+        if (ad != null) {
+            splashAd = ad
+            ad.setSplashInteractionListener(this)
 
-            container.removeAllViews()
-            it.splashView?.let {  splashView ->
-                container.addView(splashView)
+            if (ad.splashView != null) {
+                container.addView(ad.splashView)
+            } else {
+                Log.d(TAG, "splashView is null")
+                finishActivity()
             }
+        } else {
+            Log.d(TAG, "ad is null")
+            finishActivity()
         }
     }
 
