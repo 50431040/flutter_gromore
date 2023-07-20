@@ -12,6 +12,14 @@ class FlutterGromoreSplash: NSObject, BUSplashAdDelegate {
     private var eventId: String?
     private var splashAd: BUSplashAd?
     private var result: FlutterResult
+
+    // 自动关闭timer
+    private var closeAdTimer: GCDTask?
+    // 自动跳过timer
+    private var skipAdTimer: GCDTask?
+    
+    // 结束标识，防止多次调用
+    private var ended = false
     
     init(args: [String: Any], result: @escaping FlutterResult) {
         eventId = args["id"] as? String
@@ -36,6 +44,12 @@ class FlutterGromoreSplash: NSObject, BUSplashAdDelegate {
         }
         // 加载开屏广告
         splashAd?.loadData()
+        
+        // 6秒后广告未展示，延时自动关闭
+        closeAdTimer = GCDTool.gcdDelay(6) {
+            self.sendEvent("onAutoClose")
+            self.splashEnd(false)
+        }
     }
     
     /// 创建 logo 容器
@@ -71,8 +85,7 @@ class FlutterGromoreSplash: NSObject, BUSplashAdDelegate {
     // 开屏广告加载失败
     func splashAdLoadFail(_ splashAd: BUSplashAd, error: BUAdError?) {
         sendEvent("onSplashAdLoadFail")
-        sendEvent("onAdEnd")
-        result(false)
+        splashEnd(false)
     }
     
     func splashAdRenderSuccess(_ splashAd: BUSplashAd) {
@@ -80,12 +93,17 @@ class FlutterGromoreSplash: NSObject, BUSplashAdDelegate {
     }
     
     func splashAdRenderFail(_ splashAd: BUSplashAd, error: BUAdError?) {
-        sendEvent("onAdEnd")
-        result(false)
+        splashEnd(false)
     }
     
     func splashAdWillShow(_ splashAd: BUSplashAd) {
         sendEvent("onAdShow")
+        
+        GCDTool.gcdCancel(closeAdTimer)
+        // 6s后自动跳过广告
+        skipAdTimer = GCDTool.gcdDelay(6) {
+            self.splashEnd(true)
+        }
     }
     
     func splashAdDidShow(_ splashAd: BUSplashAd) {
@@ -104,13 +122,24 @@ class FlutterGromoreSplash: NSObject, BUSplashAdDelegate {
     }
     
     func splashAdDidClose(_ splashAd: BUSplashAd, closeType: BUSplashAdCloseType) {
-        sendEvent("onAdEnd")
-        result(true)
-        splashAd.mediation?.destoryAd()
+        splashEnd(true)
     }
     
     func splashDidCloseOtherController(_ splashAd: BUSplashAd, interactionType: BUInteractionType) {
         
+    }
+    
+    // 广告结束
+    func splashEnd(_ res: Bool) {
+        GCDTool.gcdCancel(closeAdTimer)
+        GCDTool.gcdCancel(skipAdTimer)
+        
+        if (!ended) {
+            ended = true
+            sendEvent("onAdEnd")
+            result(res)
+            splashAd?.mediation?.destoryAd()
+        }
     }
 
 }
