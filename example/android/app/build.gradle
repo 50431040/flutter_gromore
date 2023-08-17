@@ -90,15 +90,15 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // 广点通 SDK
-    implementation(name: 'GDTSDK.unionNormal.4.530.1400', ext: 'aar')
+    implementation(name: 'GDTSDK.unionNormal.4.540.1410', ext: 'aar')
     // 广点通 Adapter
-    implementation "com.pangle.cn:mediation-gdt-adapter:4.530.1400.1"
+    implementation "com.pangle.cn:mediation-gdt-adapter:4.540.1410.1"
     // 百度SDK
-    implementation(name: 'Baidu_MobAds_SDK_v9.29', ext: 'aar')
+    implementation(name: 'Baidu_MobAds_SDK_v9.313', ext: 'aar')
     // 百度 Adapter
-    implementation "com.pangle.cn:mediation-baidu-adapter:9.29.1"
+    implementation "com.pangle.cn:mediation-baidu-adapter:9.313.1"
     // 快手SDK
-    implementation(name: 'kssdk-ad-3.3.44', ext: 'aar')
+    implementation(name: 'kssdk-ad-3.3.51.1', ext: 'aar')
     // 快手 Adapter
-    implementation "com.pangle.cn:mediation-ks-adapter:3.3.44.1"
+    implementation "com.pangle.cn:mediation-ks-adapter:3.3.51.1.0"
 }
