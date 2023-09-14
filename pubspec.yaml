@@ -34,8 +34,6 @@ flutter:
       android:
         package: net.niuxiaoer.flutter_gromore
         pluginClass: FlutterGromorePlugin
-      ios:
-        pluginClass: FlutterGromorePlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
