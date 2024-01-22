@@ -533,6 +533,10 @@ SizedBox(
 
 其他问题请提[issue](https://github.com/50431040/flutter_gromore/issues)
 
+## 进群交流
+
+![group.jog](./screenshots/group.jpg)
+
 ## 团队
 
 > 牛小二招聘前端
