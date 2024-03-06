@@ -533,9 +533,9 @@ SizedBox(
 
 其他问题请提[issue](https://github.com/50431040/flutter_gromore/issues)
 
-## 进群交流
+## 加好友进群
 
-![group.jog](./screenshots/group.jpg)
+![group.JPG](./screenshots/qrcode.JPG)
 
 ## 团队
 
