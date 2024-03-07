@@ -535,7 +535,7 @@ SizedBox(
 
 ## 加好友进群
 
-![group.JPG](./screenshots/qrcode.JPG)
+![qrcode.jpg](./screenshots/qrcode.jpg)
 
 ## 团队
 
