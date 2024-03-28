@@ -58,85 +58,97 @@ dependencies {
 2. AndroidManifest.xml中手动添加对应adn的配置项（具体请参考官方文档）
 
 ```xml
-<!-- Pangle start================== -->
+<!-- baidu start================== -->
+<!-- 声明打开落地页的Activity（不建议修改主题配置）-->
+<activity
+     android:name="com.baidu.mobads.sdk.api.AppActivity"
+     android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
+     android:theme="@android:style/Theme.NoTitleBar" />
+     <!-- 声明打开显示激励视频/全屏视频的Activity-->
+<activity
+    android:name="com.baidu.mobads.sdk.api.MobRewardVideoActivity"
+    android:configChanges="screenSize|orientation|keyboardHidden"
+    android:launchMode="singleTask"
+    android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+<!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现 -->
+<!-- android:authorities="${packageName}.bd.provider" authorities中${packageName}部分必须替换成app自己的包名 -->
+<!-- 原来的FileProvider在新版本中改为BdFileProvider,继承自v4的FileProvider,需要在应用内引用support-v4包 -->
 <provider
-   android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
-   android:authorities="${applicationId}.TTFileProvider"
-   android:exported="false"
-   android:grantUriPermissions="true">
-   <meta-data
-       android:name="android.support.FILE_PROVIDER_PATHS"
-       android:resource="@xml/pangle_file_paths" />
+    android:name="com.baidu.mobads.sdk.api.BdFileProvider"
+    android:authorities="${applicationId}.bd.provider"
+    android:exported="false"
+    android:grantUriPermissions="true">
+<meta-data 
+     android:name="android.support.FILE_PROVIDER_PATHS"
+     android:resource="@xml/bd_file_paths" />
 </provider>
+<!-- baidu end================== -->
 
-<provider
-   android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
-   android:authorities="${applicationId}.TTMultiProvider"
-   android:exported="false" />
-<!-- Pangle end================== -->
 
 <!-- GDT start================== -->
 <!-- targetSDKVersion >= 24时才需要添加这个provider。provider的authorities属性的值为${applicationId}.fileprovider，请开发者根据自己的${applicationId}来设置这个值，例如本例中applicationId为"com.qq.e.union.demo"。 -->
 <provider
-   android:name="com.qq.e.comm.GDTFileProvider"
-   android:authorities="${applicationId}.gdt.fileprovider"
-   android:exported="false"
-   android:grantUriPermissions="true">
-   <meta-data
-       android:name="android.support.FILE_PROVIDER_PATHS"
-       android:resource="@xml/gdt_file_path" />
+    android:name="com.qq.e.comm.GDTFileProvider"
+    android:authorities="${applicationId}.gdt.fileprovider"
+    android:exported="false"
+    android:grantUriPermissions="true">
+<meta-data
+     android:name="android.support.FILE_PROVIDER_PATHS"
+     android:resource="@xml/gdt_file_path" />
 </provider>
 
 <activity
-   android:name="com.qq.e.ads.PortraitADActivity"
-   android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-   android:screenOrientation="portrait" />
+    android:name="com.qq.e.ads.PortraitADActivity"
+    android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+    android:screenOrientation="portrait" />
 <activity
-   android:name="com.qq.e.ads.LandscapeADActivity"
-   android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-   tools:replace="android:screenOrientation"
-   android:screenOrientation="landscape" />
+    android:name="com.qq.e.ads.LandscapeADActivity"
+    android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+    android:screenOrientation="landscape"
+    tools:replace="android:screenOrientation" />
 
 <!-- 声明SDK所需要的组件 -->
 <service
-   android:name="com.qq.e.comm.DownloadService"
-   android:exported="false" />
+    android:name="com.qq.e.comm.DownloadService"
+    android:exported="false" />
 <!-- 请开发者注意字母的大小写，ADActivity，而不是AdActivity -->
 
 <activity
-   android:name="com.qq.e.ads.ADActivity"
-   android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
+    android:name="com.qq.e.ads.ADActivity"
+    android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
 <!-- GDT end================== -->
+
 
 <!-- baidu start================== -->
 <!-- 声明打开落地页的Activity（不建议修改主题配置）-->
 <activity
-   android:name="com.baidu.mobads.sdk.api.AppActivity"
-   android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
-   android:theme="@android:style/Theme.NoTitleBar"/>
+    android:name="com.baidu.mobads.sdk.api.AppActivity"
+    android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
+    android:theme="@android:style/Theme.NoTitleBar" />
 <!-- 声明打开显示激励视频/全屏视频的Activity-->
 <activity
-   android:name="com.baidu.mobads.sdk.api.MobRewardVideoActivity"
-   android:configChanges="screenSize|orientation|keyboardHidden"
-   android:launchMode="singleTask"
-   android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    android:name="com.baidu.mobads.sdk.api.MobRewardVideoActivity"
+    android:configChanges="screenSize|orientation|keyboardHidden"
+    android:launchMode="singleTask"
+    android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
 <!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现 -->
 <!-- android:authorities="${packageName}.bd.provider" authorities中${packageName}部分必须替换成app自己的包名 -->
 <!-- 原来的FileProvider在新版本中改为BdFileProvider,继承自v4的FileProvider,需要在应用内引用support-v4包 -->
 <provider
-   android:name="com.baidu.mobads.sdk.api.BdFileProvider"
-   android:authorities="${applicationId}.bd.provider"
-   android:exported="false"
-   android:grantUriPermissions="true">
-   <meta-data
-       android:name="android.support.FILE_PROVIDER_PATHS"
-       android:resource="@xml/bd_file_paths" />
+    android:name="com.baidu.mobads.sdk.api.BdFileProvider"
+    android:authorities="${applicationId}.bd.provider"
+    android:exported="false"
+    android:grantUriPermissions="true">
+<meta-data
+     android:name="android.support.FILE_PROVIDER_PATHS"
+     android:resource="@xml/bd_file_paths" />
 </provider>
 <!-- baidu end================== -->
+
 ```
 
-3. 代码混淆及资源混淆配置（参考官方文档）
+3. **代码混淆及资源混淆配置**（参考官方文档）
 
 #### iOS
 

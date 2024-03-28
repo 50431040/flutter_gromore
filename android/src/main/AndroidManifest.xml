@@ -28,5 +28,20 @@
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme" />
 
+        <provider
+            android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
+            android:authorities="${applicationId}.TTFileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/pangle_file_paths" />
+        </provider>
+
+        <provider
+            android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
+            android:authorities="${applicationId}.TTMultiProvider"
+            android:exported="false" />
+
     </application>
 </manifest>
