@@ -2,15 +2,15 @@ package net.niuxiaoer.flutter_gromore.view
 
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import com.bytedance.sdk.openadsdk.AdSlot
-import com.bytedance.sdk.openadsdk.TTAdNative
+import com.bytedance.sdk.openadsdk.CSJAdError
+import com.bytedance.sdk.openadsdk.CSJSplashAd
+import com.bytedance.sdk.openadsdk.TTAdNative.CSJSplashAdListener
 import com.bytedance.sdk.openadsdk.TTAdSdk
-import com.bytedance.sdk.openadsdk.TTSplashAd
 import com.bytedance.sdk.openadsdk.mediation.ad.MediationAdSlot
 import net.niuxiaoer.flutter_gromore.R
 import net.niuxiaoer.flutter_gromore.event.AdEvent
@@ -20,14 +20,14 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 // Activity实例
-class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, TTSplashAd.AdInteractionListener {
+class FlutterGromoreSplash : AppCompatActivity() {
 
     private val TAG: String = this::class.java.simpleName
 
     // 广告容器
     private lateinit var container: FrameLayout
     private lateinit var logoContainer: AppCompatImageView
-    private var splashAd: TTSplashAd? = null
+    private var splashAd: CSJSplashAd? = null
 
     // activity id
     private lateinit var id: String
@@ -58,6 +58,7 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
         val volume = intent.getFloatExtra("volume", 1f)
         val isSplashShakeButton = intent.getBooleanExtra("splashShakeButton", true)
         val isBidNotify = intent.getBooleanExtra("bidNotify", false)
+        val timeout = intent.getIntExtra("timeout", 3500);
 
         val adNativeLoader = TTAdSdk.getAdManager().createAdNative(this)
 
@@ -73,7 +74,7 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
                         .build())
                 .build()
 
-        adNativeLoader.loadSplashAd(adSlot, this)
+        adNativeLoader.loadSplashAd(adSlot, getCSJSplashAdListener(), timeout)
 
         // 6秒后广告未展示，延时自动关闭
         closeAdTimer.schedule(6000) {
@@ -164,76 +165,86 @@ class FlutterGromoreSplash : AppCompatActivity(), TTAdNative.SplashAdListener, T
         init()
     }
 
-    override fun onAdClicked(p0: View?, p1: Int) {
-        Log.d(TAG, "onAdClicked")
-        sendEvent("onAdClicked")
-    }
+    private fun getCSJSplashAdListener(): CSJSplashAdListener {
+        return object : CSJSplashAdListener {
+            // 加载成功
+            override fun onSplashLoadSuccess(ad: CSJSplashAd) {
+                Log.d(TAG, "onSplashLoadSuccess")
+                sendEvent("onSplashLoadSuccess")
 
-    override fun onAdShow(p0: View?, p1: Int) {
-        adShow = true
-        closeAdTimer.cancel()
+                splashAd = ad
 
-        Log.d(TAG, "onAdShow")
-        sendEvent("onAdShow")
-
-        // 6s后自动跳过广告
-        skipAdTimer.schedule(6000) {
-            if (!isFinishing) {
-                runOnUiThread {
-                    Log.d(TAG, "skipAdTimer exec")
-                    sendEvent("onAutoSkip")
+                if (ad.splashView != null) {
+                    container.addView(ad.splashView)
+                } else {
+                    Log.d(TAG, "splashView is null")
                     finishActivity()
                 }
             }
-        }
-    }
 
-    override fun onAdSkip() {
-        Log.d(TAG, "onAdSkip")
-        sendEvent("onAdSkip")
+            // 加载失败
+            override fun onSplashLoadFail(error: CSJAdError) {
+                Log.d(TAG, "onSplashLoadFail ${error.msg}")
+                sendEvent("onSplashLoadFail")
 
-        finishActivity()
-    }
-
-    override fun onAdTimeOver() {
-        Log.d(TAG, "onAdDismiss")
-        sendEvent("onAdDismiss")
-
-        finishActivity()
-    }
-
-    override fun onError(p0: Int, p1: String?) {
-        Log.d(TAG, "onSplashAdLoadFail")
-        sendEvent("onSplashAdLoadFail")
-
-        finishActivity()
-    }
-
-    override fun onTimeout() {
-        Log.d(TAG, "onAdLoadTimeout")
-        sendEvent("onAdLoadTimeout")
-
-        finishActivity()
-    }
-
-    override fun onSplashAdLoad(ad: TTSplashAd?) {
-        Log.d(TAG, "onSplashAdLoadSuccess")
-        sendEvent("onSplashAdLoadSuccess")
-
-        if (ad != null) {
-            splashAd = ad
-            ad.setSplashInteractionListener(this)
-
-            if (ad.splashView != null) {
-                container.addView(ad.splashView)
-            } else {
-                Log.d(TAG, "splashView is null")
                 finishActivity()
             }
-        } else {
-            Log.d(TAG, "ad is null")
-            finishActivity()
+
+            // 渲染成功
+            override fun onSplashRenderSuccess(ad: CSJSplashAd) {
+                Log.d(TAG, "onSplashRenderSuccess")
+                sendEvent("onSplashRenderSuccess")
+                ad.setSplashAdListener(getSplashAdListener())
+            }
+
+            override fun onSplashRenderFail(ad: CSJSplashAd, csjAdError: CSJAdError) {
+                Log.d(TAG, "onSplashRenderFail ${csjAdError.msg}")
+                sendEvent("onSplashRenderFail")
+
+                finishActivity()
+            }
         }
     }
+
+    private fun getSplashAdListener(): CSJSplashAd.SplashAdListener {
+        return object : CSJSplashAd.SplashAdListener {
+
+            // 开屏展示
+            override fun onSplashAdShow(p0: CSJSplashAd?) {
+                adShow = true
+                closeAdTimer.cancel()
+
+                Log.d(TAG, "onSplashAdShow")
+                sendEvent("onSplashAdShow")
+
+                // 6s后自动跳过广告
+                skipAdTimer.schedule(6000) {
+                    if (!isFinishing) {
+                        runOnUiThread {
+                            Log.d(TAG, "skipAdTimer exec")
+                            sendEvent("onAutoSkip")
+                            finishActivity()
+                        }
+                    }
+                }
+            }
+
+            // 开屏点击
+            override fun onSplashAdClick(p0: CSJSplashAd?) {
+                Log.d(TAG, "onSplashAdClick")
+                sendEvent("onSplashAdClick")
+            }
+
+            // 开屏关闭，有些ADN会调用多次close回调需要开发者特殊处理
+            override fun onSplashAdClose(p0: CSJSplashAd?, p1: Int) {
+                Log.d(TAG, "onSplashAdClose")
+                sendEvent("onSplashAdClose")
+
+                finishActivity()
+            }
+
+        }
+    }
+
 
 }
