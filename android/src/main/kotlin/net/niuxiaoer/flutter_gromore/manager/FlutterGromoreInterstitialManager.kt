@@ -6,10 +6,11 @@ import com.bytedance.sdk.openadsdk.*
 import com.bytedance.sdk.openadsdk.mediation.ad.MediationAdSlot
 import io.flutter.plugin.common.MethodChannel
 
-class FlutterGromoreInterstitialManager(private val params: Map<String, Any?>,
-                                        private val activity: Activity,
-                                        private val result: MethodChannel.Result) : TTAdNative.FullScreenVideoAdListener {
-
+class FlutterGromoreInterstitialManager(
+    private val params: Map<String, Any?>,
+    private val activity: Activity,
+    private val result: MethodChannel.Result
+) : TTAdNative.FullScreenVideoAdListener {
 
     init {
         loadAd()
@@ -21,20 +22,24 @@ class FlutterGromoreInterstitialManager(private val params: Map<String, Any?>,
         val orientation = params["orientation"] as? Int ?: TTAdConstant.VERTICAL
         // 静音
         val muted = params["muted"] as? Boolean ?: true
+        // 是否使用SurfaceView
+        val useSurfaceView = params["setUseSurfaceView"] as? Boolean ?: true
 
         require(adUnitId != null && adUnitId.isNotEmpty())
 
         val adNativeLoader =
-                TTAdSdk.getAdManager().createAdNative(activity)
+            TTAdSdk.getAdManager().createAdNative(activity)
         val adslot = AdSlot.Builder()
-                .setCodeId(adUnitId) // 广告位id
-                .setAdCount(1) // 请求的广告数
-                .setOrientation(orientation)
-                .setMediationAdSlot(
-                        MediationAdSlot.Builder()
-                                .setMuted(muted)
-                                .build()) // 聚合广告请求配置
-                .build()
+            .setCodeId(adUnitId) // 广告位id
+            .setAdCount(1) // 请求的广告数
+            .setOrientation(orientation)
+            .setMediationAdSlot(
+                MediationAdSlot.Builder()
+                    .setMuted(muted)
+                    .setUseSurfaceView(useSurfaceView)
+                    .build()
+            ) // 聚合广告请求配置
+            .build()
 
         adNativeLoader.loadFullScreenVideoAd(adslot, this)
     }
