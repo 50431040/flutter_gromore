@@ -18,15 +18,16 @@ import net.niuxiaoer.flutter_gromore.utils.Utils
 
 
 class FlutterGromoreBanner(
-        private val context: Context,
-        private val activity: Activity,
-        viewId: Int,
-        creationParams: Map<String?, Any?>,
-        binaryMessenger: BinaryMessenger
+    private val context: Context,
+    private val activity: Activity,
+    viewId: Int,
+    creationParams: Map<String?, Any?>,
+    binaryMessenger: BinaryMessenger
 ) :
-        FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.bannerTypeId}/$viewId"),
-        PlatformView,
-        TTAdDislike.DislikeInteractionCallback, TTNativeExpressAd.ExpressAdInteractionListener, TTAdNative.NativeExpressAdListener {
+    FlutterGromoreBase(binaryMessenger, "${FlutterGromoreConstants.bannerTypeId}/$viewId"),
+    PlatformView,
+    TTAdDislike.DislikeInteractionCallback, TTNativeExpressAd.ExpressAdInteractionListener,
+    TTAdNative.NativeExpressAdListener {
 
     private val TAG: String = this::class.java.simpleName
 
@@ -37,8 +38,8 @@ class FlutterGromoreBanner(
     private var bannerAd: TTNativeExpressAd? = null
 
     private var layoutParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
+        ViewGroup.LayoutParams.WRAP_CONTENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
     )
 
     init {
@@ -55,19 +56,23 @@ class FlutterGromoreBanner(
         val height = creationParams["height"] as? Int ?: 150
         require(adUnitId.isNotEmpty())
 
+        val useSurfaceView = creationParams["useSurfaceView"] as? Boolean ?: true
+
         val adNativeLoader = TTAdSdk.getAdManager().createAdNative(activity)
 
         val adslot = AdSlot.Builder()
-                .setCodeId(adUnitId)
-                .setImageAcceptedSize(width, Utils.dp2px(context, height.toFloat()))
-                .setAdCount(1)
-                .setMediationAdSlot(MediationAdSlot.Builder()
-                        .setMediationNativeToBannerListener(object : MediationNativeToBannerListener() {
-                            override fun getMediationBannerViewFromNativeAd(p0: IMediationNativeAdInfo?): View? {
-                                return null
-                            }
-                        }).build())
-                .build()
+            .setCodeId(adUnitId)
+            .setImageAcceptedSize(width, Utils.dp2px(context, height.toFloat()))
+            .setAdCount(1)
+            .setMediationAdSlot(MediationAdSlot.Builder()
+                .setUseSurfaceView(useSurfaceView)
+                .setMediationNativeToBannerListener(object : MediationNativeToBannerListener() {
+                    override fun getMediationBannerViewFromNativeAd(p0: IMediationNativeAdInfo?): View? {
+                        return null
+                    }
+                }).build()
+            )
+            .build()
 
         adNativeLoader.loadBannerExpressAd(adslot, this)
 
@@ -106,17 +111,19 @@ class FlutterGromoreBanner(
     }
 
     override fun onRenderSuccess(p0: View?, width: Float, height: Float) {
-        Log.d(TAG, "onRenderSuccess")
+        Log.d(TAG, "onRenderSuccess $width $height")
 
         val ad = bannerAd?.expressAdView
         ad?.let {
             (it as? ViewGroup)?.removeView(ad)
             container.removeAllViews()
             container.setBackgroundColor(Color.WHITE)
-            container.addView(ad, FrameLayout.LayoutParams(
+            container.addView(
+                ad, FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
-            ))
+                )
+            )
         }
 
         postMessage("onRenderSuccess")
