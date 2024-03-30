@@ -9,10 +9,12 @@ import com.bytedance.sdk.openadsdk.mediation.ad.MediationAdSlot
 import io.flutter.plugin.common.MethodChannel
 import net.niuxiaoer.flutter_gromore.utils.Utils
 
-class FlutterGromoreFeedManager(private val params: Map<String, Any?>,
-                                private val context: Context,
-                                private val result: MethodChannel.Result) :
-        TTAdNative.FeedAdListener {
+class FlutterGromoreFeedManager(
+    private val params: Map<String, Any?>,
+    private val context: Context,
+    private val result: MethodChannel.Result
+) :
+    TTAdNative.FeedAdListener {
 
     init {
         loadAd()
@@ -29,6 +31,8 @@ class FlutterGromoreFeedManager(private val params: Map<String, Any?>,
         val width = params["width"] as? Int ?: Utils.getScreenWidthInPx(context)
         // 0为高度选择自适应参数
         val height = params["height"] as? Int ?: 0
+        // 是否使用SurfaceView
+        val useSurfaceView = params["useSurfaceView"] as? Boolean ?: true
 
         require(adUnitId.isNotEmpty())
         require(count > 0)
@@ -36,11 +40,11 @@ class FlutterGromoreFeedManager(private val params: Map<String, Any?>,
         val adNativeLoader = TTAdSdk.getAdManager().createAdNative(context)
 
         val adslot = AdSlot.Builder()
-                .setCodeId(adUnitId)
-                .setImageAcceptedSize(width, height)
-                .setAdCount(count)
-                .setMediationAdSlot(MediationAdSlot.Builder().build())
-                .build()
+            .setCodeId(adUnitId)
+            .setImageAcceptedSize(width, height)
+            .setAdCount(count)
+            .setMediationAdSlot(MediationAdSlot.Builder().setUseSurfaceView(useSurfaceView).build())
+            .build()
 
         adNativeLoader.loadFeedAd(adslot, this)
     }
