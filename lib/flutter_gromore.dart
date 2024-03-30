@@ -59,18 +59,40 @@ class FlutterGromore {
   }
 
   /// 初始化SDK
-  static Future<bool> initSDK(
-      {required String appId,
-      required String appName,
-      required bool debug,
-      bool? useMediation}) async {
+  static Future<bool> initSDK({
+    required String appId,
+    required String appName,
+    required bool debug,
 
+    /// 是否使用聚合
+    required bool useMediation,
+
+    /// 是否为计费用户
+    bool? paid = false,
+
+    /// 是否允许SDK弹出通知
+    bool? allowShowNotify = false,
+
+    /// 是否使用TextureView播放视频
+    bool? useTextureView = false,
+
+    /// 是否支持多进程
+    bool? supportMultiProcess = false,
+
+    /// 主题模式设置，0是正常模式；1是夜间模式。默认为正常模式
+    int? themeStatus = 0,
+  }) async {
     try {
       await _methodChannel.invokeMethod("initSDK", {
         "appId": appId,
         "appName": appName,
         "debug": debug,
-        "useMediation": useMediation ?? false
+        "useMediation": useMediation,
+        "paid": paid,
+        "allowShowNotify": allowShowNotify,
+        "useTextureView": useTextureView,
+        "supportMultiProcess": supportMultiProcess,
+        "themeStatus": themeStatus
       });
       isInit = true;
       _handleEventListener();

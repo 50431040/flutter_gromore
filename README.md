@@ -29,6 +29,7 @@
 - 引入的方式可以使用pod/maven，不需要手动添加aar/sdk
 - 插件内部移除了某些参数/回调事件
 - 接入变得更加简单
+- 支持SurfaceView，提升广告性能
 
 ## 接入文档
 
@@ -45,110 +46,86 @@
 ```gradle
 dependencies {
     // 广点通 SDK
-    implementation(name: 'GDTSDK.unionNormal.4.530.1400', ext: 'aar')
+    implementation (name: 'GDTSDK.unionNormal.4.563.1433', ext: 'aar')
     // 广点通 Adapter
-    implementation "com.pangle.cn:mediation-gdt-adapter:4.530.1400.1"
+    implementation(name: 'mediation_gdt_adapter_4.563.1433.0', ext: 'aar')
     // 百度SDK
-    implementation(name: 'Baidu_MobAds_SDK_v9.29', ext: 'aar')
+    implementation(name: 'Baidu_MobAds_SDK_v9.34', ext: 'aar')
     // 百度 Adapter
-    implementation "com.pangle.cn:mediation-baidu-adapter:9.29.1"
+    implementation(name: 'mediation_baidu_adapter_9.34.0', ext: 'aar')
+    // 快手SDK
+    implementation(name: 'kssdk-ad-3.3.59', ext: 'aar')
+    // 快手 Adapter
+    implementation(name: 'mediation_ks_adapter_3.3.59.0', ext: 'aar')
 }
 ```
 
 2. AndroidManifest.xml中手动添加对应adn的配置项（具体请参考官方文档）
 
 ```xml
-<!-- baidu start================== -->
-<!-- 声明打开落地页的Activity（不建议修改主题配置）-->
-<activity
-     android:name="com.baidu.mobads.sdk.api.AppActivity"
-     android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
-     android:theme="@android:style/Theme.NoTitleBar" />
-     <!-- 声明打开显示激励视频/全屏视频的Activity-->
-<activity
-    android:name="com.baidu.mobads.sdk.api.MobRewardVideoActivity"
-    android:configChanges="screenSize|orientation|keyboardHidden"
-    android:launchMode="singleTask"
-    android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-<!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现 -->
-<!-- android:authorities="${packageName}.bd.provider" authorities中${packageName}部分必须替换成app自己的包名 -->
-<!-- 原来的FileProvider在新版本中改为BdFileProvider,继承自v4的FileProvider,需要在应用内引用support-v4包 -->
-<provider
-    android:name="com.baidu.mobads.sdk.api.BdFileProvider"
-    android:authorities="${applicationId}.bd.provider"
-    android:exported="false"
-    android:grantUriPermissions="true">
-<meta-data 
-     android:name="android.support.FILE_PROVIDER_PATHS"
-     android:resource="@xml/bd_file_paths" />
-</provider>
-<!-- baidu end================== -->
-
-
 <!-- GDT start================== -->
 <!-- targetSDKVersion >= 24时才需要添加这个provider。provider的authorities属性的值为${applicationId}.fileprovider，请开发者根据自己的${applicationId}来设置这个值，例如本例中applicationId为"com.qq.e.union.demo"。 -->
 <provider
-    android:name="com.qq.e.comm.GDTFileProvider"
-    android:authorities="${applicationId}.gdt.fileprovider"
-    android:exported="false"
-    android:grantUriPermissions="true">
-<meta-data
-     android:name="android.support.FILE_PROVIDER_PATHS"
-     android:resource="@xml/gdt_file_path" />
+          android:name="com.qq.e.comm.GDTFileProvider"
+          android:authorities="${applicationId}.gdt.fileprovider"
+          android:exported="false"
+          android:grantUriPermissions="true">
+  <meta-data
+             android:name="android.support.FILE_PROVIDER_PATHS"
+             android:resource="@xml/gdt_file_path" />
 </provider>
 
 <activity
-    android:name="com.qq.e.ads.PortraitADActivity"
-    android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-    android:screenOrientation="portrait" />
+          android:name="com.qq.e.ads.PortraitADActivity"
+          android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+          android:screenOrientation="portrait" />
 <activity
-    android:name="com.qq.e.ads.LandscapeADActivity"
-    android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-    android:screenOrientation="landscape"
-    tools:replace="android:screenOrientation" />
+          android:name="com.qq.e.ads.LandscapeADActivity"
+          android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+          android:screenOrientation="landscape"
+          tools:replace="android:screenOrientation" />
 
 <!-- 声明SDK所需要的组件 -->
 <service
-    android:name="com.qq.e.comm.DownloadService"
-    android:exported="false" />
+         android:name="com.qq.e.comm.DownloadService"
+         android:exported="false" />
 <!-- 请开发者注意字母的大小写，ADActivity，而不是AdActivity -->
 
 <activity
-    android:name="com.qq.e.ads.ADActivity"
-    android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
+          android:name="com.qq.e.ads.ADActivity"
+          android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
 <!-- GDT end================== -->
-
 
 <!-- baidu start================== -->
 <!-- 声明打开落地页的Activity（不建议修改主题配置）-->
 <activity
-    android:name="com.baidu.mobads.sdk.api.AppActivity"
-    android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
-    android:theme="@android:style/Theme.NoTitleBar" />
+          android:name="com.baidu.mobads.sdk.api.AppActivity"
+          android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
+          android:theme="@android:style/Theme.NoTitleBar" />
 <!-- 声明打开显示激励视频/全屏视频的Activity-->
 <activity
-    android:name="com.baidu.mobads.sdk.api.MobRewardVideoActivity"
-    android:configChanges="screenSize|orientation|keyboardHidden"
-    android:launchMode="singleTask"
-    android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+          android:name="com.baidu.mobads.sdk.api.MobRewardVideoActivity"
+          android:configChanges="screenSize|orientation|keyboardHidden"
+          android:launchMode="singleTask"
+          android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
 <!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现 -->
 <!-- android:authorities="${packageName}.bd.provider" authorities中${packageName}部分必须替换成app自己的包名 -->
 <!-- 原来的FileProvider在新版本中改为BdFileProvider,继承自v4的FileProvider,需要在应用内引用support-v4包 -->
 <provider
-    android:name="com.baidu.mobads.sdk.api.BdFileProvider"
-    android:authorities="${applicationId}.bd.provider"
-    android:exported="false"
-    android:grantUriPermissions="true">
-<meta-data
-     android:name="android.support.FILE_PROVIDER_PATHS"
-     android:resource="@xml/bd_file_paths" />
+          android:name="com.baidu.mobads.sdk.api.BdFileProvider"
+          android:authorities="${applicationId}.bd.provider"
+          android:exported="false"
+          android:grantUriPermissions="true">
+  <meta-data
+             android:name="android.support.FILE_PROVIDER_PATHS"
+             android:resource="@xml/bd_file_paths" />
 </provider>
 <!-- baidu end================== -->
 
 ```
 
-3. **代码混淆及资源混淆配置**（参考官方文档）
+3. **代码混淆及资源混淆配置，请务必配置！！！**（参考官方文档）
 
 #### iOS
 
@@ -177,19 +154,29 @@ FlutterGromore.requestPermissionIfNecessary(); // 已废弃
 修改AndroidManifest配置（注：插件内部已经添加了必要权限，如下所示，可选权限参考官方文档）
 
 ```xml
-<!-- 必要权限，插件内部已经添加，不需要再次添加 -->
+<!-- 必要权限 -->
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-<!--必要权限，解决安全风险漏洞，发送和注册广播事件需要调用带有传递权限的接口-->
+<!-- 可选权限 -->
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<!--suppress DeprecatedClassUsageInspection -->
+<uses-permission android:name="android.permission.GET_TASKS" />
+<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+<!--可选权限，申请后用于防作弊功能以及有助于广告平台投放广告-->
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 <permission
-    android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN"
-    android:protectionLevel="signature" />
+            android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN"
+            android:protectionLevel="signature" />
 <uses-permission android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN" />
+
+<!--建议添加“query_all_package”权限，穿山甲将通过此权限在Android R系统上判定广告对应的应用是否在用户的app上安装，避免投放错误的广告，以此提高用户的广告体验。若添加此权限，需要在您的用户隐私文档中声明！ -->
+<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
 
 <!--可选权限，视情况添加，参考官方文档-->
@@ -223,6 +210,18 @@ bool initResult = await FlutterGromore.initSDK(
   debug: true,
   useMediation: true);
 ```
+
+| 参数名              | 说明                                                   | 必选 |
+| ------------------- | ------------------------------------------------------ | ---- |
+| appId               |                                                        | 是   |
+| appName             |                                                        | 是   |
+| debug               | debug模式，默认为true                                  | 是   |
+| useMediation        | 是否使用聚合                                           | 是   |
+| paid                | 是否为计费用户，默认为false                            | 否   |
+| allowShowNotify     | 是否允许SDK弹出通知，默认为false                       | 否   |
+| useTextureView      | 是否使用TextureView播放视频，默认为false               | 否   |
+| supportMultiProcess | 是否支持多进程，默认为false                            | 否   |
+| themeStatus         | 主题模式设置，0是正常模式；1是夜间模式。默认为正常模式 | 否   |
 
 若需要添加本地缓存配置，请将文件`gromore_local_config`放在`android/src/main/assets/`目录下，初始化时会尝试加载该文件配置
 
@@ -259,36 +258,34 @@ child: GromoreSplashView(
 
 3. 参数（GromoreSplashConfig）
 
-| 参数名              | 说明                                                         | 可选 |
-| ------------------- | ------------------------------------------------------------ | ---- |
-| adUnitId            | 聚合开屏广告位id                                             | 是   |
-| ~~width~~           | 广告宽度（自定义渲染可用）                                   | 否   |
-| ~~height~~          | 广告高度（自定义渲染可用）                                   | 否   |
-| logo                | 如果传入了logo则会在底部显示logo，Android放在android/app/src/main/res/mipmap下，iOS放在Assets中，值不需要文件后缀（非自定义渲染可用）。不传则全屏显示。 | 否   |
-| muted               | 静音，默认为true                                             | 否   |
-| preload             | 预加载，默认为true。仅Android可用                            | 否   |
-| volume              | 声音配置，与muted配合使用，默认为1。仅Android可用            | 否   |
-| ~~timeout~~         | 超时时间，默认3，单位：秒(s)                                 | 否   |
-| ~~buttonType~~      | 按钮样式（1：全屏可点击，2：仅按钮可点击，默认为1）          | 否   |
-| ~~downloadType~~    | 点击下载样式（0或者1，默认为1）                              | 否   |
-| isSplashShakeButton | 开屏摇一摇开关，默认为true。仅Android可用                    | 否   |
-| isBidNotify         | bidding类型广告，竞价成功或者失败后是否通知对应的adn，默认为false | 否   |
+| 参数名            | 说明                                                         | 必选 |
+| ----------------- | ------------------------------------------------------------ | ---- |
+| adUnitId          | 聚合开屏广告位id                                             | 是   |
+| ~~width~~         | 广告宽度（自定义渲染可用）                                   | 否   |
+| ~~height~~        | 广告高度（自定义渲染可用）                                   | 否   |
+| logo              | 如果传入了logo则会在底部显示logo，Android放在android/app/src/main/res/mipmap下，iOS放在Assets中，值不需要文件后缀（非自定义渲染可用）。不传则全屏显示。 | 否   |
+| muted             | 静音，默认为true                                             | 否   |
+| preload           | 预加载，默认为true。仅Android可用                            | 否   |
+| volume            | 声音配置，与muted配合使用，默认为1。仅Android可用            | 否   |
+| ~~buttonType~~    | 按钮样式（1：全屏可点击，2：仅按钮可点击，默认为1）          | 否   |
+| ~~downloadType~~  | 点击下载样式（0或者1，默认为1）                              | 否   |
+| splashShakeButton | 开屏摇一摇开关，默认为true。仅Android可用                    | 否   |
+| bidNotify         | bidding类型广告，竞价成功或者失败后是否通知对应的adn，默认为false | 否   |
+| timeout           | 超时时间，默认为3500，单位：毫秒                             | 否   |
+| useSurfaceView    | 是否使用SurfaceView，默认为true。建议开启                    | 否   |
 
 4. 回调（GromoreSplashCallback）
-
-**新增了一个 onAdEnd 事件，建议统一在这个事件中处理广告销毁的逻辑**
 
 | 回调方法名            | 说明                                                         |
 | --------------------- | ------------------------------------------------------------ |
 | onAdClicked           | 点击                                                         |
 | onAdShow              | 展示成功                                                     |
-| onAdShowFail          | 展示失败，仅Android可用                                      |
-| onAdSkip              | 点击跳过，仅Android可用                                      |
-| onAdDismiss           | 倒计时结束，仅Android可用                                    |
 | onSplashAdLoadFail    | 加载失败                                                     |
-| onSplashAdLoadSuccess | 加载成功，此时会展示广告                                     |
-| onAdLoadTimeout       | 加载超时，仅Android可用                                      |
-| onAdEnd               | 开屏广告结束，这个时候会销毁广告（点击跳过、倒计时结束或渲染错误等 理应隐藏广告 的情况都会触发此回调，建议统一在此回调处理路由跳转等逻辑） |
+| onSplashAdLoadSuccess | 加载成功                                                     |
+| onSplashRenderSuccess | 渲染成功                                                     |
+| onSplashRenderFail    | 渲染失败                                                     |
+| onSplashAdClose       | 关闭                                                         |
+| **onAdEnd**           | **开屏广告结束，这个时候会销毁广告（点击跳过、倒计时结束或渲染错误等 理应隐藏广告 的情况都会触发此回调，建议统一在此回调处理路由跳转等逻辑）** |
 | onAutoClose           | 开屏广告自动关闭，超过6s未触发onAdShow回调时会执行（由于存在异常场景，导致广告无法正常展示，但无相关回调） |
 | onAutoSkip            | 开屏广告自动跳过，onAdShow回调触发后6s内未关闭广告时会执行（由于存在部分场景，导致广告无法跳过） |
 
@@ -329,12 +326,12 @@ if (interstitialId.isNotEmpty) {
 
 3. 配置（GromoreInterstitialConfig）
 
-| 参数名      | 说明                                                | 必填 |
-| ----------- | --------------------------------------------------- | ---- |
-| adUnitId    | 插屏广告位id                                        | 是   |
-| orientation | 设置横竖，仅Android可用。竖屏为1，横屏为2。默认竖屏 | 否   |
-| muted       | 是否静音，默认为true                                | 否   |
-| ~~size~~    | 广告尺寸（GromoreAdSize类）                         | 否   |
+| 参数名         | 说明                                                | 必填 |
+| -------------- | --------------------------------------------------- | ---- |
+| adUnitId       | 插屏广告位id                                        | 是   |
+| orientation    | 设置横竖，仅Android可用。竖屏为1，横屏为2。默认竖屏 | 否   |
+| muted          | 是否静音，默认为true                                | 否   |
+| useSurfaceView | 是否使用SurfaceView，默认为true。建议开启           | 否   |
 
 4. 回调（GromoreSplashCallback，命名和 **Android** 聚合文档基本一致）
 
@@ -397,13 +394,14 @@ GromoreFeedView(
 
 3. 配置（GromoreFeedConfig）
 
-| 参数名          | 说明                                 | 必填 |
-| --------------- | ------------------------------------ | ---- |
-| adUnitId        | 信息流广告位id                       | 是   |
-| count           | 请求数量，默认为3                    | 否   |
-| width           | 宽度，默认宽度占满                   | 否   |
-| height          | 高度，默认为0，0为高度选择自适应参数 | 否   |
-| ~~adStyleType~~ | 1-模板信息流,2-原生信息流，默认为1   | 否   |
+| 参数名          | 说明                                      | 必填 |
+| --------------- | ----------------------------------------- | ---- |
+| adUnitId        | 信息流广告位id                            | 是   |
+| count           | 请求数量，默认为3                         | 否   |
+| width           | 宽度，默认宽度占满                        | 否   |
+| height          | 高度，默认为0，0为高度选择自适应参数      | 否   |
+| ~~adStyleType~~ | 1-模板信息流,2-原生信息流，默认为1        | 否   |
+| useSurfaceView  | 是否使用SurfaceView，默认为true。建议开启 | 否   |
 
 4. 回调（GromoreFeedCallback，命名和 **Android** 聚合文档基本一致）
 
@@ -450,12 +448,13 @@ Future<void> showRewardAd(String rewardId) async {
 
 3. 配置（GromoreRewardConfig）
 
-| 参数名      | 说明                                                    | 必填 |
-| ----------- | ------------------------------------------------------- | ---- |
-| adUnitId    | 信息流广告位id                                          | 是   |
-| orientation | 播放方向。竖屏：1，横屏：2。默认为竖屏。仅Android端有效 | 否   |
-| muted       | 是否静音，默认为true                                    | 否   |
-| volume      | 音量，默认为0。仅Android端有效                          | 否   |
+| 参数名         | 说明                                                    | 必填 |
+| -------------- | ------------------------------------------------------- | ---- |
+| adUnitId       | 信息流广告位id                                          | 是   |
+| orientation    | 播放方向。竖屏：1，横屏：2。默认为竖屏。仅Android端有效 | 否   |
+| muted          | 是否静音，默认为true                                    | 否   |
+| volume         | 音量，默认为0。仅Android端有效                          | 否   |
+| useSurfaceView | 是否使用SurfaceView，默认为true。建议开启               | 否   |
 
 4. 回调（GromoreFeedCallback，命名和 **Android** 聚合文档基本一致）
 
@@ -507,11 +506,12 @@ SizedBox(
 
 3. 配置（GromoreFeedConfig）
 
-| 参数名   | 说明                           | 必填 |
-| -------- | ------------------------------ | ---- |
-| adUnitId | 信息流广告位id                 | 是   |
-| width    | 宽度，默认宽度占满。String类型 | 否   |
-| height   | 高度，默认为150。String类型    | 否   |
+| 参数名         | 说明                                      | 必填 |
+| -------------- | ----------------------------------------- | ---- |
+| adUnitId       | 信息流广告位id                            | 是   |
+| width          | 宽度，默认宽度占满。String类型            | 否   |
+| height         | 高度，默认为150。String类型               | 否   |
+| useSurfaceView | 是否使用SurfaceView，默认为true。建议开启 | 否   |
 
 4. 回调（GromoreBannerCallback，命名和 **Android** 聚合文档基本一致）
 

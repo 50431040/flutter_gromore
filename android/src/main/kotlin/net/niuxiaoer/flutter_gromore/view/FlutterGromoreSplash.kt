@@ -38,6 +38,7 @@ class FlutterGromoreSplash : AppCompatActivity() {
 
     // 广告未展示时 自动关闭广告的延时器
     private var closeAdTimer = Timer()
+
     // 广告已经展示时 自动关闭广告的延时器
     private var skipAdTimer = Timer()
 
@@ -59,20 +60,24 @@ class FlutterGromoreSplash : AppCompatActivity() {
         val isSplashShakeButton = intent.getBooleanExtra("splashShakeButton", true)
         val isBidNotify = intent.getBooleanExtra("bidNotify", false)
         val timeout = intent.getIntExtra("timeout", 3500);
+        val useSurfaceView = intent.getBooleanExtra("useSurfaceView", true)
 
         val adNativeLoader = TTAdSdk.getAdManager().createAdNative(this)
 
         val adSlot = AdSlot.Builder()
-                .setCodeId(adUnitId)
-                .setImageAcceptedSize(containerWidth, containerHeight)
-                .setMediationAdSlot(MediationAdSlot.Builder()
-                        .setSplashPreLoad(preload)
-                        .setMuted(muted)
-                        .setVolume(volume)
-                        .setSplashShakeButton(isSplashShakeButton)
-                        .setBidNotify(isBidNotify)
-                        .build())
-                .build()
+            .setCodeId(adUnitId)
+            .setImageAcceptedSize(containerWidth, containerHeight)
+            .setMediationAdSlot(
+                MediationAdSlot.Builder()
+                    .setSplashPreLoad(preload)
+                    .setMuted(muted)
+                    .setVolume(volume)
+                    .setSplashShakeButton(isSplashShakeButton)
+                    .setBidNotify(isBidNotify)
+                    .setUseSurfaceView(useSurfaceView)
+                    .build()
+            )
+            .build()
 
         adNativeLoader.loadSplashAd(adSlot, getCSJSplashAdListener(), timeout)
 
@@ -132,7 +137,7 @@ class FlutterGromoreSplash : AppCompatActivity() {
      * @return 返回资源id
      */
     private fun getMipmapId(resName: String) =
-            resources.getIdentifier(resName, "mipmap", packageName)
+        resources.getIdentifier(resName, "mipmap", packageName)
 
     // 发送事件
     private fun sendEvent(msg: String) = AdEventHandler.getInstance().sendEvent(AdEvent(id, msg))
@@ -169,12 +174,11 @@ class FlutterGromoreSplash : AppCompatActivity() {
         return object : CSJSplashAdListener {
             // 加载成功
             override fun onSplashLoadSuccess(ad: CSJSplashAd) {
-                Log.d(TAG, "onSplashLoadSuccess")
-                sendEvent("onSplashLoadSuccess")
-
                 splashAd = ad
 
                 if (ad.splashView != null) {
+                    Log.d(TAG, "onSplashAdLoadSuccess")
+                    sendEvent("onSplashAdLoadSuccess")
                     container.addView(ad.splashView)
                 } else {
                     Log.d(TAG, "splashView is null")
@@ -184,8 +188,8 @@ class FlutterGromoreSplash : AppCompatActivity() {
 
             // 加载失败
             override fun onSplashLoadFail(error: CSJAdError) {
-                Log.d(TAG, "onSplashLoadFail ${error.msg}")
-                sendEvent("onSplashLoadFail")
+                Log.d(TAG, "onSplashAdLoadFail ${error.msg}")
+                sendEvent("onSplashAdLoadFail")
 
                 finishActivity()
             }
@@ -214,8 +218,8 @@ class FlutterGromoreSplash : AppCompatActivity() {
                 adShow = true
                 closeAdTimer.cancel()
 
-                Log.d(TAG, "onSplashAdShow")
-                sendEvent("onSplashAdShow")
+                Log.d(TAG, "onAdShow")
+                sendEvent("onAdShow")
 
                 // 6s后自动跳过广告
                 skipAdTimer.schedule(6000) {
@@ -231,8 +235,8 @@ class FlutterGromoreSplash : AppCompatActivity() {
 
             // 开屏点击
             override fun onSplashAdClick(p0: CSJSplashAd?) {
-                Log.d(TAG, "onSplashAdClick")
-                sendEvent("onSplashAdClick")
+                Log.d(TAG, "onAdClicked")
+                sendEvent("onAdClicked")
             }
 
             // 开屏关闭，有些ADN会调用多次close回调需要开发者特殊处理

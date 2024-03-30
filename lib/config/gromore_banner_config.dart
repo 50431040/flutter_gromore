@@ -13,11 +13,15 @@ class GromoreBannerConfig extends GromoreBaseAdConfig {
   /// 高度，默认为0，0为高度选择自适应参数
   final int? height;
 
+  /// 是否使用SurfaceView，默认为true
+  final bool? useSurfaceView;
+
   GromoreBannerConfig(
       {required this.adUnitId,
       this.count,
       this.width,
-      this.height});
+      this.height,
+      this.useSurfaceView = true});
 
   @override
   Map toJson() {
@@ -26,6 +30,7 @@ class GromoreBannerConfig extends GromoreBaseAdConfig {
       "count": count,
       "width": width,
       "height": height,
+      "useSurfaceView": useSurfaceView
     };
 
     result.removeWhere((key, value) => value == null);

@@ -26,10 +26,16 @@ class GromoreSplashConfig extends GromoreBaseAdConfig {
   final double? volume;
 
   /// 开屏摇一摇开关，默认为true
-  final bool? isSplashShakeButton;
+  final bool? splashShakeButton;
 
   /// bidding类型广告，竞价成功或者失败后是否通知对应的adn，默认为false
-  final bool? isBidNotify;
+  final bool? bidNotify;
+
+  /// 超时时间
+  final int? timeout;
+
+  /// 是否使用SurfaceView，默认为true
+  final bool? useSurfaceView;
 
   GromoreSplashConfig({
     required this.adUnitId,
@@ -39,8 +45,10 @@ class GromoreSplashConfig extends GromoreBaseAdConfig {
     this.muted,
     this.preload,
     this.volume,
-    this.isSplashShakeButton,
-    this.isBidNotify,
+    this.splashShakeButton,
+    this.bidNotify,
+    this.timeout,
+    this.useSurfaceView = true,
   });
 
   @override
@@ -54,8 +62,9 @@ class GromoreSplashConfig extends GromoreBaseAdConfig {
       "muted": muted,
       "preload": preload,
       "volume": volume,
-      "isSplashShakeButton": isSplashShakeButton,
-      "isBidNotify": isBidNotify
+      "splashShakeButton": splashShakeButton,
+      "bidNotify": bidNotify,
+      "timeout": timeout,
     };
     result.removeWhere((key, value) => value == null);
     return result;

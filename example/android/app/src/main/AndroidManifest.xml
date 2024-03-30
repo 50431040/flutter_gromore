@@ -2,21 +2,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="net.niuxiaoer.flutter_gromore_example">
 
-    <!--可选权限-->
+    <!-- 必要权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <!-- 可选权限 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!--suppress DeprecatedClassUsageInspection -->
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
-    <!--可选，Mobrain SDK提供“获取地理位置权限”方式上报用户位置，两种方式均可不选，添加位置权限或参数将帮助投放定位广告-->
-    <!--请注意：无论通过何种方式提供给穿山甲用户地理位置，均需向用户声明地理位置权限将应用于穿山甲广告投放，穿山甲不强制获取地理位置信息-->
+    <!--可选权限，申请后用于防作弊功能以及有助于广告平台投放广告-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <permission
+        android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN" />
 
-    <!-- 如果有视频相关的广告且使用textureView播放，请务必添加，否则黑屏 -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <!-- 高于Android 11的系统上，如果应用的 targetSdkVersion >= 30 ，推荐增加以下权限声明
-       （SDK将通过此权限正常触发广告行为，并保证广告的正确投放。此权限需要在用户隐私文档中声明)-->
+    <!--建议添加“query_all_package”权限，穿山甲将通过此权限在Android R系统上判定广告对应的应用是否在用户的app上安装，避免投放错误的广告，以此提高用户的广告体验。若添加此权限，需要在您的用户隐私文档中声明！ -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
     <application

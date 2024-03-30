@@ -16,14 +16,24 @@ class GromoreInterstitialConfig extends GromoreBaseAdConfig {
   /// 是否静音，默认为true
   final bool? muted;
 
-  GromoreInterstitialConfig({required this.adUnitId, this.size, this.orientation, this.muted});
+  /// 是否使用SurfaceView，默认为true
+  final bool? useSurfaceView;
+
+  GromoreInterstitialConfig(
+      {required this.adUnitId,
+      this.size,
+      this.orientation,
+      this.muted,
+      this.useSurfaceView = true});
 
   @override
   Map toJson() {
     return {
       "id": id,
       "adUnitId": adUnitId,
-      "muted": muted
+      "muted": muted,
+      "orientation": orientation,
+      "useSurfaceView": useSurfaceView
     };
   }
 }

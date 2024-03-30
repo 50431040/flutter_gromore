@@ -14,9 +14,9 @@ import net.niuxiaoer.flutter_gromore.view.FlutterGromoreReward
 import net.niuxiaoer.flutter_gromore.view.FlutterGromoreSplash
 
 class PluginDelegate(
-        private val context: Context,
-        private val activity: Activity,
-        private val binaryMessenger: BinaryMessenger
+    private val context: Context,
+    private val activity: Activity,
+    private val binaryMessenger: BinaryMessenger
 ) : MethodChannel.MethodCallHandler {
     private val TAG: String = this::class.java.simpleName
 
@@ -78,6 +78,7 @@ class PluginDelegate(
                 require(arguments != null && arguments["rewardId"] != null)
                 FlutterGromoreReward(activity, binaryMessenger, arguments, result)
             }
+
             else -> {
                 Log.d(TAG, "unknown method $method")
                 result.success(true)
@@ -98,8 +99,7 @@ class PluginDelegate(
             putExtra("preload", arguments["preload"] as? Boolean)
             putExtra("volume", arguments["volume"] as? Float)
             putExtra("timeout", arguments["timeout"] as? Int)
-            putExtra("buttonType", arguments["buttonType"] as? Int)
-            putExtra("downloadType", arguments["downloadType"] as? Int)
+            putExtra("useSurfaceView", arguments["useSurfaceView"] as? Boolean)
         }
 
         activity.apply {

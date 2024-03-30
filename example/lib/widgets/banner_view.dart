@@ -31,7 +31,8 @@ class _BannerViewState extends State<BannerView>
             child: GromoreBannerView(
                 creationParams: {
                   "adUnitId": GroMoreAdConfig.bannerId,
-                  "height": _bannerHeight.toString()
+                  "height": _bannerHeight,
+                  "useSurfaceView": true,
                 },
                 callback: GromoreBannerCallback(onRenderSuccess: () {
                   print("GromoreBannerView | onRenderSuccess");

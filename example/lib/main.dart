@@ -105,10 +105,11 @@ class _HomePageState extends State<HomePage> {
   /// 加载插屏广告
   Future<void> loadInterstitialAd() async {
     interstitialId = await FlutterGromore.loadInterstitialAd(
-        GromoreInterstitialConfig(
-            adUnitId: GroMoreAdConfig.interstitialId,
-            size: GromoreAdSize.withPercent(
-                MediaQuery.of(context).size.width * 2 / 3, 2 / 3)));
+      GromoreInterstitialConfig(
+          adUnitId: GroMoreAdConfig.interstitialId,
+          size: GromoreAdSize.withPercent(
+              MediaQuery.of(context).size.width * 2 / 3, 2 / 3)),
+    );
 
     if (interstitialId.isEmpty) {
       print("loadInterstitialAd 失败");

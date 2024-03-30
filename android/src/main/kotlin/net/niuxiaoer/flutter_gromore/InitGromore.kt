@@ -42,12 +42,12 @@ class InitGromore(private val context: Context) : TTAdSdk.Callback {
         // 是否允许SDK弹出通知
         val allowShowNotify = arguments["allowShowNotify"] as? Boolean ?: false
         // 是否使用TextureView播放视频
-        val useTextureView = arguments["useTextureView"] as? Boolean ?: true
+        val useTextureView = arguments["useTextureView"] as? Boolean ?: false
         // 是否支持多进程
-        val supportMultiProcess = arguments["supportMultiProcess"] as? Boolean ?: true
-        // 是否使用聚合，默认为false
+        val supportMultiProcess = arguments["supportMultiProcess"] as? Boolean ?: false
+        // 是否使用聚合，默认为true
         val useMediation = arguments["useMediation"] as? Boolean ?: true
-        // 主体模式设置，0是正常模式；1是夜间模式；
+        // 主题模式设置，0是正常模式；1是夜间模式。默认为正常模式
         val themeStatus = arguments["themeStatus"] as? Int ?: 0
 
         require(appId.isNotEmpty())

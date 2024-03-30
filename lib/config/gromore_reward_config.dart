@@ -14,11 +14,15 @@ class GromoreRewardConfig extends GromoreBaseAdConfig {
   /// 音量，默认为0
   final double? volume;
 
+  /// 是否使用SurfaceView，默认为true
+  final bool? useSurfaceView;
+
   GromoreRewardConfig(
       {required this.adUnitId,
       this.orientation,
       this.muted,
-      this.volume});
+      this.volume,
+      this.useSurfaceView = true});
 
   @override
   Map toJson() {
@@ -26,7 +30,8 @@ class GromoreRewardConfig extends GromoreBaseAdConfig {
       "adUnitId": adUnitId,
       "orientation": orientation,
       "muted": muted,
-      "volume": volume
+      "volume": volume,
+      "useSurfaceView": useSurfaceView
     };
 
     result.removeWhere((key, value) => value == null);

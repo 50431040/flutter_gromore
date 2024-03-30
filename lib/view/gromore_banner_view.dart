@@ -14,7 +14,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 /// 信息流广告组件
 class GromoreBannerView extends StatefulWidget {
-  final Map<String, String> creationParams;
+  final Map<String, dynamic> creationParams;
 
   /// 回调
   final GromoreBannerCallback callback;

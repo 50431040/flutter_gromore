@@ -23,7 +23,7 @@ class FlutterGromoreInterstitialManager(
         // 静音
         val muted = params["muted"] as? Boolean ?: true
         // 是否使用SurfaceView
-        val useSurfaceView = params["setUseSurfaceView"] as? Boolean ?: true
+        val useSurfaceView = params["useSurfaceView"] as? Boolean ?: true
 
         require(adUnitId != null && adUnitId.isNotEmpty())
 
