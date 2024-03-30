@@ -9,10 +9,12 @@ import com.bytedance.sdk.openadsdk.TTRewardVideoAd
 import com.bytedance.sdk.openadsdk.mediation.ad.MediationAdSlot
 import io.flutter.plugin.common.MethodChannel
 
-class FlutterGromoreRewardManager(private val params: Map<String, Any?>,
-                                  private val activity: Activity,
-                                  private val result: MethodChannel.Result) :
-        TTAdNative.RewardVideoAdListener {
+class FlutterGromoreRewardManager(
+    private val params: Map<String, Any?>,
+    private val activity: Activity,
+    private val result: MethodChannel.Result
+) :
+    TTAdNative.RewardVideoAdListener {
 
     init {
         loadAd()
@@ -22,26 +24,30 @@ class FlutterGromoreRewardManager(private val params: Map<String, Any?>,
     private fun loadAd() {
         val adUnitId = params["adUnitId"] as? String
         // 是否静音，默认为true
-        var muted = params["muted"] as? Boolean ?: true
+        val muted = params["muted"] as? Boolean ?: true
         // 音量，默认为0
-        var volume = params["volume"] as? Float ?: 0f
+        val volume = params["volume"] as? Float ?: 0f
         // 播放方向。竖屏：1，横屏：2。默认竖屏
-        var orientation = params["orientation"] as? Int ?: 1
+        val orientation = params["orientation"] as? Int ?: 1
+        // 是否使用SurfaceView
+        val useSurfaceView = params["useSurfaceView"] as? Boolean ?: true
 
         require(!adUnitId.isNullOrEmpty())
 
         val adNativeLoader = TTAdSdk.getAdManager().createAdNative(activity)
 
         val adslot = AdSlot.Builder()
-                .setCodeId(adUnitId) // 广告位id
-                .setAdCount(1) // 请求的广告数
-                .setOrientation(orientation)
-                .setMediationAdSlot(
-                        MediationAdSlot.Builder()
-                                .setMuted(muted)
-                                .setVolume(volume)
-                                .build()) // 聚合广告请求配置
-                .build()
+            .setCodeId(adUnitId) // 广告位id
+            .setAdCount(1) // 请求的广告数
+            .setOrientation(orientation)
+            .setMediationAdSlot(
+                MediationAdSlot.Builder()
+                    .setMuted(muted)
+                    .setVolume(volume)
+                    .setUseSurfaceView(useSurfaceView)
+                    .build()
+            ) // 聚合广告请求配置
+            .build()
 
         adNativeLoader.loadRewardVideoAd(adslot, this)
     }
