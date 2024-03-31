@@ -49,11 +49,11 @@ class FlutterGromoreBanner(
         val width: Int = if (creationParams["width"] == null) {
             Utils.getScreenWidthInPx(context)
         } else {
-            Utils.dp2px(context, (creationParams["width"] as Int).toFloat())
+            Utils.dp2px(context, (creationParams["width"] as Double).toFloat())
         }
 
         // 默认高度为150
-        val height = creationParams["height"] as? Int ?: 150
+        val height = creationParams["height"] as? Double ?: 150
         require(adUnitId.isNotEmpty())
 
         val useSurfaceView = creationParams["useSurfaceView"] as? Boolean ?: true
@@ -62,18 +62,23 @@ class FlutterGromoreBanner(
 
         val adslot = AdSlot.Builder()
             .setCodeId(adUnitId)
-            .setImageAcceptedSize(width, Utils.dp2px(context, height.toFloat()))
+            .setImageAcceptedSize(
+                width,
+                Utils.dp2px(context, height.toFloat())
+            )
             .setAdCount(1)
-            .setMediationAdSlot(MediationAdSlot.Builder()
-                .setUseSurfaceView(useSurfaceView)
-                .setMediationNativeToBannerListener(object : MediationNativeToBannerListener() {
-                    override fun getMediationBannerViewFromNativeAd(p0: IMediationNativeAdInfo?): View? {
-                        return null
-                    }
-                }).build()
+            .setMediationAdSlot(
+                MediationAdSlot.Builder()
+                    .setUseSurfaceView(useSurfaceView)
+                    .setMediationNativeToBannerListener(object : MediationNativeToBannerListener() {
+                        override fun getMediationBannerViewFromNativeAd(p0: IMediationNativeAdInfo?): View? {
+                            return null
+                        }
+                    }).build()
             )
             .build()
 
+        layoutParams.gravity = android.view.Gravity.CENTER_VERTICAL
         adNativeLoader.loadBannerExpressAd(adslot, this)
 
         container.layoutParams = layoutParams
@@ -103,6 +108,21 @@ class FlutterGromoreBanner(
     override fun onAdShow(p0: View?, p1: Int) {
         Log.d(TAG, "onAdShow")
         postMessage("onAdShow")
+
+        container.apply {
+            // 计算渲染后的高度
+            measure(
+                View.MeasureSpec.makeMeasureSpec(
+                    Utils.getScreenWidthInPx(context),
+                    View.MeasureSpec.UNSPECIFIED
+                ),
+                View.MeasureSpec.makeMeasureSpec(
+                    Utils.getScreenHeightInPx(context),
+                    View.MeasureSpec.UNSPECIFIED
+                )
+            )
+            Log.d(TAG, "measuredHeight - $measuredHeight")
+        }
     }
 
     override fun onRenderFail(p0: View?, p1: String?, p2: Int) {
@@ -118,12 +138,7 @@ class FlutterGromoreBanner(
             (it as? ViewGroup)?.removeView(ad)
             container.removeAllViews()
             container.setBackgroundColor(Color.WHITE)
-            container.addView(
-                ad, FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-            )
+            container.addView(ad)
         }
 
         postMessage("onRenderSuccess")

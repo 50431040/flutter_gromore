@@ -28,19 +28,19 @@ class FlutterGromoreBanner: NSObject, FlutterPlatformView, BUNativeExpressBanner
     }
     
     func initAd() {
-        print("FlutterGromoreBanner initAd")
+        print("FlutterGromoreBanner initAd ")
         let adUnitId: String = createParams["adUnitId"] as! String
         var width: CGFloat = 0
         var height: CGFloat = 0
         
         if createParams["width"] != nil {
-            width = CGFloat(Float(createParams["width"] as! Int))
+            width = CGFloat(Float(createParams["width"] as! Double))
         } else {
             width = UIScreen.main.bounds.size.width
         }
         
         if createParams["height"] != nil {
-            height = CGFloat(Float(createParams["height"] as! Int))
+            height = CGFloat(Float(createParams["height"] as! Double))
         } else {
             height = 150
         }

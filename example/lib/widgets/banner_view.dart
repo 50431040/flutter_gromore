@@ -14,7 +14,7 @@ class BannerView extends StatefulWidget {
 class _BannerViewState extends State<BannerView>
     with AutomaticKeepAliveClientMixin {
   double _height = 0.1;
-  final double _bannerHeight = 150;
+  final double _bannerHeight = 75;
   bool _show = true;
 
   @override

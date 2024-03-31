@@ -50,7 +50,7 @@ class GroMoreAdConfig {
   /// banner广告ID
   static String get bannerId {
     if (Platform.isAndroid) {
-      return '102363749';
+      return '102754191';
     }
     return '102754949';
   }
