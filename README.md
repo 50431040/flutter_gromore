@@ -396,8 +396,8 @@ GromoreFeedView(
 | -------------- | ---------------------------------------------------------- | ---- |
 | adUnitId       | 信息流广告位id                                             | 是   |
 | count          | 请求数量，默认为3                                          | 否   |
-| width          | 宽度，默认宽度占满                                         | 否   |
-| height         | 高度，默认为0，0为高度选择自适应参数                       | 否   |
+| width          | 宽度，默认宽度占满。double类型                             | 否   |
+| height         | 高度，默认150。double类型                                  | 是   |
 | useSurfaceView | 是否使用SurfaceView，默认为true。建议开启，仅对Android生效 | 否   |
 
 4. 回调（GromoreFeedCallback，命名和 **Android** 聚合文档基本一致）

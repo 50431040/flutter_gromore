@@ -1,5 +1,5 @@
 name: flutter_gromore
-description: 穿山甲Gromore插件、融合版本（持续更新Gromore版本..）
+description: 一款集成了穿山甲Gromore融合SDK的flutter插件，支持Android/iOS，多种广告类型。持续更新SDK版本
 version: 2.0.10
 homepage: https://github.com/50431040/flutter_gromore
 repository: https://github.com/50431040/flutter_gromore
