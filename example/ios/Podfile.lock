@@ -1,102 +1,52 @@
 PODS:
-  - Ads-Fusion-CN-Beta (5.1.7.0):
-    - Ads-Fusion-CN-Beta/Ads-CN (= 5.1.7.0)
-  - Ads-Fusion-CN-Beta/Ads-CN (5.1.7.0):
-    - Ads-Fusion-CN-Beta/Ads-CSJ
+  - Ads-Fusion-CN-Beta (6.0.0.5):
+    - Ads-Fusion-CN-Beta/BUAdSDK (= 6.0.0.5)
+  - Ads-Fusion-CN-Beta/BUAdSDK (6.0.0.5)
+  - Ads-Fusion-CN-Beta/CSJMediation (6.0.0.5):
     - Ads-Fusion-CN-Beta/BUAdSDK
-    - Ads-Fusion-CN-Beta/BURelyFoundation
-  - Ads-Fusion-CN-Beta/Ads-CSJ (5.1.7.0)
-  - Ads-Fusion-CN-Beta/BUAdSDK (5.1.7.0):
-    - BUAdSDK (= 0.3.0.6)
-  - Ads-Fusion-CN-Beta/BURelyFoundation (5.1.7.0):
-    - BURelyFoundation/CSJ (= 0.1.0.21)
-  - Ads-Fusion-CN-Beta/CSJMediation (5.1.7.0):
-    - Ads-Fusion-CN-Beta/BUAdSDK
-    - Ads-Fusion-CN-Beta/BURelyFoundation
-  - BaiduMobAdSDK (5.101)
-  - BUAdSDK (0.3.0.6):
-    - BUAdSDK/BUAdSDK (= 0.3.0.6)
-  - BUAdSDK/BUAdSDK (0.3.0.6)
-  - BURelyFoundation/AFNetworking (0.1.0.21)
-  - BURelyFoundation/BURelyFoundation (0.1.0.21)
-  - BURelyFoundation/CSJ (0.1.0.21):
-    - BURelyFoundation/AFNetworking
-    - BURelyFoundation/BURelyFoundation
-    - BURelyFoundation/CSJLottie
-    - BURelyFoundation/Foundation
-    - BURelyFoundation/Gecko
-    - BURelyFoundation/HM
-    - BURelyFoundation/NETWork
-    - BURelyFoundation/SDWebImage
-    - BURelyFoundation/Ugen
-    - BURelyFoundation/YYModel
-    - BURelyFoundation/ZFPlayer
-    - BURelyFoundation/Zip
-  - BURelyFoundation/CSJLottie (0.1.0.21)
-  - BURelyFoundation/ELCoreTokenizer (0.1.0.21)
-  - BURelyFoundation/Foundation (0.1.0.21):
-    - BURelyFoundation/NETWork
-  - BURelyFoundation/Gecko (0.1.0.21):
-    - BURelyFoundation/Foundation
-  - BURelyFoundation/HM (0.1.0.21)
-  - BURelyFoundation/NETWork (0.1.0.21):
-    - BURelyFoundation/AFNetworking
-  - BURelyFoundation/SDWebImage (0.1.0.21):
-    - BURelyFoundation/Foundation
-    - BURelyFoundation/ServiceCenter
-  - BURelyFoundation/ServiceCenter (0.1.0.21)
-  - BURelyFoundation/Ugen (0.1.0.21):
-    - BURelyFoundation/ELCoreTokenizer
-  - BURelyFoundation/YYModel (0.1.0.21)
-  - BURelyFoundation/ZFPlayer (0.1.0.21):
-    - BURelyFoundation/Foundation
-    - BURelyFoundation/Zip
-  - BURelyFoundation/Zip (0.1.0.21):
-    - BURelyFoundation/Foundation
-  - CSJMBaiduAdapter (5.13.0):
-    - Ads-Fusion-CN-Beta/CSJMediation (>= 5.1.6.0)
-  - CSJMGdtAdapter (4.14.20.0):
-    - Ads-Fusion-CN-Beta/CSJMediation (>= 5.1.6.0)
-  - CSJMKsAdapter (3.3.42.0):
-    - Ads-Fusion-CN-Beta/CSJMediation (>= 5.1.7.0)
+  - BaiduMobAdSDK (5.34)
+  - CSJMBaiduAdapter (5.34.0):
+    - Ads-Fusion-CN-Beta/CSJMediation (>= 6.0.0.5)
+  - CSJMGdtAdapter (4.14.63.0):
+    - Ads-Fusion-CN-Beta/CSJMediation (>= 6.0.0.2)
+  - CSJMKsAdapter (3.3.61.0.0):
+    - Ads-Fusion-CN-Beta/CSJMediation (>= 6.0.0.2)
   - Flutter (1.0.0)
   - flutter_gromore (0.0.1):
-    - Ads-Fusion-CN-Beta (= 5.1.7.0)
+    - Ads-Fusion-CN-Beta (= 6.0.0.5)
     - Flutter
-    - flutter_gromore/Ads-CSJ (= 0.0.1)
+    - flutter_gromore/BUAdSDK (= 0.0.1)
     - flutter_gromore/CSJMediation (= 0.0.1)
-  - flutter_gromore/Ads-CSJ (0.0.1):
-    - Ads-Fusion-CN-Beta (= 5.1.7.0)
-    - Ads-Fusion-CN-Beta/Ads-CSJ
+  - flutter_gromore/BUAdSDK (0.0.1):
+    - Ads-Fusion-CN-Beta (= 6.0.0.5)
+    - Ads-Fusion-CN-Beta/BUAdSDK (= 6.0.0.5)
     - Flutter
   - flutter_gromore/CSJMediation (0.0.1):
-    - Ads-Fusion-CN-Beta (= 5.1.7.0)
-    - Ads-Fusion-CN-Beta/CSJMediation
+    - Ads-Fusion-CN-Beta (= 6.0.0.5)
+    - Ads-Fusion-CN-Beta/CSJMediation (= 6.0.0.5)
     - Flutter
-  - GDTMobSDK (4.14.02):
-    - GDTMobSDK/GDTMobSDK (= 4.14.02)
-  - GDTMobSDK/GDTMobSDK (4.14.02)
-  - KSAdSDK (3.3.40)
+  - GDTMobSDK (4.14.63):
+    - GDTMobSDK/GDTMobSDK (= 4.14.63)
+  - GDTMobSDK/GDTMobSDK (4.14.63)
+  - KSAdSDK (3.3.61)
   - permission_handler_apple (9.1.0):
     - Flutter
 
 DEPENDENCIES:
-  - BaiduMobAdSDK (= 5.101)
-  - CSJMBaiduAdapter (= 5.13.0)
-  - CSJMGdtAdapter (= 4.14.20.0)
-  - CSJMKsAdapter (= 3.3.42.0)
+  - BaiduMobAdSDK (= 5.34)
+  - CSJMBaiduAdapter (= 5.34.0)
+  - CSJMGdtAdapter (= 4.14.63.0)
+  - CSJMKsAdapter (= 3.3.61.0)
   - Flutter (from `Flutter`)
   - flutter_gromore (from `.symlinks/plugins/flutter_gromore/ios`)
-  - GDTMobSDK (= 4.14.02)
-  - KSAdSDK (= 3.3.40)
+  - GDTMobSDK (= 4.14.63)
+  - KSAdSDK (= 3.3.61.0)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
 
 SPEC REPOS:
   trunk:
     - Ads-Fusion-CN-Beta
     - BaiduMobAdSDK
-    - BUAdSDK
-    - BURelyFoundation
     - CSJMBaiduAdapter
     - CSJMGdtAdapter
     - CSJMKsAdapter
@@ -112,19 +62,17 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
 
 SPEC CHECKSUMS:
-  Ads-Fusion-CN-Beta: 34675cac134f1b6ededcb87d1bb0334d9d7be846
-  BaiduMobAdSDK: b6256b85b452708720c0f435ac8c2d88ab5134d5
-  BUAdSDK: d56d1eb9eb31716b1bb4b84ecf8838a19f89c044
-  BURelyFoundation: 79e0742fccb862759cdd13143c12b8c946e17c6b
-  CSJMBaiduAdapter: 0d5e8210352871442b511270a8df6bcfccbee758
-  CSJMGdtAdapter: b7e39aa443d7cc5d0db970d48755c561eee35ad2
-  CSJMKsAdapter: 9435e303f60007630e109f07de2137b834c9064b
+  Ads-Fusion-CN-Beta: 151539e60342aa6096b7eef4358570abce27b216
+  BaiduMobAdSDK: debcb4e54e00b461ae6b8f6fb8ee232d872cb42e
+  CSJMBaiduAdapter: 966e2992ad47a3b589a979f295b2a2a2212b0ee2
+  CSJMGdtAdapter: af4675b025885fe2a482b91baae2d27e56001510
+  CSJMKsAdapter: 78a2ae637a45e3e2c1c307697da357d25ebd5339
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_gromore: 6bde44420eef1bf237c07e831d5d989de5c131f4
-  GDTMobSDK: d1f45f95df9df74ba0253ae9e1036a5f30d23c4c
-  KSAdSDK: cb9e9baa29a93ca4dc5f8fec0674627e04b3c896
+  flutter_gromore: 43b8095366361a1a5136cdcfcb4708671500070e
+  GDTMobSDK: 12270ef644af85e8032974b1a75df90593e96d1d
+  KSAdSDK: 7754afd132df893c0c7a493fa878cbee7af6ff3c
   permission_handler_apple: 8f116445eff3c0e7c65ad60f5fef5490aa94b4e4
 
-PODFILE CHECKSUM: 1b955e8af4aabc87df9b8918b977006543d46ba3
+PODFILE CHECKSUM: 8a034b11d7ec0262e9bf49ae0baa2a8be0784616
 
 COCOAPODS: 1.11.3

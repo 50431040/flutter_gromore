@@ -88,11 +88,13 @@ class FlutterGromoreSplash: NSObject, BUSplashAdDelegate {
         splashEnd(false)
     }
     
+    
     func splashAdRenderSuccess(_ splashAd: BUSplashAd) {
-        
+        sendEvent("splashAdRenderSuccess")
     }
     
     func splashAdRenderFail(_ splashAd: BUSplashAd, error: BUAdError?) {
+        sendEvent("onSplashRenderFail")
         splashEnd(false)
     }
     
@@ -113,7 +115,7 @@ class FlutterGromoreSplash: NSObject, BUSplashAdDelegate {
     func splashAdViewControllerDidClose(_ splashAd: BUSplashAd) {
     }
     
-    func splashVideoAdDidPlayFinish(_ splashAd: BUSplashAd, didFailWithError error: Error) {
+    func splashVideoAdDidPlayFinish(_ splashAd: BUSplashAd, didFailWithError error: Error?) {
         
     }
     
@@ -122,6 +124,7 @@ class FlutterGromoreSplash: NSObject, BUSplashAdDelegate {
     }
     
     func splashAdDidClose(_ splashAd: BUSplashAd, closeType: BUSplashAdCloseType) {
+        sendEvent("onSplashAdClose")
         splashEnd(true)
     }
     

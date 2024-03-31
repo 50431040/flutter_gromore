@@ -44,14 +44,14 @@ class GroMoreAdConfig {
     if (Platform.isAndroid) {
       return '102363841';
     }
-    return '102363841';
+    return '102754385';
   }
 
-  /// 激励视频广告ID
+  /// banner广告ID
   static String get bannerId {
     if (Platform.isAndroid) {
       return '102363749';
     }
-    return '102363749';
+    return '102754949';
   }
 }

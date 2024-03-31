@@ -8,10 +8,10 @@
 import Foundation
 import BUAdSDK
 
-class FlutterGromoreReward: NSObject, FlutterGromoreBase, BURewardedVideoAdDelegate {
+class FlutterGromoreReward: NSObject, FlutterGromoreBase, BUMNativeExpressRewardedVideoAdDelegate {
     var methodChannel: FlutterMethodChannel?
     private var args: [String: Any]
-    private var rewardAd: BURewardedVideoAd?
+    private var rewardAd: BUNativeExpressRewardedVideoAd?
     private var result: FlutterResult
     private var rewardId: String = ""
     
@@ -37,35 +37,35 @@ class FlutterGromoreReward: NSObject, FlutterGromoreBase, BURewardedVideoAdDeleg
         rewardAd = nil
     }
     
-    func rewardedVideoAdDidVisible(_ rewardedVideoAd: BURewardedVideoAd) {
+    func nativeExpressRewardedVideoAdDidVisible(_ rewardedVideoAd: BUNativeExpressRewardedVideoAd) {
         postMessage("onAdShow")
     }
     
-    func rewardedVideoAdDidClick(_ rewardedVideoAd: BURewardedVideoAd) {
+    func nativeExpressRewardedVideoAdDidClick(_ rewardedVideoAd: BUNativeExpressRewardedVideoAd) {
         postMessage("onAdVideoBarClick")
     }
     
-    func rewardedVideoAdDidClose(_ rewardedVideoAd: BURewardedVideoAd) {
+    func nativeExpressRewardedVideoAdDidClose(_ rewardedVideoAd: BUNativeExpressRewardedVideoAd) {
         postMessage("onAdClose")
         result(true)
         destroyAd()
     }
     
-    func rewardedVideoAdDidPlayFinish(_ rewardedVideoAd: BURewardedVideoAd, didFailWithError error: Error?) {
+    func nativeExpressRewardedVideoAdDidPlayFinish(_ rewardedVideoAd: BUNativeExpressRewardedVideoAd, didFailWithError error: Error?) {
         postMessage("onVideoComplete")
     }
     
-    func rewardedVideoAdServerRewardDidFail(_ rewardedVideoAd: BURewardedVideoAd, error: Error) {
+    func nativeExpressRewardedVideoAdServerRewardDidFail(_ rewardedVideoAd: BUNativeExpressRewardedVideoAd, error: Error?) {
         postMessage("onVideoError")
         result(false)
         destroyAd()
     }
     
-    func rewardedVideoAdServerRewardDidSucceed(_ rewardedVideoAd: BURewardedVideoAd, verify: Bool) {
+    func nativeExpressRewardedVideoAdServerRewardDidSucceed(_ rewardedVideoAd: BUNativeExpressRewardedVideoAd, verify: Bool) {
         postMessage("onRewardVerify", arguments: ["verify": verify])
     }
     
-    func rewardedVideoAdDidClickSkip(_ rewardedVideoAd: BURewardedVideoAd) {
+    func nativeExpressRewardedVideoAdDidClickSkip(_ rewardedVideoAd: BUNativeExpressRewardedVideoAd) {
         postMessage("onSkippedVideo")
     }
 }

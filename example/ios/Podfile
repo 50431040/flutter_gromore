@@ -32,12 +32,12 @@ target 'Runner' do
   use_modular_headers!
   
   # SDK 版本需要查看 GroMore 提供 Adapter 的支持范围
-  pod 'BaiduMobAdSDK', '5.101'
-  pod 'CSJMBaiduAdapter', '5.13.0'
-  pod 'GDTMobSDK', '4.14.02'
-  pod 'CSJMGdtAdapter', '4.14.20.0'
-  pod 'KSAdSDK', '3.3.40'
-  pod 'CSJMKsAdapter', '3.3.42.0'
+  pod 'BaiduMobAdSDK', '5.34'
+  pod 'CSJMBaiduAdapter', '5.34.0'
+  pod 'GDTMobSDK', '4.14.63'
+  pod 'CSJMGdtAdapter', '4.14.63.0'
+  pod 'KSAdSDK', '3.3.61.0'
+  pod 'CSJMKsAdapter', '3.3.61.0'
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end

@@ -22,18 +22,16 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
         registrar.addMethodCallDelegate(instance, channel: channel)
         registrar.register(FlutterGromoreFactory(messenger: registrar.messenger()), withId: FlutterGromoreContants.feedViewTypeId)
         registrar.register(FlutterGromoreBannerFactory(messenger: registrar.messenger()), withId: FlutterGromoreContants.bannerTypeId)
-        
+                
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let args = call.arguments as? Dictionary<String, Any> ?? [:]
         switch call.method {
-        case "getPlatformVersion":
-            result("iOS " + UIDevice.current.systemVersion)
         case "requestATT":
             requestATT(result: result)
         case "initSDK":
-            initSDK(appId: args["appId"] as! String, result: result, debug: args["debug"] as? Bool ?? true, useMediation: args["useMediation"] as? Bool ?? false)
+            initSDK(appId: args["appId"] as! String, result: result, debug: args["debug"] as? Bool ?? true, useMediation: args["useMediation"] as? Bool ?? false, themeStatus: args["themeStatus"] as? Int ?? 0)
         case "showSplashAd":
             splashAd = FlutterGromoreSplash(args: args, result: result)
         case "loadInterstitialAd":
@@ -72,19 +70,19 @@ public class SwiftFlutterGromorePlugin: NSObject, FlutterPlugin {
     }
     
     // 初始化SDK
-    private func initSDK(appId: String, result: @escaping FlutterResult, debug: Bool, useMediation: Bool) {
+    private func initSDK(appId: String, result: @escaping FlutterResult, debug: Bool, useMediation: Bool, themeStatus: Int) {
         
-        // 已经初始化
-        if (BUAdSDKManager.initializationState == BUAdSDKInitializationState.ready) {
-            result(true)
+        // 已经开始初始化
+        if (BUAdSDKManager.state == BUAdSDKState.start) {
+            result(false)
             return
         }
         
-        let config = BUAdSDKConfiguration()
+        let config = BUAdSDKConfiguration.configuration()
         config.appID = appId
         config.debugLog = debug ? 1 : 0
         config.useMediation = useMediation
-        config.territory = BUAdSDKTerritory.CN
+        config.themeStatus = (themeStatus) as NSNumber
         
         BUAdSDKManager.start(asyncCompletionHandler: {success, error in
             // 已经回调

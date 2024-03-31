@@ -8,10 +8,10 @@
 import Foundation
 import BUAdSDK
 
-class FlutterGromoreRewardManager: NSObject, BURewardedVideoAdDelegate {
+class FlutterGromoreRewardManager: NSObject, BUNativeExpressRewardedVideoAdDelegate {
     private var args: [String: Any]
     private var result: FlutterResult
-    private var rewardAd: BURewardedVideoAd?
+    private var rewardAd: BUNativeExpressRewardedVideoAd?
     
     init(args: [String: Any], result: @escaping FlutterResult) {
         self.args = args
@@ -26,7 +26,7 @@ class FlutterGromoreRewardManager: NSObject, BURewardedVideoAdDelegate {
         slot.id = adUnitId
         
         let model = BURewardedVideoModel()
-        rewardAd = BURewardedVideoAd.init(slot: slot, rewardedVideoModel: model)
+        rewardAd = BUNativeExpressRewardedVideoAd.init(slot: slot, rewardedVideoModel: model)
         if let ad = rewardAd {
             ad.delegate = self
             ad.loadData()
@@ -34,15 +34,16 @@ class FlutterGromoreRewardManager: NSObject, BURewardedVideoAdDelegate {
     }
     
     // 加载成功
-    func rewardedVideoAdDidLoad(_ rewardedVideoAd: BURewardedVideoAd) {
+    func nativeExpressRewardedVideoAdDidLoad(_ rewardedVideoAd: BUNativeExpressRewardedVideoAd) {
         let id = String(rewardedVideoAd.hashValue)
         FlutterGromoreRewardCache.addAd(key: id, ad: rewardedVideoAd)
         result(id)
     }
     
     // 加载失败
-    func rewardedVideoAd(_ rewardedVideoAd: BURewardedVideoAd, didFailWithError error: Error?) {
+    func nativeExpressRewardedVideoAd(_ rewardedVideoAd: BUNativeExpressRewardedVideoAd, didFailWithError error: Error?) {
         result(FlutterError(code: "0", message: error?.localizedDescription ?? "", details: error?.localizedDescription ?? ""))
     }
+    
     
 }

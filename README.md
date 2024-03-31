@@ -130,7 +130,7 @@ dependencies {
 #### iOS
 
 1. 引入**除穿山甲以外**的SDK和适配器，案例中使用 CocoaPods 引入百度和广点通，可见 `example/ios/Podfile` 。引入时需要注意 Adapter 所支持的 SDK 版本范围，可在 GroMore 接入文档查看。
-2. 在XCode中添加依赖库
+2. 在XCode中添加依赖库【  TARGETS -> Build Phases 中添加...】
 3. 建议允许 `http` 访问，`info.plist` 添加：
 
    ```plist
@@ -211,17 +211,17 @@ bool initResult = await FlutterGromore.initSDK(
   useMediation: true);
 ```
 
-| 参数名              | 说明                                                   | 必选 |
-| ------------------- | ------------------------------------------------------ | ---- |
-| appId               |                                                        | 是   |
-| appName             |                                                        | 是   |
-| debug               | debug模式，默认为true                                  | 是   |
-| useMediation        | 是否使用聚合                                           | 是   |
-| paid                | 是否为计费用户，默认为false                            | 否   |
-| allowShowNotify     | 是否允许SDK弹出通知，默认为false                       | 否   |
-| useTextureView      | 是否使用TextureView播放视频，默认为false               | 否   |
-| supportMultiProcess | 是否支持多进程，默认为false                            | 否   |
-| themeStatus         | 主题模式设置，0是正常模式；1是夜间模式。默认为正常模式 | 否   |
+| 参数名              | 说明                                                      | 必选 |
+| ------------------- | --------------------------------------------------------- | ---- |
+| appId               |                                                           | 是   |
+| appName             |                                                           | 是   |
+| debug               | debug模式，默认为true                                     | 是   |
+| useMediation        | 是否使用聚合                                              | 是   |
+| paid                | 是否为计费用户，默认为false。仅作用于Android              | 否   |
+| allowShowNotify     | 是否允许SDK弹出通知，默认为false。仅作用于Android         | 否   |
+| useTextureView      | 是否使用TextureView播放视频，默认为false。仅作用于Android | 否   |
+| supportMultiProcess | 是否支持多进程，默认为false。仅作用于Android              | 否   |
+| themeStatus         | 主题模式设置，0是正常模式；1是夜间模式。默认为正常模式    | 否   |
 
 若需要添加本地缓存配置，请将文件`gromore_local_config`放在`android/src/main/assets/`目录下，初始化时会尝试加载该文件配置
 
@@ -272,7 +272,7 @@ child: GromoreSplashView(
 | splashShakeButton | 开屏摇一摇开关，默认为true。仅Android可用                    | 否   |
 | bidNotify         | bidding类型广告，竞价成功或者失败后是否通知对应的adn，默认为false | 否   |
 | timeout           | 超时时间，默认为3500，单位：毫秒                             | 否   |
-| useSurfaceView    | 是否使用SurfaceView，默认为true。建议开启                    | 否   |
+| useSurfaceView    | 是否使用SurfaceView，默认为true。建议开启，仅对Android生效   | 否   |
 
 4. 回调（GromoreSplashCallback）
 
@@ -282,8 +282,8 @@ child: GromoreSplashView(
 | onAdShow              | 展示成功                                                     |
 | onSplashAdLoadFail    | 加载失败                                                     |
 | onSplashAdLoadSuccess | 加载成功                                                     |
-| onSplashRenderSuccess | 渲染成功                                                     |
-| onSplashRenderFail    | 渲染失败                                                     |
+| onSplashRenderSuccess | 渲染成功。貌似iOS不会触发回调                                |
+| onSplashRenderFail    | 渲染失败。貌似iOS不会触发回调                                |
 | onSplashAdClose       | 关闭                                                         |
 | **onAdEnd**           | **开屏广告结束，这个时候会销毁广告（点击跳过、倒计时结束或渲染错误等 理应隐藏广告 的情况都会触发此回调，建议统一在此回调处理路由跳转等逻辑）** |
 | onAutoClose           | 开屏广告自动关闭，超过6s未触发onAdShow回调时会执行（由于存在异常场景，导致广告无法正常展示，但无相关回调） |
@@ -326,23 +326,21 @@ if (interstitialId.isNotEmpty) {
 
 3. 配置（GromoreInterstitialConfig）
 
-| 参数名         | 说明                                                | 必填 |
-| -------------- | --------------------------------------------------- | ---- |
-| adUnitId       | 插屏广告位id                                        | 是   |
-| orientation    | 设置横竖，仅Android可用。竖屏为1，横屏为2。默认竖屏 | 否   |
-| muted          | 是否静音，默认为true                                | 否   |
-| useSurfaceView | 是否使用SurfaceView，默认为true。建议开启           | 否   |
+| 参数名         | 说明                                                       | 必填 |
+| -------------- | ---------------------------------------------------------- | ---- |
+| adUnitId       | 插屏广告位id                                               | 是   |
+| orientation    | 设置横竖，仅Android可用。竖屏为1，横屏为2。默认竖屏        | 否   |
+| muted          | 是否静音，默认为true                                       | 否   |
+| useSurfaceView | 是否使用SurfaceView，默认为true。建议开启，仅对Android生效 | 否   |
 
 4. 回调（GromoreSplashCallback，命名和 **Android** 聚合文档基本一致）
 
-| 回调方法名              | 说明                                                         | 备注      |
-| ----------------------- | ------------------------------------------------------------ | --------- |
-| onInterstitialShow      | 广告展示                                                     |           |
-| onInterstitialShowFail  | 展示失败                                                     | 仅iOS可用 |
-| onInterstitialAdClick   | 广告被点击                                                   |           |
-| onInterstitialClosed    | 广告关闭                                                     |           |
-| ~~onAdOpened~~          | 当广告打开浮层时调用，如打开内置浏览器、内容展示浮层，一般发生在点击之后,常常在onAdLeftApplication之前调用，并非百分百回调，优量汇sdk支持，穿山甲SDK、baidu SDK、mintegral SDK、admob sdk暂时不支持 |           |
-| ~~onAdLeftApplication~~ | 此方法会在用户点击打开其他应用（例如 Google Play）时于 onAdOpened() 之后调用，从而在后台运行当前应用。并非百分百回调，优量汇sdk和admob sdk支持，穿山甲SDK、baidu SDK、mintegral SDK暂时不支持 |           |
+| 回调方法名             | 说明       | 备注      |
+| ---------------------- | ---------- | --------- |
+| onInterstitialShow     | 广告展示   |           |
+| onInterstitialShowFail | 展示失败   | 仅iOS可用 |
+| onInterstitialAdClick  | 广告被点击 |           |
+| onInterstitialClosed   | 广告关闭   |           |
 
 ### 信息流广告
 
@@ -394,14 +392,13 @@ GromoreFeedView(
 
 3. 配置（GromoreFeedConfig）
 
-| 参数名          | 说明                                      | 必填 |
-| --------------- | ----------------------------------------- | ---- |
-| adUnitId        | 信息流广告位id                            | 是   |
-| count           | 请求数量，默认为3                         | 否   |
-| width           | 宽度，默认宽度占满                        | 否   |
-| height          | 高度，默认为0，0为高度选择自适应参数      | 否   |
-| ~~adStyleType~~ | 1-模板信息流,2-原生信息流，默认为1        | 否   |
-| useSurfaceView  | 是否使用SurfaceView，默认为true。建议开启 | 否   |
+| 参数名         | 说明                                                       | 必填 |
+| -------------- | ---------------------------------------------------------- | ---- |
+| adUnitId       | 信息流广告位id                                             | 是   |
+| count          | 请求数量，默认为3                                          | 否   |
+| width          | 宽度，默认宽度占满                                         | 否   |
+| height         | 高度，默认为0，0为高度选择自适应参数                       | 否   |
+| useSurfaceView | 是否使用SurfaceView，默认为true。建议开启，仅对Android生效 | 否   |
 
 4. 回调（GromoreFeedCallback，命名和 **Android** 聚合文档基本一致）
 
@@ -448,13 +445,13 @@ Future<void> showRewardAd(String rewardId) async {
 
 3. 配置（GromoreRewardConfig）
 
-| 参数名         | 说明                                                    | 必填 |
-| -------------- | ------------------------------------------------------- | ---- |
-| adUnitId       | 信息流广告位id                                          | 是   |
-| orientation    | 播放方向。竖屏：1，横屏：2。默认为竖屏。仅Android端有效 | 否   |
-| muted          | 是否静音，默认为true                                    | 否   |
-| volume         | 音量，默认为0。仅Android端有效                          | 否   |
-| useSurfaceView | 是否使用SurfaceView，默认为true。建议开启               | 否   |
+| 参数名         | 说明                                                       | 必填 |
+| -------------- | ---------------------------------------------------------- | ---- |
+| adUnitId       | 信息流广告位id                                             | 是   |
+| orientation    | 播放方向。竖屏：1，横屏：2。默认为竖屏。仅Android端有效    | 否   |
+| muted          | 是否静音，默认为true                                       | 否   |
+| volume         | 音量，默认为0。仅Android端有效                             | 否   |
+| useSurfaceView | 是否使用SurfaceView，默认为true。建议开启，仅对Android生效 | 否   |
 
 4. 回调（GromoreFeedCallback，命名和 **Android** 聚合文档基本一致）
 
@@ -506,12 +503,12 @@ SizedBox(
 
 3. 配置（GromoreFeedConfig）
 
-| 参数名         | 说明                                      | 必填 |
-| -------------- | ----------------------------------------- | ---- |
-| adUnitId       | 信息流广告位id                            | 是   |
-| width          | 宽度，默认宽度占满。String类型            | 否   |
-| height         | 高度，默认为150。String类型               | 否   |
-| useSurfaceView | 是否使用SurfaceView，默认为true。建议开启 | 否   |
+| 参数名         | 说明                                                       | 必填 |
+| -------------- | ---------------------------------------------------------- | ---- |
+| adUnitId       | 信息流广告位id                                             | 是   |
+| width          | 宽度，默认宽度占满。Int类型                                | 否   |
+| height         | 高度，默认为150。Int类型                                   | 否   |
+| useSurfaceView | 是否使用SurfaceView，默认为true。建议开启，仅对Android生效 | 否   |
 
 4. 回调（GromoreBannerCallback，命名和 **Android** 聚合文档基本一致）
 

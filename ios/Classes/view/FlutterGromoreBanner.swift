@@ -34,13 +34,13 @@ class FlutterGromoreBanner: NSObject, FlutterPlatformView, BUNativeExpressBanner
         var height: CGFloat = 0
         
         if createParams["width"] != nil {
-            width = CGFloat(Float(createParams["width"] as! String) ?? 0)
+            width = CGFloat(Float(createParams["width"] as! Int))
         } else {
             width = UIScreen.main.bounds.size.width
         }
         
         if createParams["height"] != nil {
-            height = CGFloat(Float(createParams["height"] as! String) ?? 0)
+            height = CGFloat(Float(createParams["height"] as! Int))
         } else {
             height = 150
         }

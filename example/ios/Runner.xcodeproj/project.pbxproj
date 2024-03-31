@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -65,8 +65,6 @@
 /* Begin PBXFileReference section */
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
-		17AD5EEA28462183006752B8 /* ABUAdBaiduAdapter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ABUAdBaiduAdapter.framework; path = Frameworks/ABUAdBaiduAdapter.framework; sourceTree = "<group>"; };
-		17AD5EEB28462183006752B8 /* ABUAdGdtAdapter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ABUAdGdtAdapter.framework; path = Frameworks/ABUAdGdtAdapter.framework; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		589779E9736815D5BDB19260 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		5BF2230F06946462ABFF2BF9 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
@@ -200,8 +198,6 @@
 				83853EAF292CE7C000BA6C83 /* libresolv.tbd */,
 				83853EAD292CE7BB00BA6C83 /* libc++.tbd */,
 				83853EAB292CE7B500BA6C83 /* libz.tbd */,
-				17AD5EEA28462183006752B8 /* ABUAdBaiduAdapter.framework */,
-				17AD5EEB28462183006752B8 /* ABUAdGdtAdapter.framework */,
 				C59A0BE55DE9ED70F4C7770F /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
