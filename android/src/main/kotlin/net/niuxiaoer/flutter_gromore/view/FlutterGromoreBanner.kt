@@ -49,7 +49,7 @@ class FlutterGromoreBanner(
         val width: Int = if (creationParams["width"] == null) {
             Utils.getScreenWidthInPx(context)
         } else {
-            Utils.dp2px(context, (creationParams["width"] as String).toFloat())
+            Utils.dp2px(context, (creationParams["width"] as Int).toFloat())
         }
 
         // 默认高度为150
@@ -144,6 +144,7 @@ class FlutterGromoreBanner(
     override fun initAd() {}
 
     override fun onError(p0: Int, p1: String?) {
+        Log.d(TAG, "onLoadError - $p0 - $p1")
         postMessage("onLoadError")
     }
 
