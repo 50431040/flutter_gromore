@@ -41,7 +41,7 @@ class FlutterGromoreFeedManager(
 
         val adslot = AdSlot.Builder()
             .setCodeId(adUnitId)
-            .setImageAcceptedSize(width, height)
+            .setImageAcceptedSize(width, Utils.dp2px(context, height.toFloat()))
             .setAdCount(count)
             .setMediationAdSlot(MediationAdSlot.Builder().setUseSurfaceView(useSurfaceView).build())
             .build()
