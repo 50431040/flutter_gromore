@@ -101,11 +101,7 @@ class FlutterGromoreFeed: NSObject, FlutterPlatformView, BUMNativeAdDelegate {
     
     func nativeAdDidBecomeVisible(_ nativeAd: BUNativeAd) {
         postMessage("onAdShow")
-        
-        if let adnName = nativeAd.mediation?.getShowEcpmInfo()?.adnName, adnName == "pangle" {
-            // 穿山甲广告存在点击穿透
-            container.isPermeable = true
-        }
+        container.isPermeable = true
 
         // if let adnName = nativeAd.mediation?.getShowEcpmInfo()?.adnName, adnName == "pangle" {
             // 穿山甲广告存在点击穿透

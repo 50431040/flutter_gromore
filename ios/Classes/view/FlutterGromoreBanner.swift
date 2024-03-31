@@ -94,6 +94,8 @@ class FlutterGromoreBanner: NSObject, FlutterPlatformView, BUNativeExpressBanner
         container.clipsToBounds = true
         container.addSubview(bannerAd!)
         postMessage("onRenderSuccess")
+        
+        container.isPermeable = true
     }
     
     // 加载失败
